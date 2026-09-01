@@ -1,0 +1,35 @@
+{
+    "name": "crm/laravel-lead",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {
+        "crm/laravel-activity": "^1.0",
+        "crm/laravel-attribute": "^1.0",
+        "crm/laravel-contact": "^1.0",
+        "crm/laravel-core": "^1.0",
+        "crm/laravel-email": "^1.0",
+        "crm/laravel-product": "^1.0",
+        "crm/laravel-quote": "^1.0",
+        "crm/laravel-tag": "^1.0",
+        "crm/laravel-user": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crm\\Lead\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Lead\\Providers\\LeadServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,26 @@
+{
+    "name": "crm/laravel-installer",
+    "license": "MIT",
+    "description": "Installer package",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Crm\\Installer\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Installer\\Providers\\InstallerServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

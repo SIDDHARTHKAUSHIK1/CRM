@@ -1,0 +1,27 @@
+{
+    "name": "crm/laravel-attribute",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {
+        "crm/laravel-core": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crm\\Attribute\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Attribute\\Providers\\AttributeServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,28 @@
+{
+    "name": "crm/laravel-tag",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {
+        "crm/laravel-core": "^1.0",
+        "crm/laravel-user": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crm\\Tag\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Tag\\Providers\\TagServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

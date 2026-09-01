@@ -1,0 +1,28 @@
+{
+    "name": "crm/laravel-product",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {
+        "crm/laravel-attribute": "^1.0",
+        "crm/laravel-core": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crm\\Product\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Product\\Providers\\ProductServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

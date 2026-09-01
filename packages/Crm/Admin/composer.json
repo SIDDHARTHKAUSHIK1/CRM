@@ -1,0 +1,35 @@
+{
+    "name": "crm/laravel-admin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik",
+            "email": "sidd2004.sk@gmail.com"
+        }
+    ],
+    "require": {
+        "crm/laravel-attribute": "^1.0",
+        "crm/laravel-contact": "^1.0",
+        "crm/laravel-core": "^1.0",
+        "crm/laravel-email": "^1.0",
+        "crm/laravel-lead": "^1.0",
+        "crm/laravel-product": "^1.0",
+        "crm/laravel-tag": "^1.0",
+        "crm/laravel-ui": "^1.0",
+        "crm/laravel-user": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crm\\Admin\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\Admin\\Providers\\AdminServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "minimum-stability": "dev"
+}

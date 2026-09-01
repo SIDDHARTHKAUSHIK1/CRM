@@ -1,0 +1,260 @@
+<?php
+
+namespace Crm\Admin\Http\Controllers\Contact\Persons;
+
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Event;
+use Illuminate\View\View;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Crm\Admin\DataGrids\Contact\PersonDataGrid;
+use Crm\Admin\Http\Controllers\Controller;
+use Crm\Admin\Http\Requests\AttributeForm;
+use Crm\Admin\Http\Requests\MassDestroyRequest;
+use Crm\Admin\Http\Resources\PersonResource;
+use Crm\Contact\Repositories\PersonRepository;
+
+class PersonController extends Controller
+{
+    /**
+     * Create a new class instance.
+     *
+     * @return void
+     */
+    public function __construct(protected PersonRepository $personRepository)
+    {
+        request()->request->add(['entity_type' => 'persons']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        if (request()->ajax()) {
+            return datagrid(PersonDataGrid::class)->process();
+        }
+
+        return view('admin::contacts.persons.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View
+    {
+        return view('admin::contacts.persons.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(AttributeForm $request): RedirectResponse|JsonResponse
+    {
+        Event::dispatch('contacts.person.create.before');
+
+        $data = $request->all();
+
+        if (request()->has('quick_add') && empty($data['user_id'])) {
+            $data['user_id'] = auth()->guard('user')->user()->id;
+        }
+
+        $person = $this->personRepository->create($data);
+
+        Event::dispatch('contacts.person.create.after', $person);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => $person,
+                'message' => trans('admin::app.contacts.persons.index.create-success'),
+            ]);
+        }
+
+        session()->flash('success', trans('admin::app.contacts.persons.index.create-success'));
+
+        return redirect()->route('admin.contacts.persons.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(int $id): View
+    {
+        $person = $this->personRepository->findOrFail($id);
+
+        $this->preventUnauthorizedAccess($person->user_id);
+
+        return view('admin::contacts.persons.view', compact('person'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(int $id): View
+    {
+        $person = $this->personRepository->findOrFail($id);
+
+        $this->preventUnauthorizedAccess($person->user_id);
+
+        return view('admin::contacts.persons.edit', compact('person'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(AttributeForm $request, int $id): RedirectResponse|JsonResponse
+    {
+        $this->preventUnauthorizedAccess($this->personRepository->findOrFail($id)->user_id);
+
+        Event::dispatch('contacts.person.update.before', $id);
+
+        $person = $this->personRepository->update($request->all(), $id);
+
+        Event::dispatch('contacts.person.update.after', $person);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => $person,
+                'message' => trans('admin::app.contacts.persons.index.update-success'),
+            ], 200);
+        }
+
+        session()->flash('success', trans('admin::app.contacts.persons.index.update-success'));
+
+        return redirect()->route('admin.contacts.persons.index');
+    }
+
+    /**
+     * Search person results.
+     */
+    public function search(): JsonResource
+    {
+        $personRepository = $this->personRepository
+            ->pushCriteria(app(RequestCriteria::class));
+
+        if ($searchTerm = request()->query('query')) {
+            $personRepository = $personRepository->scopeQuery(function ($query) use ($searchTerm) {
+                return $query->where(function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', '%'.$searchTerm.'%')
+                        ->orWhere('emails', 'like', '%'.$searchTerm.'%')
+                        ->orWhere('contact_numbers', 'like', '%'.$searchTerm.'%');
+                });
+            });
+        }
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $persons = $personRepository->findWhereIn('user_id', $userIds);
+        } else {
+            $persons = $personRepository->all();
+        }
+
+        return PersonResource::collection($persons);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $person = $this->personRepository->findOrFail($id);
+
+        $this->preventUnauthorizedAccess($person->user_id);
+
+        if (
+            $person->leads
+            && $person->leads->count() > 0
+        ) {
+            return response()->json([
+                'message' => trans('admin::app.contacts.persons.index.delete-failed'),
+            ], 400);
+        }
+
+        try {
+            Event::dispatch('contacts.person.delete.before', $person);
+
+            $person->delete();
+
+            Event::dispatch('contacts.person.delete.after', $person);
+
+            return response()->json([
+                'message' => trans('admin::app.contacts.persons.index.delete-success'),
+            ], 200);
+
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => trans('admin::app.contacts.persons.index.delete-failed'),
+            ], 400);
+        }
+    }
+
+    /**
+     * Mass destroy the specified resources from storage.
+     */
+    public function massDestroy(MassDestroyRequest $request): JsonResponse
+    {
+        try {
+            $persons = $this->filterAuthorizedRecords(
+                $this->personRepository->findWhereIn('id', $request->input('indices', []))
+            );
+
+            $deletedCount = 0;
+
+            $blockedCount = 0;
+
+            foreach ($persons as $person) {
+                if (
+                    $person->leads
+                    && $person->leads->count() > 0
+                ) {
+                    $blockedCount++;
+
+                    continue;
+                }
+
+                Event::dispatch('contact.person.delete.before', $person);
+
+                $this->personRepository->delete($person->id);
+
+                Event::dispatch('contact.person.delete.after', $person);
+
+                $deletedCount++;
+            }
+
+            $statusCode = 200;
+
+            switch (true) {
+                case $deletedCount > 0 && $blockedCount === 0:
+                    $message = trans('admin::app.contacts.persons.index.all-delete-success');
+
+                    break;
+
+                case $deletedCount > 0 && $blockedCount > 0:
+                    $message = trans('admin::app.contacts.persons.index.partial-delete-warning');
+
+                    break;
+
+                case $deletedCount === 0 && $blockedCount > 0:
+                    $message = trans('admin::app.contacts.persons.index.none-delete-warning');
+
+                    $statusCode = 400;
+
+                    break;
+
+                default:
+                    $message = trans('admin::app.contacts.persons.index.no-selection');
+
+                    $statusCode = 400;
+
+                    break;
+            }
+
+            return response()->json(['message' => $message], $statusCode);
+        } catch (Exception $exception) {
+            return response()->json([
+                'message' => trans('admin::app.contacts.persons.index.delete-failed'),
+            ], 400);
+        }
+    }
+}
