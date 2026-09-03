@@ -10,6 +10,7 @@ echo -e "\n\033[1;36m==> 1. Navigating to project directory...\033[0m"
 cd /var/www/crm
 
 echo -e "\n\033[1;36m==> 2. Pulling latest code from GitHub...\033[0m"
+git reset --hard HEAD
 git pull origin main
 
 echo -e "\n\033[1;36m==> 3. Updating PHP dependencies...\033[0m"
