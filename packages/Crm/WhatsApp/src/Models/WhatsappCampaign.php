@@ -86,7 +86,11 @@ class WhatsappCampaign extends Model implements WhatsappCampaignContract
      */
     public function getBrochureUrlAttribute(): string
     {
-        return $this->brochure_path ? \Storage::url($this->brochure_path) : '';
+        if (! $this->brochure_path) {
+            return '';
+        }
+
+        return '/storage/' . ltrim($this->brochure_path, '/');
     }
 
     /**

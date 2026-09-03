@@ -58,15 +58,23 @@
         <link
             type="image/x-icon"
             href="{{ Storage::url($favicon) }}"
+            rel="icon"
+        >
+        <link
+            type="image/x-icon"
+            href="{{ Storage::url($favicon) }}"
             rel="shortcut icon"
-            sizes="16x16"
         >
     @else
+        <link
+            type="image/svg+xml"
+            href="{{ vite()->asset('images/favicon.svg') }}"
+            rel="icon"
+        />
         <link
             type="image/x-icon"
             href="{{ vite()->asset('images/favicon.ico') }}"
             rel="shortcut icon"
-            sizes="16x16"
         />
     @endif
 

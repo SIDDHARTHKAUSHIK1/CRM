@@ -15,8 +15,14 @@ git pull origin main
 echo -e "\n\033[1;36m==> 3. Updating PHP dependencies...\033[0m"
 composer install --no-dev --optimize-autoloader --no-interaction
 
-echo -e "\n\033[1;36m==> 4. Running database migrations...\033[0m"
+echo -e "\n\033[1;36m==> 4. Running database migrations & storage link...\033[0m"
 php artisan migrate --force
+php artisan storage:link 2>/dev/null || true
+
+# Ensure APP_URL in .env points to the production domain instead of localhost
+if grep -qE "^APP_URL=.*localhost" .env 2>/dev/null; then
+    sed -i "s|^APP_URL=.*|APP_URL=https://realestate.aflix.co.in|" .env
+fi
 
 echo -e "\n\033[1;36m==> 5. Building root frontend assets...\033[0m"
 npm run build
