@@ -3,6 +3,7 @@
 return [
     'acl' => [
         'help' => 'Help',
+        'whatsapp' => 'WhatsApp Broadcast',
         'leads' => 'Leads',
         'lead' => 'Lead',
         'quotes' => 'Quotes',
@@ -2204,6 +2205,7 @@ return [
         'leads' => 'Leads',
         'quotes' => 'Quotes',
         'quote' => 'Quote',
+        'whatsapp' => 'WhatsApp Broadcast',
         'mail' => [
             'title' => 'Mail',
             'compose' => 'Compose',

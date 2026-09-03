@@ -1,0 +1,22 @@
+{
+    "name": "crm/whatsapp",
+    "description": "WhatsApp Bulk Broadcast Module for Laravel CRM",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Siddharth Kaushik"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Crm\\WhatsApp\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Crm\\WhatsApp\\Providers\\WhatsAppServiceProvider"
+            ]
+        }
+    }
+}

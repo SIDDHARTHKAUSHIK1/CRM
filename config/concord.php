@@ -16,6 +16,7 @@ use Crm\Tag\Providers\ModuleServiceProvider as TagModuleServiceProvider;
 use Crm\User\Providers\ModuleServiceProvider as UserModuleServiceProvider;
 use Crm\Warehouse\Providers\ModuleServiceProvider as WarehouseModuleServiceProvider;
 use Crm\WebForm\Providers\ModuleServiceProvider as WebFormModuleServiceProvider;
+use Crm\WhatsApp\Providers\ModuleServiceProvider as WhatsAppModuleServiceProvider;
 
 return [
     'modules' => [
@@ -36,6 +37,7 @@ return [
         WarehouseModuleServiceProvider::class,
         WebFormModuleServiceProvider::class,
         DataTransferModuleServiceProvider::class,
+        WhatsAppModuleServiceProvider::class,
     ],
 
     'register_route_models' => true,

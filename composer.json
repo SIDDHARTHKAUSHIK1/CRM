@@ -79,7 +79,8 @@
             "Crm\\User\\": "packages/Crm/User/src",
             "Crm\\Warehouse\\": "packages/Crm/Warehouse/src",
             "Crm\\WebForm\\": "packages/Crm/WebForm/src",
-            "Crm\\Automation\\": "packages/Crm/Automation/src"
+            "Crm\\Automation\\": "packages/Crm/Automation/src",
+            "Crm\\WhatsApp\\": "packages/Crm/WhatsApp/src"
         }
     },
     "autoload-dev": {

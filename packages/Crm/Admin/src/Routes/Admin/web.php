@@ -51,6 +51,11 @@ require 'configuration-routes.php';
 require 'help-routes.php';
 
 /**
+ * WhatsApp routes.
+ */
+require 'whatsapp-routes.php';
+
+/**
  * Rest routes.
  */
 require 'rest-routes.php';

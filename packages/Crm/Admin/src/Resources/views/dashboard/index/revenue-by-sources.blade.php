@@ -27,12 +27,12 @@
                     </p>
                 </div>
 
-                <!-- Doughnut Chart -->
+                <!-- Bar Chart -->
                 <div
-                    class="flex w-full max-w-full flex-col gap-4 px-8 pt-8"
+                    class="flex w-full max-w-full flex-col gap-4 px-4 pt-4"
                     v-if="report.statistics.length"
                 >
-                    <x-admin::charts.doughnut
+                    <x-admin::charts.bar
                         ::labels="chartLabels"
                         ::datasets="chartDatasets"
                     />

@@ -462,3 +462,40 @@ Breadcrumbs::for('dashboard.account.edit', function (BreadcrumbTrail $trail, $us
     $trail->parent('dashboard');
     $trail->push(trans('admin::app.account.edit.title'), route('admin.user.account.edit', $user->id));
 });
+
+// Dashboard > WhatsApp
+Breadcrumbs::for('whatsapp', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.layouts.whatsapp'), route('admin.whatsapp.index'));
+});
+
+// Dashboard > WhatsApp > Create
+Breadcrumbs::for('whatsapp.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('whatsapp');
+    $trail->push('Create Broadcast', route('admin.whatsapp.create'));
+});
+
+// Dashboard > WhatsApp > Preview
+Breadcrumbs::for('whatsapp.preview', function (BreadcrumbTrail $trail, $campaign) {
+    $trail->parent('whatsapp');
+    $trail->push('Preview #' . ($campaign->id ?? ''), route('admin.whatsapp.preview', $campaign->id ?? 0));
+});
+
+// Dashboard > WhatsApp > Show
+Breadcrumbs::for('whatsapp.show', function (BreadcrumbTrail $trail, $campaign) {
+    $trail->parent('whatsapp');
+    $trail->push('#' . ($campaign->id ?? '') . ' ' . ($campaign->name ?? 'Campaign'), route('admin.whatsapp.show', $campaign->id ?? 0));
+});
+
+// Dashboard > WhatsApp > Gateway
+Breadcrumbs::for('whatsapp.gateway', function (BreadcrumbTrail $trail) {
+    $trail->parent('whatsapp');
+    $trail->push('Link WhatsApp (QR)', route('admin.whatsapp.gateway'));
+});
+
+// Dashboard > WhatsApp > DNC
+Breadcrumbs::for('whatsapp.dnc', function (BreadcrumbTrail $trail) {
+    $trail->parent('whatsapp');
+    $trail->push('Do Not Contact (DNC)', route('admin.whatsapp.dnc'));
+});
+

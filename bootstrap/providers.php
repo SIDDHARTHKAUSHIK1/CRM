@@ -61,4 +61,5 @@ return [
     UserServiceProvider::class,
     WarehouseServiceProvider::class,
     WebFormServiceProvider::class,
+    \Crm\WhatsApp\Providers\WhatsAppServiceProvider::class,
 ];

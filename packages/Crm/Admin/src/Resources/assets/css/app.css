@@ -37,6 +37,16 @@
     mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZT0iIzAwMCI+PHBhdGggc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBkPSJNOS44NzkgNy41MTljMS4xNzEtMS4wMjUgMy4wNzEtMS4wMjUgNC4yNDIgMCAxLjE3MiAxLjAyNSAxLjE3MiAyLjY4NyAwIDMuNzEyLS4yMDMuMTc5LS40My4zMjYtLjY3LjQ0Mi0uNzQ1LjM2MS0xLjQ1Ljk5OS0xLjQ1IDEuODI3di43NU0yMSAxMmE5IDkgMCAxIDEtMTggMCA5IDkgMCAwIDEgMTggMFptLTkgNS4yNWguMDA4di4wMDhIMTJ2LS4wMDhaIi8+PC9zdmc+") no-repeat center / contain;
   }
 
+  /* WhatsApp menu glyph rendered as an SVG mask. */
+  .icon-whatsapp {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNMTIuMDQgMmMtNS40NiAwLTkuOTEgNC40NS05LjkxIDkuOTEgMCAxLjc1LjQ2IDMuNDUgMS4zMiA0Ljk1TDIuMDUgMjJsNS4yNS0xLjM4YzEuNDUuNzkgMy4wOCAxLjIxIDQuNzQgMS4yMSA1LjQ2IDAgOS45MS00LjQ1IDkuOTEtOS45MSAwLTIuNjUtMS4wMy01LjE0LTIuOS03LjAxQTkuODE2IDkuODE2IDAgMCAwIDEyLjA0IDJ6bS4wMSAxLjY3YzIuMiAwIDQuMjYuODYgNS44MiAyLjQyYTguMjI1IDguMjI1IDAgMCAxIDIuNDEgNS44M2MwIDQuNTQtMy43IDguMjQtOC4yNCA4LjI0LTEuNDggMC0yLjkzLS40LTQuMi0xLjE1bC0uMy0uMTgtMy4xMi44Mi44My0zLjA0LS4yLS4zMWE4LjE5NiA4LjE5NiAwIDAgMS0xLjI2LTQuMzhjMC00LjU0IDMuNy04LjI0IDguMjQtOC4yNHptLTQuMTQgNC4wOWMtLjE5IDAtLjQ5LjA3LS43NS4zNS0uMjYuMjgtLjk5Ljk3LS45OSAyLjM3czEuMDEgMi43NSAxLjE1IDIuOTRjLjE0LjE5IDEuOTkgMy4wNCA0LjgyIDQuMjYuNjcuMjkgMS4yLjQ2IDEuNjEuNTkuNjguMjIgMS4zLjE5IDEuNzkuMTEuNTUtLjA4IDEuNjktLjY5IDEuOTMtMS4zNi4yNC0uNjcuMjQtMS4yNS4xNy0xLjM3LS4wNy0uMTItLjI2LS4xOS0uNTUtLjMzcy0xLjY5LS44My0xLjk1LS45M2MtLjI2LS4xLS40NS0uMTUtLjY0LjE1LS4xOS4zLS43NC45My0uOTEgMS4xMi0uMTcuMTktLjM0LjIxLS42My4wNy0uMjktLjE0LTEuMjItLjQ1LTIuMzMtMS40NC0uODYtLjc3LTEuNDQtMS43Mi0xLjYxLTIuMDEtLjE3LS4yOS0uMDItLjQ1LjEzLS41OS4xMy0uMTMuMjktLjM0LjQzLS41MS4xNC0uMTcuMTktLjI5LjI5LS40OC4xLS4xOS4wNS0uMzYtLjAyLS41LS4wNy0uMTQtLjY0LTEuNTQtLjg4LTIuMTEtLjIzLS41NS0uNDctLjQ4LS42NC0uNDktLjE3LS4wMS0uMzYtLjAxLS41NS0uMDF6Ii8+PC9zdmc+") no-repeat center / contain;
+    mask: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNMTIuMDQgMmMtNS40NiAwLTkuOTEgNC40NS05LjkxIDkuOTEgMCAxLjc1LjQ2IDMuNDUgMS4zMiA0Ljk1TDIuMDUgMjJsNS4yNS0xLjM4YzEuNDUuNzkgMy4wOCAxLjIxIDQuNzQgMS4yMSA1LjQ2IDAgOS45MS00LjQ1IDkuOTEtOS45MSAwLTIuNjUtMS4wMy01LjE0LTIuOS03LjAxQTkuODE2IDkuODE2IDAgMCAwIDEyLjA0IDJ6bS4wMSAxLjY3YzIuMiAwIDQuMjYuODYgNS44MiAyLjQyYTguMjI1IDguMjI1IDAgMCAxIDIuNDEgNS44M2MwIDQuNTQtMy43IDguMjQtOC4yNCA4LjI0LTEuNDggMC0yLjkzLS40LTQuMi0xLjE1bC0uMy0uMTgtMy4xMi44Mi44My0zLjA0LS4yLS4zMWE4LjE5NiA4LjE5NiAwIDAgMS0xLjI2LTQuMzhjMC00LjU0IDMuNy04LjI0IDguMjQtOC4yNHptLTQuMTQgNC4wOWMtLjE5IDAtLjQ5LjA3LS43NS4zNS0uMjYuMjgtLjk5Ljk3LS45OSAyLjM3czEuMDEgMi43NSAxLjE1IDIuOTRjLjE0LjE5IDEuOTkgMy4wNCA0LjgyIDQuMjYuNjcuMjkgMS4yLjQ2IDEuNjEuNTkuNjguMjIgMS4zLjE5IDEuNzkuMTEuNTUtLjA4IDEuNjktLjY5IDEuOTMtMS4zNi4yNC0uNjcuMjQtMS4yNS4xNy0xLjM3LS4wNy0uMTItLjI2LS4xOS0uNTUtLjMzcy0xLjY5LS44My0xLjk1LS45M2MtLjI2LS4xLS40NS0uMTUtLjY0LjE1LS4xOS4zLS43NC45My0uOTEgMS4xMi0uMTcuMTktLjM0LjIxLS42My4wNy0uMjktLjE0LTEuMjItLjQ1LTIuMzMtMS40NC0uODYtLjc3LTEuNDQtMS43Mi0xLjYxLTIuMDEtLjE3LS4yOS0uMDItLjQ1LjEzLS41OS4xMy0uMTMuMjktLjM0LjQzLS41MS4xNC0uMTcuMTktLjI5LjI5LS40OC4xLS4xOS4wNS0uMzYtLjAyLS41LS4wNy0uMTQtLjY0LTEuNTQtLjg4LTIuMTEtLjIzLS41NS0uNDctLjQ4LS42NC0uNDktLjE3LS4wMS0uMzYtLjAxLS41NS0uMDF6Ii8+PC9zdmc+") no-repeat center / contain;
+  }
+
 @layer components {
     .icon-image:before {
         content: "\e956";
@@ -523,26 +533,48 @@
     }
 
     ::-webkit-scrollbar {
-        width: 12px;
+        width: 10px;
+        height: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: #f1f5f9;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #888;
+        background: #94a3b8;
         border-radius: 6px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: #64748b;
+    }
+
+    html.dark ::-webkit-scrollbar-track,
+    .dark ::-webkit-scrollbar-track {
+        background: #111827;
+    }
+
+    html.dark ::-webkit-scrollbar-thumb,
+    .dark ::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 6px;
+    }
+
+    html.dark ::-webkit-scrollbar-thumb:hover,
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
     }
 
     /* Firefox */
     * {
         scrollbar-width: thin;
-        scrollbar-color: #888 #f1f1f1;
+        scrollbar-color: #94a3b8 #f1f5f9;
+    }
+
+    html.dark *,
+    .dark * {
+        scrollbar-color: #4b5563 #111827;
     }
 
     ::selection {

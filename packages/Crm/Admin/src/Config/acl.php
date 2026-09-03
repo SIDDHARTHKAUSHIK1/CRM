@@ -67,6 +67,26 @@ return [
         'route' => ['admin.quotes.delete', 'admin.quotes.mass_delete'],
         'sort' => 4,
     ], [
+        'key' => 'whatsapp',
+        'name' => 'admin::app.acl.whatsapp',
+        'route' => 'admin.whatsapp.index',
+        'sort' => 3.5,
+    ], [
+        'key' => 'whatsapp.create',
+        'name' => 'admin::app.acl.create',
+        'route' => ['admin.whatsapp.create', 'admin.whatsapp.store', 'admin.whatsapp.preview', 'admin.whatsapp.start'],
+        'sort' => 1,
+    ], [
+        'key' => 'whatsapp.manage',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.whatsapp.show', 'admin.whatsapp.pause', 'admin.whatsapp.resume', 'admin.whatsapp.cancel', 'admin.whatsapp.retry', 'admin.whatsapp.gateway', 'admin.whatsapp.dnc'],
+        'sort' => 2,
+    ], [
+        'key' => 'whatsapp.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.whatsapp.delete',
+        'sort' => 3,
+    ], [
         'key' => 'mail',
         'name' => 'admin::app.acl.mail',
         'route' => 'admin.mail.index',

@@ -27,31 +27,31 @@
                     </p>
                 </div>
 
-                <!-- Doughnut Chart -->
+                <!-- Bar Chart -->
                 <div
-                    class="relative flex w-full max-w-full flex-col gap-4"
+                    class="flex w-full max-w-full flex-col gap-4 px-4 pt-4"
                     v-if="report.statistics.length"
                 >
-                    <canvas
-                        :id="$.uid + '_chart'"
-                        class="w-full max-w-full items-end px-12"
-                        :style="{ height: report.statistics.length * 60 + 'px' }"
-                    ></canvas>
+                    <x-admin::charts.bar
+                        ::labels="chartLabels"
+                        ::datasets="chartDatasets"
+                    />
 
-                    <ul class="absolute flex w-full flex-col">
-                        <li
-                            class="flex w-full flex-col border-b border-gray-300 pb-[9px] pt-2.5 last:border-none dark:border-gray-800"
+                    <div class="flex flex-wrap justify-center gap-5">
+                        <div
+                            class="flex items-center gap-2 whitespace-nowrap"
                             v-for="(stat, index) in report.statistics"
                         >
-                            <span class="text-sm font-semibold dark:text-gray-100">
-                                @{{ stat.total }}
-                            </span>
+                            <span
+                                class="h-3.5 w-3.5 rounded-sm"
+                                :style="{ backgroundColor: colors[index] }"
+                            ></span>
 
-                            <span class="text-sm font-semibold dark:text-gray-100">
-                                @{{ stat.name }}
-                            </span>
-                        </li>
-                    </ul>
+                            <p class="text-xs dark:text-gray-300">
+                                @{{ stat.name }}: @{{ stat.total }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Empty Product Design -->
@@ -82,7 +82,6 @@
         </template>
     </script>
 
-
     <script type="module">
         app.component('v-dashboard-open-leads-by-states', {
             template: '#v-dashboard-open-leads--by-states-template',
@@ -91,9 +90,27 @@
                 return {
                     report: [],
 
-                    isLoading: true,
+                    colors: [
+                        '#8979FF',
+                        '#FF928A',
+                        '#3CC3DF',
+                    ],
 
-                    chart: undefined,
+                    isLoading: true,
+                }
+            },
+
+            computed: {
+                chartLabels() {
+                    return this.report.statistics.map(({ name }) => name);
+                },
+
+                chartDatasets() {
+                    return [{
+                        data: this.report.statistics.map(({ total }) => total),
+                        barThickness: 24,
+                        backgroundColor: this.colors,
+                    }];
                 }
             },
 
@@ -104,64 +121,33 @@
             },
 
             methods: {
-                getStats(filtets) {
+                getStats(filters) {
                     this.isLoading = true;
 
-                    var filtets = Object.assign({}, filtets);
+                    var filters = Object.assign({}, filters);
 
-                    filtets.type = 'open-leads-by-states';
+                    filters.type = 'open-leads-by-states';
 
                     this.$axios.get("{{ route('admin.dashboard.stats') }}", {
-                            params: filtets
+                            params: filters
                         })
                         .then(response => {
                             this.report = response.data;
 
-                            this.isLoading = false;
+                            this.extendColors(this.report.statistics.length);
 
-                            setTimeout(() => {
-                                this.prepare();
-                            }, 0);
+                            this.isLoading = false;
                         })
                         .catch(error => {});
                 },
 
-                prepare() {
-                    if (this.chart) {
-                        this.chart.destroy();
+                extendColors(length) {
+                    while (this.colors.length < length) {
+                        const hue = Math.floor(Math.random() * 360);
+                        const newColor = `hsl(${hue}, 70%, 60%)`;
+                        this.colors.push(newColor);
                     }
-
-                    if (this.report.statistics.length === 0) {
-                        return;
-                    }
-
-                    const ctx = document.getElementById(this.$.uid + '_chart')?.getContext('2d');
-
-                    // Create gradient
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                    gradient.addColorStop(0, 'rgba(144, 247, 236, 0.8)');
-                    gradient.addColorStop(1, 'rgba(50, 204, 188, 1)');
-
-                    this.chart = new Chart(ctx, {
-                        type: 'funnel',
-
-                        data: {
-                            labels: this.report.statistics.map(stat => stat.name),
-                            datasets: [
-                                {
-                                    data: this.report.statistics.map(stat => stat.total),
-                                    backgroundColor: gradient,
-                                    borderColor: 'rgba(0, 0, 0, 0)',
-                                    borderWidth: 0,
-                                },
-                            ],
-                        },
-
-                        options: {
-                            indexAxis: 'y',
-                        },
-                    });
-                }
+                },
             }
         });
     </script>
