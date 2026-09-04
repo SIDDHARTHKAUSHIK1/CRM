@@ -110,14 +110,17 @@ class WebklexImapEmailProcessor implements InboundEmailProcessor
          *
          * To Do: Review this.
          */
-        $folderName = match ($message->getFolder()->name) {
-            'INBOX' => SupportedFolderEnum::INBOX->value,
-            'Important' => SupportedFolderEnum::IMPORTANT->value,
-            'Starred' => SupportedFolderEnum::STARRED->value,
-            'Drafts' => SupportedFolderEnum::DRAFT->value,
-            'Sent Mail' => SupportedFolderEnum::SENT->value,
-            'Trash' => SupportedFolderEnum::TRASH->value,
-            default => '',
+        $rawFolderName = $message->getFolder()?->name ?? 'INBOX';
+        $normalizedName = strtolower($rawFolderName);
+
+        $folderName = match (true) {
+            str_contains($normalizedName, 'inbox') => SupportedFolderEnum::INBOX->value,
+            str_contains($normalizedName, 'important') => SupportedFolderEnum::IMPORTANT->value,
+            str_contains($normalizedName, 'starred') => SupportedFolderEnum::STARRED->value,
+            str_contains($normalizedName, 'draft') => SupportedFolderEnum::DRAFT->value,
+            str_contains($normalizedName, 'sent') => SupportedFolderEnum::SENT->value,
+            str_contains($normalizedName, 'trash') || str_contains($normalizedName, 'bin') => SupportedFolderEnum::TRASH->value,
+            default => SupportedFolderEnum::INBOX->value,
         };
 
         $parentEmail = null;
@@ -170,13 +173,25 @@ class WebklexImapEmailProcessor implements InboundEmailProcessor
                 return;
             }
 
-            if (in_array($folder->name, ['All Mail'])) {
+            $folderNameLower = strtolower($folder->name);
+            $folderFullNameLower = strtolower($folder->full_name ?? '');
+
+            // Skip heavy, unneeded, or duplicate folders
+            if (
+                in_array($folderNameLower, ['all mail', 'spam', 'junk', 'bin', 'trash'])
+                || str_contains($folderFullNameLower, 'all mail')
+                || str_contains($folderFullNameLower, 'spam')
+            ) {
                 return;
             }
 
-            return $folder->query()->since(now()->subDays(10))->get()->each(function ($message) {
-                $this->processMessage($message);
-            });
+            try {
+                $folder->query()->since(now()->subDays(10))->get()->each(function ($message) {
+                    $this->processMessage($message);
+                });
+            } catch (\Throwable $e) {
+                // Ignore folder query failures on unselectable/special mailboxes
+            }
         });
     }
 
