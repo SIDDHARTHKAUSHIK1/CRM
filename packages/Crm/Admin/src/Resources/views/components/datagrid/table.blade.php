@@ -39,7 +39,7 @@
                             :style="`grid-template-columns: repeat(${gridsCount}, minmax(0, 1fr))`"
                         >
                             <!-- Mass Actions -->
-                            <p v-if="available.massActions.length">
+                            <p v-if="available.massActions.length" class="flex items-center justify-center">
                                 <label for="mass_action_select_all_records">
                                     <input
                                         type="checkbox"
@@ -65,12 +65,12 @@
                             <!-- Columns -->
                             <template v-for="column in available.columns">
                                 <div
-                                    class="flex items-center gap-1.5 break-words"
+                                    class="flex items-center gap-1.5 break-words font-medium"
                                     :class="{'cursor-pointer select-none hover:text-gray-800 dark:hover:text-white': column.sortable}"
                                     @click="sort(column)"
                                     v-if="column.visibility"
                                 > 
-                                    <p v-html="column.label"></p>
+                                    <p v-html="column.label" class="whitespace-nowrap"></p>
 
                                     <i
                                         class="align-text-bottom text-base text-gray-600 dark:text-gray-300"
@@ -82,7 +82,7 @@
 
                             <!-- Actions -->
                             <p
-                                class="text-end"
+                                class="text-end font-medium pe-2"
                                 v-if="available.actions.length"
                             >
                                 @lang('admin::app.components.datagrid.table.actions')
@@ -173,12 +173,12 @@
                         <template v-if="available.records.length">
                             <!-- Desktop View -->
                             <div
-                                class="row grid items-center gap-2.5 border-b px-4 py-4 text-black transition-all hover:bg-gray-50 dark:border-gray-800 dark:text-gray-300 dark:hover:bg-gray-950 max-lg:hidden"
+                                class="row grid items-center gap-2.5 border-b px-4 py-3 text-black transition-all hover:bg-gray-50 dark:border-gray-800 dark:text-gray-300 dark:hover:bg-gray-950 max-lg:hidden"
                                 v-for="record in available.records"
                                 :style="`grid-template-columns: repeat(${gridsCount}, minmax(0, 1fr))`"
                             >
                                 <!-- Mass Actions -->
-                                <p v-if="available.massActions.length">
+                                <p v-if="available.massActions.length" class="flex items-center justify-center">
                                     <label :for="`mass_action_select_record_${record[available.meta.primary_column]}`">
                                         <input
                                             type="checkbox"
@@ -197,27 +197,33 @@
                                 <!-- Columns -->
                                 <template v-for="column in available.columns">
                                     <p
-                                        class="break-words"
+                                        class="break-words text-sm leading-relaxed"
                                         v-html="record[column.index]"
                                         v-if="column.visibility"
                                     >
                                     </p>
                                 </template>
 
-                                <!-- Actions -->
-                                <p
-                                    class="flex h-full items-center place-self-end"
+                                <!-- Actions (2x2 grid for compact space) -->
+                                <div
+                                    class="flex h-full items-center justify-end place-self-end shrink-0 pe-0.5"
                                     v-if="available.actions.length"
                                 >
-                                    <span
-                                        class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 max-sm:place-self-center"
-                                        :class="action.icon"
-                                        v-text="! action.icon ? action.title : ''"
-                                        v-for="action in record.actions"
-                                        @click="performAction(action)"
+                                    <div
+                                        class="items-center justify-items-center gap-0.5"
+                                        :class="record.actions && record.actions.length > 2 ? 'grid grid-cols-2' : 'flex gap-1'"
                                     >
-                                    </span>
-                                </p>
+                                        <span
+                                            class="cursor-pointer rounded p-1 text-lg leading-none transition-all hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white max-sm:place-self-center"
+                                            :class="action.icon"
+                                            :title="action.title || ''"
+                                            v-text="! action.icon ? action.title : ''"
+                                            v-for="action in record.actions"
+                                            @click="performAction(action)"
+                                        >
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             
                             <!-- Mobile Card View -->
@@ -246,12 +252,13 @@
 
                                         <!-- Actions for Mobile -->
                                         <div
-                                            class="flex w-full items-center justify-end"
+                                            class="flex w-full items-center justify-end gap-1 flex-nowrap"
                                             v-if="available.actions.length"
                                         >
                                             <span
-                                                class="dark:hover:bg-gray-80 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200"
+                                                class="cursor-pointer rounded-md p-1.5 text-xl leading-none transition-all hover:bg-gray-200 hover:text-black dark:hover:bg-gray-800 dark:hover:text-white"
                                                 :class="action.icon"
+                                                :title="action.title || ''"
                                                 v-text="! action.icon ? action.title : ''"
                                                 v-for="action in record.actions"
                                                 @click="performAction(action)"
