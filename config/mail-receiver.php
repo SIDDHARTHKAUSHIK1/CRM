@@ -13,5 +13,5 @@ return [
     |
     */
 
-    'default' => env('MAIL_RECEIVER_DRIVER', 'sendgrid'),
+    'default' => env('MAIL_RECEIVER_DRIVER', 'webklex-imap'),
 ];

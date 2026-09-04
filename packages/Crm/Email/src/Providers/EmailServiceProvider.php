@@ -52,6 +52,7 @@ class EmailServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ProcessInboundEmails::class,
+                \Crm\Email\Console\Commands\TestMailConnection::class,
             ]);
         }
     }

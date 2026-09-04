@@ -131,6 +131,10 @@ class EmailController extends Controller
                     'folders' => [SupportedFolderEnum::SENT->value],
                 ], $email->id);
             } catch (Exception $e) {
+                \Log::error('[Mail Send Error] ' . $e->getMessage(), [
+                    'email_id' => $email->id,
+                    'error'    => $e->getMessage(),
+                ]);
             }
         }
 
@@ -182,6 +186,10 @@ class EmailController extends Controller
                     'folders' => [SupportedFolderEnum::INBOX->value, SupportedFolderEnum::SENT->value],
                 ], $email->id);
             } catch (Exception $e) {
+                \Log::error('[Mail Send Error in Update] ' . $e->getMessage(), [
+                    'email_id' => $email->id,
+                    'error'    => $e->getMessage(),
+                ]);
             }
         }
 
