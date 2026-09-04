@@ -214,17 +214,35 @@ class WebklexImapEmailProcessor implements InboundEmailProcessor
     {
         $defaultConfig = config('imap.accounts.default');
 
-        $defaultConfig['host'] = core()->getConfigData('email.imap.account.host') ?: $defaultConfig['host'];
+        $dbHost = core()->getConfigData('email.imap.account.host');
+        if ($dbHost && $dbHost !== 'imap.example.com') {
+            $defaultConfig['host'] = $dbHost;
+        }
 
-        $defaultConfig['port'] = core()->getConfigData('email.imap.account.port') ?: $defaultConfig['port'];
+        $dbPort = core()->getConfigData('email.imap.account.port');
+        if ($dbPort) {
+            $defaultConfig['port'] = $dbPort;
+        }
 
-        $defaultConfig['encryption'] = core()->getConfigData('email.imap.account.encryption') ?: $defaultConfig['encryption'];
+        $dbEnc = core()->getConfigData('email.imap.account.encryption');
+        if ($dbEnc) {
+            $defaultConfig['encryption'] = $dbEnc;
+        }
 
-        $defaultConfig['validate_cert'] = (bool) core()->getConfigData('email.imap.account.validate_cert');
+        $dbCert = core()->getConfigData('email.imap.account.validate_cert');
+        if ($dbCert !== null && $dbCert !== '') {
+            $defaultConfig['validate_cert'] = (bool) $dbCert;
+        }
 
-        $defaultConfig['username'] = core()->getConfigData('email.imap.account.username') ?: $defaultConfig['username'];
+        $dbUser = core()->getConfigData('email.imap.account.username');
+        if ($dbUser && $dbUser !== 'your_username' && $dbUser !== 'root@example.com') {
+            $defaultConfig['username'] = $dbUser;
+        }
 
-        $defaultConfig['password'] = core()->getConfigData('email.imap.account.password') ?: $defaultConfig['password'];
+        $dbPass = core()->getConfigData('email.imap.account.password');
+        if ($dbPass && $dbPass !== 'your_password') {
+            $defaultConfig['password'] = $dbPass;
+        }
 
         return $defaultConfig;
     }

@@ -52,15 +52,36 @@ class TestMailConnection extends Command
 
         $config = config('imap.accounts.default', []);
         
-        // Merge with database core_config if available
-        $config['host'] = core()->getConfigData('email.imap.account.host') ?: ($config['host'] ?? null);
-        $config['port'] = core()->getConfigData('email.imap.account.port') ?: ($config['port'] ?? 993);
-        $config['encryption'] = core()->getConfigData('email.imap.account.encryption') ?: ($config['encryption'] ?? 'ssl');
-        $config['validate_cert'] = core()->getConfigData('email.imap.account.validate_cert') !== null 
-            ? (bool) core()->getConfigData('email.imap.account.validate_cert') 
-            : ($config['validate_cert'] ?? true);
-        $config['username'] = core()->getConfigData('email.imap.account.username') ?: ($config['username'] ?? null);
-        $config['password'] = core()->getConfigData('email.imap.account.password') ?: ($config['password'] ?? null);
+        // Merge with database core_config if available (ignoring default seeder placeholders)
+        $dbHost = core()->getConfigData('email.imap.account.host');
+        if ($dbHost && $dbHost !== 'imap.example.com') {
+            $config['host'] = $dbHost;
+        }
+
+        $dbPort = core()->getConfigData('email.imap.account.port');
+        if ($dbPort) {
+            $config['port'] = $dbPort;
+        }
+
+        $dbEnc = core()->getConfigData('email.imap.account.encryption');
+        if ($dbEnc) {
+            $config['encryption'] = $dbEnc;
+        }
+
+        $dbCert = core()->getConfigData('email.imap.account.validate_cert');
+        if ($dbCert !== null && $dbCert !== '') {
+            $config['validate_cert'] = (bool) $dbCert;
+        }
+
+        $dbUser = core()->getConfigData('email.imap.account.username');
+        if ($dbUser && $dbUser !== 'your_username' && $dbUser !== 'root@example.com') {
+            $config['username'] = $dbUser;
+        }
+
+        $dbPass = core()->getConfigData('email.imap.account.password');
+        if ($dbPass && $dbPass !== 'your_password') {
+            $config['password'] = $dbPass;
+        }
 
         $this->line("IMAP Host:         <comment>{$config['host']}</comment>");
         $this->line("IMAP Port:         <comment>{$config['port']}</comment>");
