@@ -25,8 +25,49 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     >
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#070711" media="(prefers-color-scheme: dark)">
+
+    <script>
+        (function() {
+            function updateDeviceMetrics() {
+                var w = window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 375);
+                var h = window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 667);
+                var doc = document.documentElement;
+                if (!doc) return;
+
+                doc.classList.remove('is-mobile', 'is-tablet', 'is-desktop', 'is-ultrawide');
+                if (w < 768) {
+                    doc.classList.add('is-mobile');
+                } else if (w < 1024) {
+                    doc.classList.add('is-tablet');
+                } else if (w < 1440) {
+                    doc.classList.add('is-desktop');
+                } else {
+                    doc.classList.add('is-ultrawide');
+                }
+
+                doc.classList.remove('orientation-portrait', 'orientation-landscape');
+                doc.classList.add(h >= w ? 'orientation-portrait' : 'orientation-landscape');
+
+                var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+                doc.classList.toggle('is-standalone', isStandalone);
+                doc.classList.add('is-edge-to-edge');
+
+                doc.style.setProperty('--device-width', w + 'px');
+                doc.style.setProperty('--device-height', h + 'px');
+                doc.style.setProperty('--app-height', h + 'px');
+                doc.style.setProperty('--mobile-top-gap', w < 768 ? '16px' : (w < 1024 ? '20px' : '24px'));
+            }
+            updateDeviceMetrics();
+        })();
+    </script>
     <meta
         name="base-url"
         content="{{ url()->to('/') }}"
@@ -87,11 +128,43 @@
     <style>
         :root {
             --brand-color: {{ $brandColor }};
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
+            --mobile-top-gap: 16px;
+            --app-height: 100vh;
+        }
+
+        @supports (height: 100dvh) {
+            :root {
+                --app-height: 100dvh;
+            }
+        }
+
+        /* Edge-to-Edge & Containment Core */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+
+        /* Safe area utility classes for edge-to-edge mobile apps */
+        .edge-to-edge-safe-top {
+            padding-top: max(env(safe-area-inset-top, 0px), 0px) !important;
+        }
+        .edge-to-edge-safe-bottom {
+            padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px) !important;
+        }
+        .edge-to-edge-safe-x {
+            padding-left: max(env(safe-area-inset-left, 0px), 0px) !important;
+            padding-right: max(env(safe-area-inset-right, 0px), 0px) !important;
         }
 
         {!! core()->getConfigData('general.content.custom_scripts.custom_css') !!}
 
-        /* Sidebar & Layout Geometry (Guaranteed Zero Overlap) */
+        /* Sidebar & Layout Geometry (Auto Device Alignment & Zero Overlap) */
         @media (min-width: 1024px) {
             #admin-sidebar {
                 width: 240px !important;
@@ -100,8 +173,11 @@
                 bottom: 0 !important;
                 left: 0 !important;
                 height: 100vh !important;
+                height: 100dvh !important;
                 z-index: 10003 !important;
                 overflow: visible !important;
+                padding-top: env(safe-area-inset-top, 0px) !important;
+                padding-bottom: env(safe-area-inset-bottom, 0px) !important;
             }
             .sidebar-collapsed #admin-sidebar {
                 width: 70px !important;
@@ -115,6 +191,9 @@
                 max-height: 60px !important;
                 box-sizing: border-box !important;
                 border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+                padding-top: 0 !important;
+                padding-left: 16px !important;
+                padding-right: max(env(safe-area-inset-right, 0px), 16px) !important;
             }
             .sidebar-collapsed .admin-header-bar {
                 margin-left: 70px !important;
@@ -130,6 +209,8 @@
             .admin-main-content {
                 margin-left: 240px !important;
                 transition: all 0.15s ease !important;
+                min-height: calc(100vh - 60px) !important;
+                min-height: calc(100dvh - 60px) !important;
             }
             .sidebar-collapsed .admin-main-content {
                 margin-left: 70px !important;
@@ -145,14 +226,19 @@
             .admin-header-bar {
                 margin-left: 0 !important;
                 width: 100% !important;
-                height: 60px !important;
-                min-height: 60px !important;
-                max-height: 60px !important;
+                height: calc(60px + env(safe-area-inset-top, 0px)) !important;
+                min-height: calc(60px + env(safe-area-inset-top, 0px)) !important;
+                padding-top: env(safe-area-inset-top, 0px) !important;
+                padding-left: max(env(safe-area-inset-left, 0px), 16px) !important;
+                padding-right: max(env(safe-area-inset-right, 0px), 16px) !important;
                 box-sizing: border-box !important;
                 border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
             }
             .admin-main-content {
                 margin-left: 0 !important;
+                padding-top: calc(var(--mobile-top-gap, 16px) + 8px) !important;
+                min-height: calc(100vh - 60px - env(safe-area-inset-top, 0px)) !important;
+                min-height: calc(100dvh - 60px - env(safe-area-inset-top, 0px)) !important;
             }
             .mobile-only-logo {
                 display: flex !important;
@@ -163,6 +249,7 @@
             .admin-impersonation-banner {
                 margin-left: 240px !important;
                 width: calc(100% - 240px) !important;
+                top: 60px !important;
             }
             .sidebar-collapsed .admin-impersonation-banner {
                 margin-left: 70px !important;
@@ -173,6 +260,7 @@
             .admin-impersonation-banner {
                 margin-left: 0 !important;
                 width: 100% !important;
+                top: calc(60px + env(safe-area-inset-top, 0px)) !important;
             }
         }
 
@@ -643,14 +731,96 @@
             });
         };
 
-        window.addEventListener('resize', window.__autoFitTextElements, { passive: true });
-        window.addEventListener('orientationchange', window.__autoFitTextElements, { passive: true });
+        /**
+         * Device Auto-Alignment & Edge-to-Edge Engine
+         * Detects screen size, orientation, touch support, standalone/mobile-app mode,
+         * dynamic viewport height, and safe areas to prevent overlapping/misplaced UI.
+         */
+        window.detectDeviceAlignment = function() {
+            var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            var docEl = document.documentElement;
+            if (!docEl) return;
+
+            // Responsive Breakpoints
+            var isMobile = width < 768;
+            var isTablet = width >= 768 && width < 1024;
+            var isDesktop = width >= 1024 && width < 1440;
+            var isUltrawide = width >= 1440;
+
+            // Orientation
+            var isPortrait = height >= width;
+            var isLandscape = !isPortrait;
+
+            // Touch capability
+            var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+            // Standalone / Mobile App / PWA / WebView detection
+            var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || 
+                               window.navigator.standalone === true || 
+                               (typeof document !== 'undefined' && document.referrer && document.referrer.indexOf('android-app://') !== -1);
+
+            var ua = navigator.userAgent || navigator.vendor || window.opera || '';
+            var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+            var isAndroid = /android/i.test(ua);
+            var isMobileApp = isStandalone || (isTouch && (isIOS || isAndroid));
+
+            // Sync HTML classes
+            docEl.classList.toggle('is-mobile', isMobile);
+            docEl.classList.toggle('is-tablet', isTablet);
+            docEl.classList.toggle('is-desktop', isDesktop);
+            docEl.classList.toggle('is-ultrawide', isUltrawide);
+            docEl.classList.toggle('orientation-portrait', isPortrait);
+            docEl.classList.toggle('orientation-landscape', isLandscape);
+            docEl.classList.toggle('is-touch', isTouch);
+            docEl.classList.toggle('is-standalone', isStandalone);
+            docEl.classList.toggle('is-mobile-app', isMobileApp);
+            docEl.classList.add('is-edge-to-edge');
+
+            // Dynamic safe viewport variables
+            var vh = height * 0.01;
+            docEl.style.setProperty('--vh', vh + 'px');
+            docEl.style.setProperty('--device-width', width + 'px');
+            docEl.style.setProperty('--device-height', height + 'px');
+            docEl.style.setProperty('--app-height', height + 'px');
+
+            // Mobile Top Gap Clearance
+            var mobileTopGap = isMobile ? '16px' : (isTablet ? '20px' : '24px');
+            docEl.style.setProperty('--mobile-top-gap', mobileTopGap);
+
+            if (window.visualViewport) {
+                docEl.style.setProperty('--viewport-height', window.visualViewport.height + 'px');
+                docEl.style.setProperty('--viewport-width', window.visualViewport.width + 'px');
+            }
+        };
+
+        window.initEdgeToEdge = function() {
+            window.detectDeviceAlignment();
+            if (window.__autoFitTextElements) {
+                window.__autoFitTextElements();
+            }
+        };
+
+        window.addEventListener('resize', function() {
+            window.detectDeviceAlignment();
+            window.__autoFitTextElements();
+        }, { passive: true });
+
+        window.addEventListener('orientationchange', function() {
+            window.detectDeviceAlignment();
+            setTimeout(window.detectDeviceAlignment, 150);
+            window.__autoFitTextElements();
+        }, { passive: true });
+
         if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', window.__autoFitTextElements, { passive: true });
+            window.visualViewport.addEventListener('resize', function() {
+                window.detectDeviceAlignment();
+                window.__autoFitTextElements();
+            }, { passive: true });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            window.__autoFitTextElements();
+            window.initEdgeToEdge();
             if (window.MutationObserver && document.body) {
                 var observer = new MutationObserver(function() {
                     window.__autoFitTextElements();
@@ -667,9 +837,9 @@
          */
         window.addEventListener("load", function(event) {
             app.mount("#app");
-            window.__autoFitTextElements();
-            setTimeout(window.__autoFitTextElements, 250);
-            setTimeout(window.__autoFitTextElements, 700);
+            window.initEdgeToEdge();
+            setTimeout(window.initEdgeToEdge, 250);
+            setTimeout(window.initEdgeToEdge, 700);
         });
     </script>
 

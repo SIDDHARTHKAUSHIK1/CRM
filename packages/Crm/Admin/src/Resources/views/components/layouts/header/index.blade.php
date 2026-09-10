@@ -1,6 +1,6 @@
-<header class="admin-header-bar sticky top-0 z-[10001] flex items-center justify-between gap-1 border-b border-slate-200/90 bg-white px-4 dark:border-gray-800 dark:bg-gray-900" style="height: 60px !important; min-height: 60px !important; max-height: 60px !important; box-sizing: border-box !important;">  
+<header class="admin-header-bar sticky top-0 z-[10001] flex items-center justify-between gap-1.5 border-b border-slate-200/90 bg-white px-4 dark:border-gray-800 dark:bg-gray-900">  
     <!-- logo (visible only on mobile where desktop sidebar is hidden) -->
-    <div class="mobile-only-logo flex items-center gap-1.5">
+    <div class="mobile-only-logo flex items-center gap-1.5 shrink-0">
         <!-- Sidebar Menu -->
         <x-admin::layouts.sidebar.mobile />
         
@@ -32,7 +32,7 @@
         @include('admin::components.layouts.header.quick-creation')
     </div>
 
-    <div class="flex items-center gap-2.5">
+    <div class="flex items-center gap-1.5 sm:gap-2.5 flex-nowrap shrink-0">
         @if (request()->routeIs('admin.whatsapp.*') || request()->is('admin/whatsapp*'))
             <!-- WhatsApp Broadcast Contextual Header Actions -->
             <div class="flex items-center gap-2 max-sm:hidden">
@@ -88,14 +88,14 @@
         <!-- Role Badge -->
         <div class="flex items-center">
             @if ($isAdmin)
-                <span class="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-red-500 dark:text-white" title="@lang('admin::app.admin-panel.roles.admin')">
+                <span class="inline-flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-red-500 dark:text-white sm:px-2.5" title="@lang('admin::app.admin-panel.roles.admin')">
                     <svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span>@lang('admin::app.admin-panel.roles.admin')</span>
+                    <span class="hidden sm:inline">@lang('admin::app.admin-panel.roles.admin')</span>
                 </span>
             @else
-                <span class="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-blue-500 dark:text-white" title="@lang('admin::app.admin-panel.roles.employee')">
+                <span class="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-blue-500 dark:text-white sm:px-2.5" title="@lang('admin::app.admin-panel.roles.employee')">
                     <svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    <span>@lang('admin::app.admin-panel.roles.employee')</span>
+                    <span class="hidden sm:inline">@lang('admin::app.admin-panel.roles.employee')</span>
                 </span>
             @endif
         </div>

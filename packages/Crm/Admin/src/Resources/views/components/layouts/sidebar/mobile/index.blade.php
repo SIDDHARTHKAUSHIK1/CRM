@@ -69,14 +69,14 @@
         <x-admin::drawer
             position="left"
             width="280px"
-            class="lg:hidden [&>:nth-child(3)]:!m-0 [&>:nth-child(3)]:!rounded-l-none [&>:nth-child(3)]:max-sm:!w-[85%]"
+            class="lg:hidden [&>:nth-child(3)]:!m-0 [&>:nth-child(3)]:!rounded-l-none [&>:nth-child(3)]:max-sm:!w-[85%] [&>:nth-child(3)]:!pt-[env(safe-area-inset-top,0px)] [&>:nth-child(3)]:!pb-[env(safe-area-inset-bottom,0px)]"
         >
             <x-slot:toggle>
                 <i class="icon-menu lg:hidden cursor-pointer rounded-md p-1.5 text-2xl hover:bg-gray-100 dark:hover:bg-gray-950 max-lg:block"></i>
             </x-slot>
 
             <x-slot:header>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 pt-1">
                     <div
                         class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl font-bold text-white text-base shadow-sm"
                         style="background-color: #5b5df4 !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(91, 93, 244, 0.28) !important;"
@@ -91,7 +91,7 @@
             </x-slot>
 
             <x-slot:content class="p-3">
-                <div class="journal-scroll h-[calc(100vh-140px)] overflow-auto flex flex-col justify-between">
+                <div class="journal-scroll h-[calc(100vh-140px-env(safe-area-inset-top,0px))] h-[calc(100dvh-140px-env(safe-area-inset-top,0px))] overflow-auto flex flex-col justify-between">
                     <nav class="flex flex-col gap-1 w-full">
                         @foreach (menu()->getItems('admin') as $menuItem)
                             @php
