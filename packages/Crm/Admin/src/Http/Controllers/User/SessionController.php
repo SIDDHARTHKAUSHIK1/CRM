@@ -54,6 +54,8 @@ class SessionController extends Controller
             return redirect()->route('admin.session.create');
         }
 
+        auth()->guard('user')->user()->update(['last_login_at' => now()]);
+
         $menus = menu()->getItems('admin');
 
         $availableNextMenu = $menus?->first();

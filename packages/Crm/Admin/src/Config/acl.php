@@ -257,6 +257,51 @@ return [
         'route' => 'admin.products.view',
         'sort' => 3,
     ], [
+        'key' => 'admin_panel',
+        'name' => 'admin::app.acl.admin-panel',
+        'route' => 'admin.panel.employees.index',
+        'sort' => 7.5,
+    ], [
+        'key' => 'admin_panel.employees',
+        'name' => 'admin::app.acl.employees',
+        'route' => 'admin.panel.employees.index',
+        'sort' => 1,
+    ], [
+        'key' => 'admin_panel.employees.create',
+        'name' => 'admin::app.acl.create',
+        'route' => ['admin.panel.employees.create', 'admin.panel.employees.store'],
+        'sort' => 1,
+    ], [
+        'key' => 'admin_panel.employees.view',
+        'name' => 'admin::app.acl.view',
+        'route' => 'admin.panel.employees.view',
+        'sort' => 1,
+    ], [
+        'key' => 'admin_panel.employees.edit',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.panel.employees.edit', 'admin.panel.employees.update'],
+        'sort' => 2,
+    ], [
+        'key' => 'admin_panel.employees.edit_password',
+        'name' => 'admin::app.acl.edit_password',
+        'route' => 'admin.panel.employees.update_password',
+        'sort' => 3,
+    ], [
+        'key' => 'admin_panel.employees.reveal_password',
+        'name' => 'admin::app.acl.reveal_password',
+        'route' => 'admin.panel.employees.reveal_password',
+        'sort' => 4,
+    ], [
+        'key' => 'admin_panel.employees.impersonate',
+        'name' => 'admin::app.acl.impersonate',
+        'route' => 'admin.panel.employees.impersonate',
+        'sort' => 5,
+    ], [
+        'key' => 'admin_panel.employees.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.panel.employees.delete',
+        'sort' => 6,
+    ], [
         'key' => 'settings',
         'name' => 'admin::app.acl.settings',
         'route' => 'admin.settings.index',

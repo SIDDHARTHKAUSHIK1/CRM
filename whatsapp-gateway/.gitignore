@@ -1,4 +1,4 @@
 node_modules/
-.session/
+.session*
 .env
 *.log

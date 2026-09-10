@@ -55,8 +55,96 @@
                     {!! view_render_event('admin.components.activities.content.types.after') !!}
                 </div>
 
-                <!-- Show Default Activities if selectedType not in extraTypes -->
-                <template v-if="! extraTypes.find(type => type.name == selectedType)">
+                <!-- Show Calendar View if selectedType is calendar -->
+                <template v-if="selectedType == 'calendar'">
+                    <div class="p-4 space-y-4">
+                        <!-- Calendar Navigation Bar -->
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 shadow-2xs">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse"></span>
+                                <span class="text-xs font-bold text-slate-800 dark:text-white">
+                                    @{{ calendarMonthName }} @{{ calendarYear }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button type="button" @click="calendarPrev" class="px-2.5 py-1 rounded-xl border border-slate-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition cursor-pointer">‹</button>
+                                <button type="button" @click="calendarToday" class="px-2.5 py-1 rounded-xl border border-slate-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 text-[10px] font-bold uppercase text-slate-700 dark:text-slate-300 transition cursor-pointer">Today</button>
+                                <button type="button" @click="calendarNext" class="px-2.5 py-1 rounded-xl border border-slate-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition cursor-pointer">›</button>
+                            </div>
+                        </div>
+
+                        <!-- 7-Col Month Grid -->
+                        <div class="space-y-1.5">
+                            <div class="grid grid-cols-7 text-center text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 py-1 border-b border-slate-200 dark:border-gray-800">
+                                <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1">
+                                <template v-for="(dayObj, dIdx) in calendarDays" :key="'lead-cal-day-' + dIdx">
+                                    <div v-if="dayObj.empty" class="h-11 rounded-xl bg-slate-50/40 dark:bg-gray-800/20 opacity-30"></div>
+                                    <div
+                                        v-else
+                                        @click="selectCalendarDay(dayObj.dateStr)"
+                                        class="h-12 rounded-xl border p-1.5 transition cursor-pointer flex flex-col justify-between"
+                                        :class="[
+                                            calendarSelectedDate === dayObj.dateStr
+                                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/60 ring-2 ring-purple-500/30'
+                                                : dayObj.isToday
+                                                    ? 'border-purple-400 bg-white dark:bg-gray-800 font-bold ring-1 ring-purple-400/40'
+                                                    : dayObj.activities.length > 0
+                                                        ? 'border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-purple-300'
+                                                        : 'border-transparent hover:bg-slate-100 dark:hover:bg-gray-800 text-slate-400'
+                                        ]"
+                                    >
+                                        <span class="text-[11px] font-bold" :class="dayObj.isToday ? 'text-purple-600' : 'text-slate-800 dark:text-slate-200'">@{{ dayObj.day }}</span>
+                                        <div v-if="dayObj.activities.length > 0" class="flex items-center gap-0.5 mt-auto">
+                                            <span
+                                                v-for="(act, aIdx) in dayObj.activities.slice(0, 3)"
+                                                :key="'act-dot-' + aIdx"
+                                                class="w-1.5 h-1.5 rounded-full"
+                                                :class="act.type === 'call' ? 'bg-blue-500' : act.type === 'meeting' ? 'bg-purple-500' : act.type === 'lunch' ? 'bg-amber-500' : 'bg-emerald-500'"
+                                            ></span>
+                                            <span v-if="dayObj.activities.length > 3" class="text-[8px] font-bold text-slate-400">+@{{ dayObj.activities.length - 3 }}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Selected Date Activities or All Planned -->
+                        <div class="space-y-3 pt-3 border-t border-slate-200 dark:border-gray-800">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                    <span>🗓️ @{{ calendarSelectedDate ? 'Touchpoints on ' + calendarSelectedDate : 'All Lead Activities' }} (@{{ calendarSelectedDateActivities.length }})</span>
+                                </h4>
+                                <button v-if="calendarSelectedDate" type="button" @click="calendarSelectedDate = ''" class="text-[11px] text-purple-600 dark:text-purple-400 underline font-bold">Show All</button>
+                            </div>
+
+                            <div v-if="calendarSelectedDateActivities.length === 0" class="p-4 rounded-xl bg-slate-50 dark:bg-gray-800/50 border border-dashed border-slate-300 dark:border-gray-700 text-center text-xs font-bold text-slate-400">
+                                No activities scheduled for this date.
+                            </div>
+
+                            <div v-else class="space-y-2">
+                                <div
+                                    v-for="(act, idx) in calendarSelectedDateActivities"
+                                    :key="'cal-act-' + idx"
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-gray-800/80 border border-slate-200 dark:border-gray-700 text-xs"
+                                >
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="text-base">@{{ act.type === 'call' ? '📞' : act.type === 'meeting' ? '🏢' : act.type === 'lunch' ? '🍽️' : '📋' }}</span>
+                                        <div>
+                                            <h5 class="font-bold text-gray-600dark:text-white truncate">@{{ act.title || 'Touchpoint' }}</h5>
+                                            <p v-if="act.comment" class="text-[11px] text-slate-500 dark:text-slate-400 truncate">@{{ act.comment }}</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-slate-400 shrink-0">@{{ act.schedule_from ? act.schedule_from.substring(0, 16) : '' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Show Default Activities if selectedType not in extraTypes and not calendar -->
+                <template v-if="selectedType != 'calendar' && ! extraTypes.find(type => type.name == selectedType)">
                     <div class="animate-[on-fade_0.5s_ease-in-out] p-4">
                         {!! view_render_event('admin.components.activities.content.activity.list.before') !!}
 
@@ -408,6 +496,9 @@
                             name: 'planned',
                             label: "{{ trans('admin::app.components.activities.index.planned') }}",
                         }, {
+                            name: 'calendar',
+                            label: "🗓️ Calendar",
+                        }, {
                             name: 'note',
                             label: "{{ trans('admin::app.components.activities.index.notes') }}",
                         }, {
@@ -448,9 +539,15 @@
 
                     selectedType: this.activeType,
 
+                    calendarYear: new Date().getFullYear(),
+
+                    calendarMonth: new Date().getMonth() + 1,
+
+                    calendarSelectedDate: '',
+
                     typeClasses: {
                         email: 'icon-mail bg-green-200 text-green-900 dark:!text-green-900',
-                        note: 'icon-note bg-orange-200 text-orange-800 dark:!text-orange-800',
+                        note: 'icon-note bg-purple-200 text-purple-800 dark:!text-purple-800',
                         call: 'icon-call bg-cyan-200 text-cyan-800 dark:!text-cyan-800',
                         meeting: 'icon-activity bg-blue-200 text-blue-800 dark:!text-blue-800',
                         lunch: 'icon-activity bg-blue-200 text-blue-800 dark:!text-blue-800',
@@ -521,13 +618,48 @@
 
             computed: {
                 filteredActivities() {
-                    if (this.selectedType == 'all') {
+                    if (this.selectedType == 'all' || this.selectedType == 'calendar') {
                         return this.activities;
                     } else if (this.selectedType == 'planned') {
                         return this.activities.filter(activity => ! activity.is_done);
                     }
 
                     return this.activities.filter(activity => activity.type == this.selectedType);
+                },
+
+                calendarMonthName() {
+                    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    return months[this.calendarMonth - 1];
+                },
+
+                calendarDays() {
+                    const firstDay = new Date(this.calendarYear, this.calendarMonth - 1, 1).getDay();
+                    const totalDays = new Date(this.calendarYear, this.calendarMonth, 0).getDate();
+                    const pad = n => String(n).padStart(2, '0');
+                    const todayStr = new Date().toISOString().substring(0, 10);
+
+                    const days = [];
+                    for (let i = 0; i < firstDay; i++) {
+                        days.push({ empty: true });
+                    }
+                    for (let d = 1; d <= totalDays; d++) {
+                        const dateStr = `${this.calendarYear}-${pad(this.calendarMonth)}-${pad(d)}`;
+                        const acts = (this.activities || []).filter(a => a.schedule_from && a.schedule_from.startsWith(dateStr));
+                        days.push({
+                            day: d,
+                            dateStr: dateStr,
+                            isToday: dateStr === todayStr,
+                            activities: acts
+                        });
+                    }
+                    return days;
+                },
+
+                calendarSelectedDateActivities() {
+                    if (!this.calendarSelectedDate) {
+                        return (this.activities || []).filter(a => !a.is_done);
+                    }
+                    return (this.activities || []).filter(a => a.schedule_from && a.schedule_from.startsWith(this.calendarSelectedDate));
                 }
             },
 
@@ -544,6 +676,36 @@
             },
 
             methods: {
+                calendarPrev() {
+                    if (this.calendarMonth === 1) {
+                        this.calendarMonth = 12;
+                        this.calendarYear -= 1;
+                    } else {
+                        this.calendarMonth -= 1;
+                    }
+                },
+
+                calendarNext() {
+                    if (this.calendarMonth === 12) {
+                        this.calendarMonth = 1;
+                        this.calendarYear += 1;
+                    } else {
+                        this.calendarMonth += 1;
+                    }
+                },
+
+                calendarToday() {
+                    const today = new Date();
+                    this.calendarYear = today.getFullYear();
+                    this.calendarMonth = today.getMonth() + 1;
+                    const pad = n => String(n).padStart(2, '0');
+                    this.calendarSelectedDate = `${this.calendarYear}-${pad(this.calendarMonth)}-${pad(today.getDate())}`;
+                },
+
+                selectCalendarDay(dateStr) {
+                    this.calendarSelectedDate = (this.calendarSelectedDate === dateStr ? '' : dateStr);
+                },
+
                 onTabChange(tabName) {
                     this.selectedType = tabName;
 

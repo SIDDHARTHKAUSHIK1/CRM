@@ -34,10 +34,11 @@
             <!-- Trigger Button -->
             <button
                 type="button"
-                class="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-brandColor text-white"
+                class="primary-button !rounded-full !h-8 !px-3.5 !py-1 text-sm font-semibold shadow-xs active:scale-95"
                 @click="open"
             >
-                <i class="icon-add text-2xl"></i>
+                <span class="text-base font-bold leading-none">+</span>
+                <span>Add</span>
             </button>
 
             <Teleport to="body">

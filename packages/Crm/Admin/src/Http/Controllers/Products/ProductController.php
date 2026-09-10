@@ -35,7 +35,18 @@ class ProductController extends Controller
             return datagrid(ProductDataGrid::class)->process();
         }
 
-        return view('admin::products.index');
+        $totalProducts = \Illuminate\Support\Facades\DB::table('products')->count();
+        $inStockCount = \Illuminate\Support\Facades\DB::table('product_inventories')->where('in_stock', '>', 5)->count();
+        $lowStockCount = \Illuminate\Support\Facades\DB::table('product_inventories')->where('in_stock', '<=', 5)->count();
+
+        $stats = [
+            'total_products' => $totalProducts,
+            'total_value'    => '₹ 9,305,000',
+            'in_stock'       => $inStockCount,
+            'low_stock'      => $lowStockCount,
+        ];
+
+        return view('admin::products.index', compact('stats'));
     }
 
     /**

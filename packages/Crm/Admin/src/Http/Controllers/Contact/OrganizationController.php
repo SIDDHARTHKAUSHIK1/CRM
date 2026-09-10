@@ -51,7 +51,15 @@ class OrganizationController extends Controller
     {
         Event::dispatch('contacts.organization.create.before');
 
-        $organization = $this->organizationRepository->create(request()->all());
+        $data = request()->all();
+        $currentUser = auth()->guard('user')->user();
+        if (! $currentUser?->role || $currentUser->role->permission_type !== 'all') {
+            $data['user_id'] = $currentUser->id;
+        } elseif (empty($data['user_id'])) {
+            $data['user_id'] = $currentUser->id;
+        }
+
+        $organization = $this->organizationRepository->create($data);
 
         Event::dispatch('contacts.organization.create.after', $organization);
 

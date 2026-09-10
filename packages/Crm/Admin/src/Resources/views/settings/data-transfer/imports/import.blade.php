@@ -53,11 +53,11 @@
             <div class="box-shadow mt-3.5 grid gap-2.5 p-5 max-xl:flex-wrap">
                 <!-- Validate CSV File -->
                 <div
-                    class="flex w-full place-content-between items-center rounded-sm border border-orange-200 bg-orange-50 p-3 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
+                    class="flex w-full place-content-between items-center rounded-sm border border-purple-200 bg-purple-50 p-3 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
                     v-if="importResource.state == 'pending'"
                 >
                     <p class="flex items-center gap-2">
-                        <i class="icon-info rounded-full bg-orange-200 text-2xl text-orange-600 dark:!text-orange-600"></i>
+                        <i class="icon-info rounded-full bg-purple-200 text-2xl text-purple-600 dark:!text-purple-600"></i>
 
                         @lang('admin::app.settings.data-transfer.imports.import.validate-info')
                     </p>
@@ -194,14 +194,14 @@
                     v-else-if="importResource.state == 'processing'"
                 >
                     <p class="flex items-center gap-2">
-                        <i class="icon-info rounded-full bg-green-200 text-2xl text-green-600 dark:!text-green-600"></i>
+                        <i class="icon-info rounded-full bg-emerald-100 text-2xl text-emerald-600 dark:bg-emerald-950/80 dark:!text-emerald-400"></i>
 
                         @lang('admin::app.settings.data-transfer.imports.import.importing-info')
                     </p>
 
-                    <div class="h-5 w-full rounded-sm bg-green-200 dark:bg-green-700">
+                    <div class="h-5 w-full rounded-sm bg-emerald-100 dark:bg-emerald-950/60">
                         <div
-                            class="h-5 rounded-sm bg-green-600"
+                            class="h-5 rounded-sm bg-emerald-500"
                             :style="{ 'width': stats.progress + '%' }"
                         ></div>
                     </div>
@@ -257,24 +257,24 @@
 
                 <!-- Linking In Process -->
                 <div
-                    class="grid w-full gap-2 rounded-sm border border-green-200 bg-green-50 p-3 dark:border-gray-800 dark:bg-gray-900"
+                    class="grid w-full gap-2 rounded-sm border border-emerald-200 bg-emerald-50/50 p-3 dark:border-gray-800 dark:bg-gray-900"
                     v-else-if="importResource.state == 'linking'"
                 >
                     <p class="flex items-center gap-2">
-                        <i class="icon-info rounded-full bg-green-200 text-2xl text-green-600 dark:!text-green-600"></i>
+                        <i class="icon-info rounded-full bg-emerald-100 text-2xl text-emerald-600 dark:bg-emerald-950/80 dark:!text-emerald-400"></i>
 
                         @lang('admin::app.settings.data-transfer.imports.import.linking-info')
                     </p>
 
-                    <div class="h-5 w-full rounded-sm bg-green-200 dark:bg-green-700">
+                    <div class="h-5 w-full rounded-sm bg-emerald-100 dark:bg-emerald-950/60">
                         <div
-                            class="h-5 rounded-sm bg-green-600"
+                            class="h-5 rounded-sm bg-emerald-500"
                             :style="{ 'width': stats.progress + '%' }"
                         ></div>
                     </div>
 
                     <p class="flex items-center gap-2">
-                        <span class="font-medium text-gray-800">
+                        <span class="font-medium text-gray-800 dark:text-white">
                             @lang('admin::app.settings.data-transfer.imports.import.progress')
                         </span>
 
@@ -282,7 +282,7 @@
                     </p>
 
                     <p class="flex items-center gap-2">
-                        <span class="font-medium text-gray-800">
+                        <span class="font-medium text-gray-800 dark:text-white">
                             @lang('admin::app.settings.data-transfer.imports.import.total-batches')
                         </span>
 
@@ -305,20 +305,20 @@
                 >
 
                     <p class="flex items-center gap-2">
-                        <i class="icon-info rounded-full bg-green-200 text-2xl text-green-600 dark:!text-green-600"></i>
+                        <i class="icon-info rounded-full bg-emerald-100 text-2xl text-emerald-600 dark:bg-emerald-950/80 dark:!text-emerald-400"></i>
 
                         @lang('admin::app.settings.data-transfer.imports.import.indexing-info')
                     </p>
 
-                    <div class="h-5 w-full rounded-sm bg-green-200 dark:bg-green-700">
+                    <div class="h-5 w-full rounded-sm bg-emerald-100 dark:bg-emerald-950/60">
                         <div
-                            class="h-5 rounded-sm bg-green-600"
+                            class="h-5 rounded-sm bg-emerald-500"
                             :style="{ 'width': stats.progress + '%' }"
                         ></div>
                     </div>
 
                     <p class="flex items-center gap-2">
-                        <span class="font-medium text-gray-800">
+                        <span class="font-medium text-gray-800 dark:text-white">
                             @lang('admin::app.settings.data-transfer.imports.import.progress')
                         </span>
 
@@ -326,7 +326,7 @@
                     </p>
 
                     <p class="flex items-center gap-2">
-                        <span class="font-medium text-gray-800">
+                        <span class="font-medium text-gray-800 dark:text-white">
                             @lang('admin::app.settings.data-transfer.imports.import.total-batches')
                         </span>
 

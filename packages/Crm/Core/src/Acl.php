@@ -31,6 +31,7 @@ class Acl
         }
 
         return collect($this->items)
+            ->filter(fn ($item) => $item->getKey() !== 'admin_panel')
             ->sortBy('sort')
             ->values();
     }

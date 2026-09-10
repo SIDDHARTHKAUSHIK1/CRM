@@ -7,13 +7,13 @@
 
             <button
                 type="button"
-                class="flex cursor-pointer appearance-none items-center justify-between gap-x-2 rounded-md border bg-white px-2.5 py-[7px] text-center leading-6 text-gray-600 transition-all marker:shadow hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400"
+                class="flex cursor-pointer appearance-none items-center justify-between gap-x-2.5 rounded-xl border border-slate-200/90 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-2xs transition hover:border-slate-300 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
             >
                 <span class="whitespace-nowrap">
                     {{ $pipeline->name }}
                 </span>
                 
-                <span class="icon-down-arrow text-2xl"></span>
+                <span class="icon-down-arrow text-xl text-slate-400"></span>
             </button>
 
             {!! view_render_event('admin.leads.index.view_switcher.pipeline.button.after') !!}
@@ -40,7 +40,7 @@
                         'pipeline_id' => $tempPipeline->id,
                         'view_type' => request('view_type')
                     ]) }}"
-                    class="block px-3 py-2.5 pl-4 text-gray-600 transition-all hover:bg-gray-100 dark:hover:bg-gray-950 dark:text-gray-300 {{ $pipeline->id == $tempPipeline->id ? 'bg-gray-100 dark:bg-gray-950' : '' }}"
+                    class="block px-3 py-2.5 pl-4 text-gray-600 transition-all hover:bg-gray-100 dark:hover:bg-gray-950 dark:text-gray-300 {{ $pipeline->id == $tempPipeline->id ? 'bg-gray-100 dark:bg-gray-950 font-semibold text-blue-600' : '' }}"
                 >
                     {{ $tempPipeline->name }}
                 </a>
@@ -50,41 +50,49 @@
 
             {!! view_render_event('admin.leads.index.view_switcher.pipeline.content.footer.before') !!}
 
+            @if (bouncer()->hasPermission('settings.lead.pipelines.create'))
             <!-- Footer -->
             <a
                 href="{{ route('admin.settings.pipelines.create') }}"
                 target="_blank"
-                class="flex items-center justify-between border-t border-gray-300 px-3 py-2.5 text-brandColor dark:border-gray-800"
+                class="flex items-center justify-between border-t border-gray-200 px-3 py-2.5 text-xs font-semibold text-blue-600 dark:border-gray-800"
             >
-                <span class="font-medium">                    
+                <span>                    
                     @lang('admin::app.leads.index.view-switcher.create-new-pipeline')
                 </span>
             </a>
+            @endif
 
             {!! view_render_event('admin.leads.index.view_switcher.pipeline.content.footer.after') !!}
         </x-slot>
     </x-admin::dropdown>
 
-    <div class="flex items-center gap-0.5">
+    <div class="flex items-center gap-1">
         {!! view_render_event('admin.leads.index.view_switcher.pipeline.view_type.before') !!}
 
         @if (request('view_type'))
             <a
-                class="flex"
+                class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-gray-800"
                 href="{{ route('admin.leads.index') }}"
+                title="Kanban View"
             >
-                <span class="icon-kanban p-2 text-2xl"></span>
+                <span class="icon-kanban text-xl"></span>
             </a>
 
-            <span class="icon-list rounded-md bg-gray-100 p-2 text-2xl dark:bg-gray-950"></span>
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl border border-blue-200/80 bg-blue-50/80 text-blue-600 shadow-2xs dark:border-blue-900/60 dark:bg-blue-950/50 dark:text-blue-300" title="Table View">
+                <span class="icon-list text-xl"></span>
+            </span>
         @else
-            <span class="icon-kanban rounded-md bg-white p-2 text-2xl dark:bg-gray-900"></span>
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl border border-blue-200/80 bg-blue-50/80 text-blue-600 shadow-2xs dark:border-blue-900/60 dark:bg-blue-950/50 dark:text-blue-300" title="Kanban View">
+                <span class="icon-kanban text-xl"></span>
+            </span>
 
             <a
                 href="{{ route('admin.leads.index', ['view_type' => 'table']) }}"
-                class="flex"
+                class="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-gray-800"
+                title="Table View"
             >
-                <span class="icon-list p-2 text-2xl"></span>
+                <span class="icon-list text-xl"></span>
             </a>
         @endif
 

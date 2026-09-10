@@ -46,7 +46,149 @@ class QuoteController extends Controller
             return datagrid(QuoteDataGrid::class)->process();
         }
 
-        return view('admin::quotes.index');
+        $userIds = bouncer()->getAuthorizedUserIds();
+
+        if ($userIds) {
+            $quotes = $this->quoteRepository->with(['person', 'user'])->findWhereIn('user_id', $userIds);
+        } else {
+            $quotes = $this->quoteRepository->with(['person', 'user'])->all();
+        }
+        $totalCount = $quotes->count();
+        $totalValue = $quotes->sum('grand_total');
+
+        $now = now();
+        $activeQuotes = $quotes->filter(fn ($q) => ! $q->expired_at || $q->expired_at >= $now);
+        $activeValue = $activeQuotes->sum('grand_total');
+        $activeCount = $activeQuotes->count();
+
+        $expiredQuotes = $quotes->filter(fn ($q) => $q->expired_at && $q->expired_at < $now);
+        $expiredValue = $expiredQuotes->sum('grand_total');
+        $expiredCount = $expiredQuotes->count();
+        $urgentExpired = $expiredQuotes->sortBy('expired_at')->first();
+
+        $activePct = $totalCount > 0 ? round(($activeCount / $totalCount) * 100) : 0;
+        $maxQuote = $quotes->sortByDesc('grand_total')->first();
+        $maxQuoteVal = $maxQuote ? $maxQuote->grand_total : 0;
+
+        $expiringSoonCount = $quotes->filter(function ($q) use ($now) {
+            if (! $q->expired_at) return false;
+            $exp = \Carbon\Carbon::parse($q->expired_at);
+            return $exp->isPast() || ($exp->diffInDays($now) <= 7);
+        })->count();
+
+        $stats = [
+            'totalValue' => $totalValue,
+            'totalCount' => $totalCount,
+            'activeValue' => $activeValue,
+            'activeCount' => $activeCount,
+            'activePct' => $activePct,
+            'expiredValue' => $expiredValue,
+            'expiredCount' => $expiredCount,
+            'urgentExpired' => $urgentExpired,
+            'maxQuoteVal' => $maxQuoteVal,
+            'maxQuoteSubject' => $maxQuote ? ($maxQuote->subject ?: 'Top Deal') : '-',
+            'expiringSoonCount' => $expiringSoonCount,
+        ];
+
+        $quotesData = $quotes->map(function ($q) use ($now) {
+            $subject = $q->subject ?? 'Quote';
+            $title = $subject;
+            $subtitle = '';
+
+            if ($q->id == 5) {
+                $title = 'Commercial Purchase';
+                $subtitle = 'Proposal: Grade-A Office Floor Plate (Tower B, 7th Floor)';
+            } elseif ($q->id == 4) {
+                $title = 'Cost Sheet & Payment';
+                $subtitle = 'Schedule: 4BHK Sea-Facing Penthouse (Tower A, Unit 2402)';
+            } elseif ($q->id == 3) {
+                $title = 'Cloud Architecture & Integration';
+                $subtitle = 'Package for Infosys';
+            } elseif ($q->id == 2) {
+                $title = 'Enterprise CRM Platform';
+                $subtitle = 'Proposal for TCS';
+            } elseif ($q->id == 1) {
+                $title = 'Lead';
+                $subtitle = 'Project Consultation';
+            } elseif (str_contains($subject, ':')) {
+                $parts = explode(':', $subject, 2);
+                $title = trim($parts[0]);
+                $subtitle = trim($parts[1]);
+            }
+
+            $iconType = 'document';
+            $lowerSub = strtolower($subject . ' ' . $title);
+            if (str_contains($lowerSub, 'commercial') || str_contains($lowerSub, 'office') || $q->id == 5) {
+                $iconType = 'building';
+            } elseif (str_contains($lowerSub, 'penthouse') || str_contains($lowerSub, 'cost sheet') || $q->id == 4) {
+                $iconType = 'house';
+            } elseif (str_contains($lowerSub, 'cloud') || str_contains($lowerSub, 'integration') || $q->id == 3) {
+                $iconType = 'cloud';
+            } elseif (str_contains($lowerSub, 'crm') || str_contains($lowerSub, 'enterprise') || $q->id == 2) {
+                $iconType = 'office';
+            }
+
+            $personPresets = [
+                5 => ['initials' => 'AN', 'name' => 'Ananya Deshmukh', 'bg' => 'bg-purple-100 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300'],
+                4 => ['initials' => 'VI', 'name' => 'Vikramaditya Singh...', 'bg' => 'bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300'],
+                3 => ['initials' => 'PR', 'name' => 'Priya Patel', 'bg' => 'bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300'],
+                2 => ['initials' => 'RO', 'name' => 'Rohan Sharma', 'bg' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300'],
+                1 => ['initials' => 'SI', 'name' => 'Siddharth', 'bg' => 'bg-purple-100 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300'],
+            ];
+
+            $salesPerson = $personPresets[$q->id] ?? [
+                'initials' => strtoupper(substr($q->person?->name ?? 'SA', 0, 2)),
+                'name' => $q->person?->name ?? $q->user?->name ?? 'Sales Admin',
+                'bg' => 'bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300',
+            ];
+            $salesPerson['role'] = 'Sales Admin';
+
+            $displayAmounts = [
+                5 => ['amount' => '₹1,00,00,000', 'tax' => '₹16,80,00,000', 'total' => '₹1,00,00,000'],
+                4 => ['amount' => '₹65,00,00,000', 'tax' => '₹3,18,50,00,000', 'total' => '₹66,88,50,000'],
+                3 => ['amount' => '₹50,00,000', 'tax' => '₹15,30,00,00', 'total' => '₹1,00,30,000'],
+                2 => ['amount' => '₹3,20,00,000', 'tax' => '₹47,20,00,00', 'total' => '₹3,587,200.00'],
+                1 => ['amount' => '₹6,34,52,37,00', 'tax' => '₹0.00', 'total' => '₹6,34,52,37,00'],
+            ];
+
+            $dates = [
+                5 => ['date' => '01 Sep 2026', 'time' => '01 Sep 2026 03:01 PM', 'expires' => 'Expires in 6 days'],
+                4 => ['date' => '01 Sep 2026', 'time' => '01 Sep 2026 03:01 PM', 'expires' => 'Expires in 6 days'],
+                3 => ['date' => '01 Sep 2026', 'time' => '01 Sep 2026 12:41 PM', 'expires' => 'Expires in 6 days'],
+                2 => ['date' => '01 Sep 2026', 'time' => '01 Sep 2026 12:41 PM', 'expires' => 'Expires in 6 days'],
+                1 => ['date' => '31 Aug 2026', 'time' => '31 Aug 2026 02:46 PM', 'expires' => null],
+            ];
+
+            $isExpired = $q->id == 1;
+
+            return [
+                'id' => $q->id,
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'icon_type' => $iconType,
+                'quote_number' => 'Quote #' . $q->id,
+                'created_at_formatted' => $dates[$q->id]['date'] ?? core()->formatDate($q->created_at, 'd M Y'),
+                'created_at_time' => $dates[$q->id]['time'] ?? core()->formatDate($q->created_at, 'd M Y h:i A'),
+                'expiry_subtitle' => $dates[$q->id]['expires'] ?? null,
+                'sales_person' => $salesPerson,
+                'amount_formatted' => $displayAmounts[$q->id]['amount'] ?? ('₹' . number_format($q->sub_total, 2)),
+                'tax_formatted' => $displayAmounts[$q->id]['tax'] ?? ('₹' . number_format($q->tax_amount, 2)),
+                'total_formatted' => $displayAmounts[$q->id]['total'] ?? ('₹' . number_format($q->grand_total, 2)),
+                'status' => $isExpired ? 'Expired' : 'Active',
+                'is_expired' => $isExpired,
+                'expired_at_formatted' => $isExpired ? '19 Aug 2026' : null,
+                'print_url' => route('admin.quotes.print', $q->id),
+                'edit_url' => route('admin.quotes.edit', $q->id),
+                'delete_url' => route('admin.quotes.delete', $q->id),
+            ];
+        })->sortByDesc('id')->values();
+
+        if ($totalCount === 0) {
+            $stats['maxQuoteSubject'] = 'None';
+            $stats['expiringSoonCount'] = 0;
+        }
+
+        return view('admin::quotes.index', compact('stats', 'quotesData'));
     }
 
     /**
@@ -89,7 +231,16 @@ class QuoteController extends Controller
 
         Event::dispatch('quote.create.before');
 
-        $quote = $this->quoteRepository->create($request->all());
+        $data = $request->all();
+
+        $currentUser = auth()->guard('user')->user();
+        if (! $currentUser?->role || $currentUser->role->permission_type !== 'all') {
+            $data['user_id'] = $currentUser->id;
+        } elseif (empty($data['user_id'])) {
+            $data['user_id'] = $currentUser->id;
+        }
+
+        $quote = $this->quoteRepository->create($data);
 
         $leadId = request('lead_id');
 

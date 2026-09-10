@@ -9,26 +9,30 @@
     <div class="mb-5 flex items-center justify-between gap-4 max-sm:flex-wrap">
         {!! view_render_event('admin.dashboard.index.header.left.before') !!}
 
-        <div class="grid gap-1.5">
-            <p class="text-2xl font-semibold dark:text-white">
+        <div class="grid gap-0.5">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 @lang('admin::app.dashboard.index.title')
+            </h1>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                Here's what's happening in your business today.
             </p>
         </div>
 
         {!! view_render_event('admin.dashboard.index.header.left.after') !!}
 
-        <!-- Actions -->
+        <!-- Actions / Filters -->
         {!! view_render_event('admin.dashboard.index.header.right.before') !!}
 
         <v-dashboard-filters>
             <!-- Shimmer -->
-            <div class="flex gap-1.5">
+            <div class="flex items-center gap-2">
                 @if ($pipelines->count() > 1)
-                    <div class="light-shimmer-bg dark:shimmer h-[39px] w-[160px] rounded-md"></div>
+                    <div class="light-shimmer-bg dark:shimmer h-[38px] w-[140px] rounded-xl"></div>
                 @endif
 
-                <div class="light-shimmer-bg dark:shimmer h-[39px] w-[140px] rounded-md"></div>
-                <div class="light-shimmer-bg dark:shimmer h-[39px] w-[140px] rounded-md"></div>
+                <div class="light-shimmer-bg dark:shimmer h-[38px] w-[130px] rounded-xl"></div>
+                <span class="text-xs text-slate-400">to</span>
+                <div class="light-shimmer-bg dark:shimmer h-[38px] w-[130px] rounded-xl"></div>
             </div>
         </v-dashboard-filters>
 
@@ -37,78 +41,58 @@
 
     {!! view_render_event('admin.dashboard.index.header.after') !!}
 
-    <!-- Body Component -->
+    <!-- Body Component: 5-Tier Balanced Grid -->
     {!! view_render_event('admin.dashboard.index.content.before') !!}
 
-    <div class="mt-3.5 flex gap-4 max-xl:flex-wrap">
-        <!-- Left Section -->
-        {!! view_render_event('admin.dashboard.index.content.left.before') !!}
+    <div class="mt-4 flex flex-col gap-5">
+        <!-- Tier 1: 4 Primary Stat Cards (Won, Lost, Leads, Avg Value) -->
+        @include('admin::dashboard.index.revenue')
 
-        <div class="flex flex-1 flex-col gap-4 max-xl:flex-auto">
-            <!-- Revenue Stats -->
-            @include('admin::dashboard.index.revenue')
+        <!-- Tier 2: 6 Mini Metric Cards (New Leads, Negotiation, Prospect, Quotes, Persons, Orgs) -->
+        @include('admin::dashboard.index.over-all')
 
-            <!-- Over All Stats -->
-            @include('admin::dashboard.index.over-all')
-
-            <!-- Total Leads Stats -->
-            @include('admin::dashboard.index.total-leads')
-
-            <div class="flex gap-4 max-lg:flex-wrap">
-                <!-- Total Products -->
-                @include('admin::dashboard.index.top-selling-products')
-
-                <!-- Total Persons -->
-                @include('admin::dashboard.index.top-persons')
-            </div>
-        </div>
-
-        {!! view_render_event('admin.dashboard.index.content.left.after') !!}
-
-        <!-- Right Section -->
-        {!! view_render_event('admin.dashboard.index.content.right.before') !!}
-
-        <div class="flex w-[378px] max-w-full flex-col gap-4 max-sm:w-full">
-            <!-- Revenue by Types -->
-            @include('admin::dashboard.index.open-leads-by-states')
-
-            <!-- Revenue by Sources -->
+        <!-- Tier 3: 3 Breakdown Cards (Revenue by Source, Revenue by Type, Leads Summary) -->
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
             @include('admin::dashboard.index.revenue-by-sources')
-
-            <!-- Revenue by Types -->
             @include('admin::dashboard.index.revenue-by-types')
+            @include('admin::dashboard.index.open-leads-by-states')
         </div>
 
-        {!! view_render_event('admin.dashboard.index.content.left.after') !!}
+        <!-- Tier 4: 2 Performance Cards (Top Products, Top Persons) -->
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            @include('admin::dashboard.index.top-selling-products')
+            @include('admin::dashboard.index.top-persons')
+        </div>
+
+        <!-- Tier 5: Quick Tip Banner -->
+        <div class="flex items-center gap-2.5 rounded-2xl border border-blue-100 bg-[#edf5ff] px-4.5 py-3 text-xs text-slate-700 shadow-2xs dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-slate-300">
+            <span class="flex h-5 w-5 shrink-0 items-center justify-center text-blue-600 dark:text-blue-400">
+                <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                    <path d="M9 18h6"/>
+                    <path d="M10 22h4"/>
+                </svg>
+            </span>
+            <p>
+                <strong class="font-bold text-slate-800 dark:text-white">Tip:</strong> Use the <span class="font-bold text-blue-600 dark:text-blue-400">+ Add</span> button to quickly add Leads, Quotes, or Contacts.
+            </p>
+        </div>
     </div>
 
     {!! view_render_event('admin.dashboard.index.content.after') !!}
 
     @pushOnce('scripts')
-
-        <script
-            type="module"
-            src="{{ vite()->asset('js/chart.js') }}"
-        >
-        </script>
-
-        <script
-            type="module"
-            src="https://cdn.jsdelivr.net/npm/chartjs-chart-funnel@4.2.1/build/index.umd.min.js"
-        >
-        </script>
-
         <script
             type="text/x-template"
             id="v-dashboard-filters-template"
         >
             {!! view_render_event('admin.dashboard.index.date_filters.before') !!}
 
-            <div class="flex gap-1.5">
+            <div class="flex items-center gap-2">
                 @if ($pipelines->count() > 1)
                     <!-- Pipeline Selector -->
                     <select
-                        class="custom-select flex min-h-[39px] w-[160px] rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                        class="custom-select flex min-h-[38px] w-[140px] rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs hover:border-slate-300 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
                         v-model="filters.pipeline_id"
                     >
                         @foreach ($pipelines as $pipeline)
@@ -118,24 +102,26 @@
                 @endif
 
                 <x-admin::flat-picker.date
-                    class="!w-[140px]"
+                    class="!w-[130px]"
                     ::allow-input="false"
                     ::max-date="filters.end"
                 >
                     <input
-                        class="flex min-h-[39px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                        class="flex min-h-[38px] w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all hover:border-slate-300 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
                         v-model="filters.start"
                         placeholder="@lang('admin::app.dashboard.index.start-date')"
                     />
                 </x-admin::flat-picker.date>
 
+                <span class="text-xs font-semibold text-slate-400">to</span>
+
                 <x-admin::flat-picker.date
-                    class="!w-[140px]"
+                    class="!w-[130px]"
                     ::allow-input="false"
                     ::max-date="filters.end"
                 >
                     <input
-                        class="flex min-h-[39px] w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-all hover:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400"
+                        class="flex min-h-[38px] w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all hover:border-slate-300 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
                         v-model="filters.end"
                         placeholder="@lang('admin::app.dashboard.index.end-date')"
                     />

@@ -24,12 +24,29 @@
 
                 {!! view_render_event('admin.user.account.breadcrumbs.after', ['user' => $user]) !!}
 
-                <div class="text-xl font-bold dark:text-white">
-                    {!! view_render_event('admin.user.account.title.before', ['user' => $user]) !!}
+                <div class="flex items-center gap-3">
+                    <div class="text-xl font-bold dark:text-white">
+                        {!! view_render_event('admin.user.account.title.before', ['user' => $user]) !!}
 
-                    @lang('admin::app.account.edit.title')
+                        @lang('admin::app.account.edit.title')
 
-                    {!! view_render_event('admin.user.account.title.after', ['user' => $user]) !!}
+                        {!! view_render_event('admin.user.account.title.after', ['user' => $user]) !!}
+                    </div>
+
+                    @php
+                        $isAdmin = $user?->role && $user->role->permission_type === 'all';
+                    @endphp
+                    @if ($isAdmin)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-red-500 dark:text-white" title="@lang('admin::app.admin-panel.roles.admin')">
+                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <span>@lang('admin::app.admin-panel.roles.admin')</span>
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-xs dark:bg-blue-500 dark:text-white" title="@lang('admin::app.admin-panel.roles.employee')">
+                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span>@lang('admin::app.admin-panel.roles.employee')</span>
+                        </span>
+                    @endif
                 </div>
             </div>
 

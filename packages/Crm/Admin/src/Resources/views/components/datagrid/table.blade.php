@@ -18,7 +18,7 @@
     >
         <div class="w-full">
             <!-- Table view for larger screens, Card view for mobile -->
-            <div class="table-responsive box-shadow rounded-t-0 grid w-full overflow-hidden border border-gray-300 bg-white dark:border-gray-800 dark:bg-gray-900">
+            <div class="table-responsive box-shadow rounded-t-0 block w-full overflow-x-auto overflow-y-hidden border border-gray-300 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <!-- Table Header - Always visible on all screens -->
                 <slot
                     name="header"
@@ -273,7 +273,7 @@
                                     <template v-for="column in available.columns">
                                         <div class="flex flex-wrap items-baseline gap-x-2">
                                             <span class="text-slate-600 dark:text-gray-300" v-html="column.label + ':'"></span>
-                                            <span class="break-words font-medium text-slate-900 dark:text-white" v-html="record[column.index]"></span>
+                                            <span class="break-words font-medium text-gray-600dark:text-white" v-html="record[column.index]"></span>
                                         </div>
                                     </template>
                                 </div>

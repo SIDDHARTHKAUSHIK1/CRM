@@ -499,3 +499,21 @@ Breadcrumbs::for('whatsapp.dnc', function (BreadcrumbTrail $trail) {
     $trail->push('Do Not Contact (DNC)', route('admin.whatsapp.dnc'));
 });
 
+// Dashboard > Admin Panel
+Breadcrumbs::for('admin_panel', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.layouts.admin-panel'), route('admin.panel.employees.index'));
+});
+
+// Dashboard > Admin Panel > Employees
+Breadcrumbs::for('admin_panel.employees', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin_panel');
+    $trail->push(trans('admin::app.admin-panel.employees.title'), route('admin.panel.employees.index'));
+});
+
+// Dashboard > Admin Panel > Employees > View
+Breadcrumbs::for('admin_panel.employees.view', function (BreadcrumbTrail $trail, $employee) {
+    $trail->parent('admin_panel.employees');
+    $trail->push($employee->name ?? 'Employee', route('admin.panel.employees.view', $employee->id ?? 0));
+});
+

@@ -246,6 +246,21 @@ class CampaignController extends Controller
             'confirm_consent.accepted' => 'You must confirm that all recipients consented to receive marketing/business messages from your organization.',
         ]);
 
+        $gatewayStatus = $this->whatsAppClientService->getStatus();
+        if (empty($gatewayStatus['connected'])) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success'       => false,
+                    'not_connected' => true,
+                    'message'       => 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.',
+                    'gateway_url'   => route('admin.whatsapp.gateway'),
+                ], 422);
+            }
+
+            session()->flash('warning', 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.');
+            return redirect()->route('admin.whatsapp.gateway');
+        }
+
         $campaign = $this->campaignRepository->findOrFail($id);
 
         if ($campaign->status !== 'draft' && $campaign->status !== 'paused') {
@@ -449,6 +464,21 @@ class CampaignController extends Controller
      */
     public function resume(int $id): JsonResponse|RedirectResponse
     {
+        $gatewayStatus = $this->whatsAppClientService->getStatus();
+        if (empty($gatewayStatus['connected'])) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success'       => false,
+                    'not_connected' => true,
+                    'message'       => 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.',
+                    'gateway_url'   => route('admin.whatsapp.gateway'),
+                ], 422);
+            }
+
+            session()->flash('warning', 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.');
+            return redirect()->route('admin.whatsapp.gateway');
+        }
+
         $campaign = $this->campaignRepository->findOrFail($id);
 
         if ($campaign->status === 'paused') {
@@ -510,6 +540,21 @@ class CampaignController extends Controller
      */
     public function retryFailed(int $id): JsonResponse|RedirectResponse
     {
+        $gatewayStatus = $this->whatsAppClientService->getStatus();
+        if (empty($gatewayStatus['connected'])) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success'       => false,
+                    'not_connected' => true,
+                    'message'       => 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.',
+                    'gateway_url'   => route('admin.whatsapp.gateway'),
+                ], 422);
+            }
+
+            session()->flash('warning', 'WhatsApp Gateway is not connected. Please scan the QR code to link your WhatsApp account.');
+            return redirect()->route('admin.whatsapp.gateway');
+        }
+
         $campaign = $this->campaignRepository->findOrFail($id);
 
         $failedCount = $campaign->recipients()->where('status', 'failed')->count();

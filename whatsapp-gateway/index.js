@@ -22,11 +22,20 @@ const __dirname = path.dirname(__filename);
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
 const HOST = '127.0.0.1';
-const SESSION_DIR = path.join(__dirname, '.session');
+
+// Environment-aware session & client configuration
+// Ensures Localhost and Production maintain 100% separate Baileys auth credentials and distinct WhatsApp companion device names
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const IS_PROD = NODE_ENV === 'production';
+const CLIENT_NAME = process.env.CLIENT_NAME || (IS_PROD ? 'CRM Production' : 'CRM Localhost');
+const SESSION_NAME = process.env.SESSION_NAME || (IS_PROD ? 'production' : 'local');
+const SESSION_DIR = process.env.SESSION_DIR || path.join(__dirname, `.session-${SESSION_NAME}`);
 
 if (!fs.existsSync(SESSION_DIR)) {
   fs.mkdirSync(SESSION_DIR, { recursive: true });
 }
+
+console.log(`[WhatsApp Gateway] Starting with Environment: ${NODE_ENV}, Client Name: "${CLIENT_NAME}", Session: ${SESSION_DIR}`);
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'warn' });
 
@@ -72,7 +81,7 @@ async function startWhatsAppSocket() {
     logger,
     printQRInTerminal: false,
     auth: state,
-    browser: ['Laravel CRM', 'Chrome', '120.0.0'],
+    browser: [CLIENT_NAME, 'Chrome', '120.0.0'],
     generateHighQualityLinkPreview: false,
     connectTimeoutMs: 60000,
     keepAliveIntervalMs: 30000
@@ -152,6 +161,9 @@ app.get('/', (req, res) => {
   res.json({
     status: 'online',
     service: 'WhatsApp Gateway Microservice',
+    environment: NODE_ENV,
+    clientName: CLIENT_NAME,
+    sessionName: SESSION_NAME,
     connected: connectionStatus.connected,
     number: connectionStatus.number || null,
     pushName: connectionStatus.pushName || null,
@@ -160,7 +172,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    environment: NODE_ENV,
+    clientName: CLIENT_NAME,
+    sessionName: SESSION_NAME,
+    time: new Date().toISOString()
+  });
 });
 
 app.use(validateGatewayKey);
@@ -169,6 +187,9 @@ app.use(validateGatewayKey);
 app.get('/status', (req, res) => {
   res.json({
     success: true,
+    environment: NODE_ENV,
+    clientName: CLIENT_NAME,
+    sessionName: SESSION_NAME,
     ...connectionStatus,
     qrAvailable: !!currentQRBase64
   });

@@ -5,6 +5,7 @@ namespace Crm\Admin\Http\Controllers\Settings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -53,6 +54,10 @@ class UserController extends Controller
      */
     public function store(): View|JsonResponse
     {
+        if (! auth()->guard('user')->user()?->role || auth()->guard('user')->user()->role->permission_type !== 'all') {
+            abort(403);
+        }
+
         $this->validate(request(), [
             'email' => 'required|email|unique:users,email',
             'name' => 'required',
@@ -66,11 +71,13 @@ class UserController extends Controller
         ]);
 
         $data = request()->all();
+        $data['view_permission'] = $data['view_permission'] ?: 'individual';
 
         if (
             isset($data['password'])
             && $data['password']
         ) {
+            $data['password_plain'] = Crypt::encryptString($data['password']);
             $data['password'] = bcrypt($data['password']);
         }
 
@@ -111,6 +118,10 @@ class UserController extends Controller
      */
     public function update(int $id): JsonResponse
     {
+        if (! auth()->guard('user')->user()?->role || auth()->guard('user')->user()->role->permission_type !== 'all') {
+            abort(403);
+        }
+
         $this->validate(request(), [
             'email' => 'required|email|unique:users,email,'.$id,
             'name' => 'required|string',
@@ -128,6 +139,7 @@ class UserController extends Controller
         if (empty($data['password'])) {
             $data = Arr::except($data, ['password', 'confirm_password']);
         } else {
+            $data['password_plain'] = Crypt::encryptString($data['password']);
             $data['password'] = bcrypt($data['password']);
         }
 

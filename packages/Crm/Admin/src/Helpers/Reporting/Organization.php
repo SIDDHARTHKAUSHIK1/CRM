@@ -39,10 +39,15 @@ class Organization extends AbstractReporting
      */
     public function getTotalOrganizations($startDate, $endDate): int
     {
-        return $this->organizationRepository
+        $query = $this->organizationRepository
             ->resetModel()
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $query->whereIn('organizations.user_id', $userIds);
+        }
+
+        return $query->count();
     }
 
     /**
@@ -54,14 +59,19 @@ class Organization extends AbstractReporting
     {
         $tablePrefix = DB::getTablePrefix();
 
-        $items = $this->organizationRepository
+        $query = $this->organizationRepository
             ->resetModel()
             ->leftJoin('persons', 'organizations.id', '=', 'persons.organization_id')
             ->leftJoin('leads', 'persons.id', '=', 'leads.person_id')
             ->select('*', 'persons.id as id')
             ->addSelect(DB::raw('SUM('.$tablePrefix.'leads.lead_value) as revenue'))
-            ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate])
-            ->having(DB::raw('SUM('.$tablePrefix.'leads.lead_value)'), '>', 0)
+            ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate]);
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $query->whereIn('organizations.user_id', $userIds);
+        }
+
+        $items = $query->having(DB::raw('SUM('.$tablePrefix.'leads.lead_value)'), '>', 0)
             ->groupBy('organization_id')
             ->orderBy('revenue', 'DESC')
             ->limit($limit)

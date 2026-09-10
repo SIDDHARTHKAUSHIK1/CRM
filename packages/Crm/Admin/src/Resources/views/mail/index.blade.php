@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="flex flex-col gap-4">
-        <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+        <div class="flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
             <div class="flex flex-col gap-2">
                 {!! view_render_event('admin.mail.create.breadcrumbs.before') !!}
                 
@@ -224,7 +224,7 @@
                                     <div class="relative flex items-center">
                                         <!-- Dot Indicator -->
                                         <span
-                                            class="absolute right-8 h-1.5 w-1.5 rounded-full bg-sky-600 dark:bg-white"
+                                            class="absolute right-8 h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
                                             v-if="! record.is_read"
                                         ></span>
 
@@ -328,7 +328,7 @@
 
                                     <!-- Dot Indicator -->
                                     <span
-                                        class="h-1.5 w-1.5 rounded-full bg-sky-600 dark:bg-white"
+                                        class="h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
                                         v-if="! record.is_read"
                                     ></span>
                                 </div>
@@ -348,7 +348,7 @@
                                                 'font-medium': record.is_read,
                                                 'font-semibold': ! record.is_read
                                             }"
-                                            class="break-words text-slate-900 dark:text-white" 
+                                            class="break-words text-gray-600dark:text-white" 
                                             v-html="record[column.index]"
                                         ></span>
                                     </div>

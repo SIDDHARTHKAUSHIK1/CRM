@@ -178,8 +178,11 @@ class LeadController extends Controller
 
         $data['status'] = 1;
 
-        if (request()->has('quick_add') && empty($data['user_id'])) {
-            $data['user_id'] = auth()->guard('user')->user()->id;
+        $currentUser = auth()->guard('user')->user();
+        if (! $currentUser?->role || $currentUser->role->permission_type !== 'all') {
+            $data['user_id'] = $currentUser->id;
+        } elseif (empty($data['user_id'])) {
+            $data['user_id'] = $currentUser->id;
         }
 
         if (! empty($data['lead_pipeline_stage_id'])) {

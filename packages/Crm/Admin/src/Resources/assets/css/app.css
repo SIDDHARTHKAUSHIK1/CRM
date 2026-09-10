@@ -401,27 +401,18 @@
     }
 
     .label-active {
-        @apply max-w-max rounded-md bg-emerald-200 px-3 py-1.5 text-xs font-medium text-emerald-900;
+        @apply max-w-max rounded-md bg-emerald-200 px-3 py-1.5 text-xs font-medium text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300;
     }
 
     .label-inactive {
-        @apply max-w-max rounded-md bg-red-200 px-3 py-1.5 text-xs font-medium text-red-800;
+        @apply max-w-max rounded-md bg-red-200 px-3 py-1.5 text-xs font-medium text-red-800 dark:bg-red-950 dark:text-red-300;
     }
 
-    [dir="ltr"] .sidebar-rounded::after {
-        @apply content-[''] w-[30px] h-[30px] top-0 right-[-30px] absolute bg-no-repeat pointer-events-none bg-[url("../images/corner-clip.svg")] transition-all;
-    }
-
-    [dir="rtl"] .sidebar-rounded::before {
-        @apply content-[''] w-[30px] h-[30px] top-0 left-[-30px] absolute bg-no-repeat pointer-events-none bg-[url("../images/corner-clip.svg")] transition-all rotate-90;
-    }
-
-    .dark .sidebar-rounded::after {
-        @apply bg-[url("../images/dark-corner-clip.svg")]
-    }
-
+    [dir="ltr"] .sidebar-rounded::after,
+    [dir="rtl"] .sidebar-rounded::before,
+    .dark .sidebar-rounded::after,
     .dark .sidebar-rounded::before {
-        @apply bg-[url("../images/dark-corner-clip.svg")]
+        display: none !important;
     }
 
     .tox.tox-silver-sink.tox-tinymce-aux {
@@ -530,6 +521,10 @@
 
     .transparent-button {
         @apply flex cursor-pointer appearance-none place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-transparent px-3 py-1.5 font-semibold text-gray-600 transition-all marker:shadow hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-950 dark:focus:bg-gray-950;
+    }
+
+    .danger-button {
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border border-red-600 bg-red-600 px-3 py-1.5 font-semibold text-white transition-all hover:bg-red-700 hover:border-red-700 focus:bg-red-700 dark:border-red-600 dark:bg-red-600 dark:hover:bg-red-500;
     }
 
     ::-webkit-scrollbar {
@@ -670,14 +665,7 @@
         @apply content-['*'];
     }
 
-    body.is-scrolling-down .scroll-reactive-sticky {
-        width: calc(100% + 2rem);
-        margin-left: -1rem;
-        border-radius: 0px;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        border-right: none !important;
-    }
+
 }
 
 .tox .tox-toolbar__group:last-child button {

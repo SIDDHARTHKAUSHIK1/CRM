@@ -34,3 +34,7 @@ node_modules/
 /test-results/
 /blob-report/
 /playwright/.cache/
+
+# WhatsApp Gateway Microservice
+/whatsapp-gateway/.env
+/whatsapp-gateway/.session*

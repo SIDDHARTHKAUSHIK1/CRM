@@ -4,8 +4,8 @@
     </x-slot>
 
     <div class="flex flex-col gap-6 font-sans text-sm">
-        <!-- Sticky Top Navigation Header -->
-        <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+        <!-- Top Navigation Header -->
+        <div class="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
             <div class="flex flex-col gap-1">
                 <x-admin::breadcrumbs name="whatsapp.show" :entity="$campaign" />
                 <div class="flex items-center gap-3">
@@ -41,6 +41,8 @@
             :initial-pause-reason='@json($campaign->pause_reason)'
             :initial-throttle="{{ $campaign->throttle_seconds }}"
             :initial-recipients='@json($initialRecipients)'
+            :is-gateway-connected="{{ !empty($gatewayStatus['connected']) ? 'true' : 'false' }}"
+            gateway-url="{{ route('admin.whatsapp.gateway') }}"
         ></v-broadcast-dashboard>
     </div>
 
@@ -190,7 +192,7 @@
                             <div class="flex flex-wrap items-center gap-4 text-xs text-gray-700 dark:text-gray-300">
                                 <div>
                                     <span class="font-medium text-gray-500 dark:text-gray-400">Pacing Delay:</span>
-                                    <strong class="ml-1 font-mono text-emerald-700 dark:text-emerald-400">@{{ throttleSeconds }}s / message</strong>
+                                    <strong class="ml-1 text-gray-900 dark:text-white">@{{ throttleSeconds }}s / message</strong>
                                 </div>
                                 <div>
                                     <span class="font-medium text-gray-500 dark:text-gray-400">Total Contacts:</span>
@@ -395,7 +397,7 @@
                         <span class="text-sm font-semibold text-gray-800 dark:text-gray-200">
                             Live Broadcast Progress
                         </span>
-                        <span class="text-sm font-bold text-brandColor dark:text-brandColor">
+                        <span class="text-sm font-bold text-gray-900 dark:text-white">
                             @{{ progressPercent }}% Completed
                         </span>
                     </div>
@@ -419,21 +421,21 @@
 
                         <div class="rounded-md border border-emerald-200 bg-emerald-50/50 p-3.5 dark:border-emerald-900/40 dark:bg-emerald-950/30">
                             <p class="text-xs font-medium text-emerald-700 dark:text-emerald-400">Successfully Sent</p>
-                            <p class="text-xl font-bold text-emerald-600 dark:text-emerald-300 mt-1">
+                            <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">
                                 @{{ sentCount }}
                             </p>
                         </div>
 
                         <div class="rounded-md border border-red-200 bg-red-50/50 p-3.5 dark:border-red-900/40 dark:bg-red-950/30">
                             <p class="text-xs font-medium text-red-700 dark:text-red-400">Failed / Errors</p>
-                            <p class="text-xl font-bold text-red-600 dark:text-red-300 mt-1">
+                            <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">
                                 @{{ failedCount }}
                             </p>
                         </div>
 
                         <div class="rounded-md border border-blue-200 bg-blue-50/50 p-3.5 dark:border-blue-900/40 dark:bg-blue-950/30">
                             <p class="text-xs font-medium text-blue-700 dark:text-blue-400">Pending in Queue</p>
-                            <p class="text-xl font-bold text-blue-600 dark:text-blue-300 mt-1">
+                            <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">
                                 @{{ pendingCount }}
                             </p>
                         </div>
@@ -506,10 +508,10 @@
                                     :key="recipient.id"
                                     class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
                                 >
-                                    <td class="px-4 py-2.5 text-xs font-mono text-gray-500 dark:text-gray-400">
+                                    <td class="px-4 py-2.5 text-xs text-gray-900 dark:text-white">
                                         @{{ recipient.id }}
                                     </td>
-                                    <td class="px-4 py-2.5 font-mono text-xs font-semibold text-gray-900 dark:text-white">
+                                    <td class="px-4 py-2.5 text-xs font-semibold text-gray-900 dark:text-white">
                                         +@{{ recipient.phone_e164 }}
                                     </td>
                                     <td class="px-4 py-2.5">
@@ -529,7 +531,7 @@
                                     <td class="px-4 py-2.5 text-xs text-gray-600 dark:text-gray-400">
                                         @{{ formatDate(recipient.sent_at) }}
                                     </td>
-                                    <td class="px-4 py-2.5 text-xs text-gray-600 dark:text-gray-400">
+                                    <td class="px-4 py-2.5 text-xs font-semibold text-gray-900 dark:text-white">
                                         @{{ recipient.attempts }}
                                     </td>
                                     <td class="px-4 py-2.5 text-xs text-red-500 dark:text-red-400 max-w-xs truncate" :title="recipient.error_message || ''">
@@ -636,7 +638,7 @@
                                 <div class="rounded-lg bg-gray-50 p-3.5 text-xs dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 space-y-2">
                                     <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                         <span class="font-semibold">Pacing delay:</span>
-                                        <span class="inline-block rounded bg-emerald-100 px-2 py-0.5 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200 font-mono">
+                                        <span class="inline-block rounded bg-gray-100 px-2 py-0.5 text-gray-900 dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700">
                                             @{{ throttleSeconds }}s between messages
                                         </span>
                                     </div>
@@ -676,8 +678,71 @@
                                 >
                                     <span v-if="isActionLoading" class="icon-refresh animate-spin text-sm"></span>
                                     <span v-else class="icon-play text-sm"></span>
-                                    Confirm &amp; Start Broadcast
+                                    Start Broadcast Now
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </teleport>
+
+                <!-- WhatsApp Not Connected Modal -->
+                <teleport to="body">
+                    <div
+                        v-if="showNotConnectedModal"
+                        class="fixed inset-0 z-[10006] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs transition-opacity duration-200"
+                        @click.self="showNotConnectedModal = false"
+                    >
+                        <div class="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl transition-all dark:border-gray-800 dark:bg-gray-900">
+                            <!-- Close Button -->
+                            <button
+                                type="button"
+                                @click="showNotConnectedModal = false"
+                                class="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-gray-800 dark:hover:text-slate-200 transition cursor-pointer"
+                            >
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+
+                            <!-- Icon & Content -->
+                            <div class="flex flex-col items-center text-center">
+                                <div class="relative mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 border border-amber-200 shadow-sm dark:bg-amber-950/60 dark:border-amber-800/80 dark:text-amber-400">
+                                    <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    </svg>
+                                    <span class="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-rose-500 text-white font-bold text-xs shadow-sm ring-2 ring-white dark:ring-gray-900">!</span>
+                                </div>
+
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                                    WhatsApp Not Connected
+                                </h3>
+
+                                <p class="mt-2 text-xs font-medium leading-relaxed text-slate-600 dark:text-slate-300 max-w-sm">
+                                    WhatsApp is not connected to the CRM project. To send broadcast messages, you must first connect your WhatsApp by scanning the QR code.
+                                </p>
+
+                                <div class="mt-6 flex flex-col gap-2.5 w-full">
+                                    <a
+                                        :href="gatewayUrl"
+                                        class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 text-xs font-bold shadow-md active:scale-95 transition cursor-pointer"
+                                    >
+                                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="7" height="7"></rect>
+                                            <rect x="14" y="3" width="7" height="7"></rect>
+                                            <rect x="14" y="14" width="7" height="7"></rect>
+                                            <rect x="3" y="14" width="7" height="7"></rect>
+                                        </svg>
+                                        <span>Connect WhatsApp (Scan QR Code)</span>
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        @click="showNotConnectedModal = false"
+                                        class="w-full inline-flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 dark:border-gray-700 dark:bg-gray-800 dark:text-slate-300 dark:hover:bg-gray-700 transition cursor-pointer"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -745,6 +810,14 @@
                     initialRecipients: {
                         type: Object,
                         default: () => ({ data: [], current_page: 1, last_page: 1, total: 0 })
+                    },
+                    isGatewayConnected: {
+                        type: Boolean,
+                        default: false
+                    },
+                    gatewayUrl: {
+                        type: String,
+                        default: ''
                     }
                 },
 
@@ -770,19 +843,20 @@
                         totalLogs: this.initialRecipients?.total || 0,
                         filterStatus: '',
                         searchQuery: '',
-                        pollTimer: null,
-                        searchDebounce: null,
-                        isActionLoading: false,
                         showStartModal: false,
+                        showNotConnectedModal: false,
                         startConsentGiven: false,
+                        isActionLoading: false,
                         isEditingDetails: false,
                         isSavingDetails: false,
+                        editBrochureFile: null,
                         editForm: {
                             name: this.initialName,
                             caption: this.initialCaption,
-                            throttle_seconds: this.initialThrottle,
+                            throttle_seconds: this.initialThrottle
                         },
-                        editBrochureFile: null
+                        pollTimer: null,
+                        searchDebounce: null
                     };
                 },
 
@@ -905,6 +979,10 @@
                     },
 
                     openStartModal() {
+                        if (!this.isGatewayConnected) {
+                            this.showNotConnectedModal = true;
+                            return;
+                        }
                         this.startConsentGiven = false;
                         this.selectedBrochureFile = null;
                         this.selectedBrochureName = '';
@@ -913,6 +991,13 @@
 
                     async startCampaignFromDraft() {
                         if (!this.startConsentGiven) return;
+
+                        if (!this.isGatewayConnected) {
+                            this.showStartModal = false;
+                            this.showNotConnectedModal = true;
+                            return;
+                        }
+
                         this.isActionLoading = true;
                         try {
                             const formData = new FormData();
@@ -931,6 +1016,12 @@
                             });
 
                             const data = await res.json();
+                            if (data && data.not_connected) {
+                                this.showStartModal = false;
+                                this.showNotConnectedModal = true;
+                                return;
+                            }
+
                             if (data.success) {
                                 this.showStartModal = false;
                                 this.currentStatus = 'running';
@@ -1001,15 +1092,25 @@
                     },
 
                     async resumeCampaign() {
+                        if (!this.isGatewayConnected) {
+                            this.showNotConnectedModal = true;
+                            return;
+                        }
+
                         this.isActionLoading = true;
                         try {
-                            await fetch(`{{ url('admin/whatsapp/resume') }}/${this.campaignId}`, {
+                            const res = await fetch(`{{ url('admin/whatsapp/resume') }}/${this.campaignId}`, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                     'Accept': 'application/json'
                                 }
                             });
+                            const data = await res.json();
+                            if (data && data.not_connected) {
+                                this.showNotConnectedModal = true;
+                                return;
+                            }
                             this.currentStatus = 'running';
                             this.pauseReason = null;
                             this.initPolling();
@@ -1046,16 +1147,26 @@
                     },
 
                     async retryFailed() {
+                        if (!this.isGatewayConnected) {
+                            this.showNotConnectedModal = true;
+                            return;
+                        }
+
                         if (!confirm('Retry all failed messages now?')) return;
                         this.isActionLoading = true;
                         try {
-                            await fetch(`{{ url('admin/whatsapp/retry') }}/${this.campaignId}`, {
+                            const res = await fetch(`{{ url('admin/whatsapp/retry') }}/${this.campaignId}`, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                     'Accept': 'application/json'
                                 }
                             });
+                            const data = await res.json();
+                            if (data && data.not_connected) {
+                                this.showNotConnectedModal = true;
+                                return;
+                            }
                             this.currentStatus = 'running';
                             this.initPolling();
                             await this.fetchStatus();

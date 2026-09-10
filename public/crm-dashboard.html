@@ -1,0 +1,262 @@
+<!-- This file contains the standalone interactive Figma 4K prototype matching the prompt and screenshot -->
+<!-- Open in any browser or serve via Laravel -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex CRM - Modern Dashboard & Deal Won Modal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; }
+    .sticky-notepad {
+      background-color: #fefce8;
+      background-image: repeating-linear-gradient(transparent, transparent 21px, #f3e5be 21px, #f3e5be 22px);
+      line-height: 22px;
+    }
+  </style>
+</head>
+<body class="bg-[#edf2f8] text-slate-800 antialiased overflow-hidden min-h-screen select-none">
+  <div class="flex h-screen w-screen relative overflow-hidden bg-[#edf2f8]">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-[#0b1736] flex-shrink-0 flex flex-col justify-between py-6 px-4 z-20 text-slate-300 shadow-2xl border-r border-[#14234c]">
+      <div class="space-y-6">
+        <div class="px-2 pt-1 pb-1 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 font-bold">
+            ▲
+          </div>
+          <div>
+            <h2 class="text-white font-extrabold text-base tracking-tight leading-tight">Apex CRM</h2>
+            <p class="text-[11px] text-slate-400 font-medium">Enterprise Pipeline</p>
+          </div>
+        </div>
+        <nav class="space-y-1.5">
+          <a href="#" class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl bg-[#192b59] text-white font-semibold shadow-sm transition-all">
+            <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9.5 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="text-sm">Dashboard</span>
+          </a>
+          <a href="#" class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 font-medium transition-all group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172a2 2 0 0 0-1.414.586L4.707 9.636a2 2 0 0 0 0 2.828l3.879 3.879a2 2 0 0 0 2.828 0l3.879-3.879a2 2 0 0 0 0-2.828L11.414 5.758A2 2 0 0 0 10 5.172Z"/><path d="m14 14 3.5 3.5a2.121 2.121 0 0 0 3-3l-3.5-3.5"/><circle cx="16" cy="8" r="1.2" fill="currentColor"/></svg>
+            <span class="text-sm">Relations</span>
+          </a>
+          <a href="#" class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 font-medium transition-all group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span class="text-sm">Contacts</span>
+          </a>
+          <a href="#" class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 font-medium transition-all group">
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v12M15 9.5a2.5 2.5 0 0 0-2.5-2.5H11a2.5 2.5 0 0 0 0 5h2a2.5 2.5 0 0 1 0 5h-3.5A2.5 2.5 0 0 1 7 14.5"/></svg>
+            <span class="text-sm">Deals</span>
+          </a>
+        </nav>
+        <div class="pt-2">
+          <div class="px-3.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Tools</div>
+          <nav class="space-y-0.5">
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M7 10h4M7 14h8"/></svg><span>Quotes</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg><span>Products</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="20" height="16" x="2" y="4" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>Comms</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m3 11 18-5v12L3 14v-3zM11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg><span>Marketing</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M10 9.5c.3-.4.8-.4 1.1 0l1 1.2c.2.3.2.7 0 1l-.5.5c-.2.2-.2.5 0 .7.6.9 1.4 1.7 2.3 2.3.2.2.5.2.7 0l.5-.5c.3-.2.7-.2 1 0l1.2 1c.4.3.4.8 0 1.1l-.8.9c-.5.5-1.3.7-2 .4-2.8-1.1-5.1-3.4-6.2-6.2-.3-.7-.1-1.5.4-2l.8-.9z" fill="currentColor"/></svg><span>WhatsApp</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><span>Automation</span></a>
+            <a href="#" class="flex items-center gap-3.5 px-3.5 py-2 rounded-2xl hover:bg-[#15244a] hover:text-white text-slate-300 text-sm font-medium transition-all"><svg class="w-4.5 h-4.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span></a>
+          </nav>
+        </div>
+      </div>
+      <div class="px-1 pt-4 border-t border-[#162754]">
+        <div class="bg-[#14234d]/70 rounded-2xl p-3 flex items-center justify-between">
+          <div class="flex items-center gap-2.5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20"></div><span class="text-xs font-semibold text-slate-300">Live Sync</span></div>
+          <span class="text-[10px] text-slate-400 font-bold bg-white/10 px-2 py-0.5 rounded-full">v3.4</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#edf2f8] relative">
+      <header class="h-16 px-8 flex items-center justify-between bg-white border-b border-slate-200 shadow-xs z-10">
+        <div class="relative w-84">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+          <input type="text" placeholder="Search..." class="w-full pl-10 pr-4 py-2 text-xs font-medium bg-slate-50 hover:bg-slate-100/80 focus:bg-white rounded-full border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/25 text-slate-700">
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="reopenDealBtn" onclick="toggleModal(true)" class="hidden text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300/80 px-3.5 py-1.5 rounded-full shadow-xs">🏆 Show Elena Rodriguez Modal</button>
+          <div class="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 cursor-pointer shadow-xs">
+            <div class="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white shadow-xs bg-slate-200">
+              <svg class="w-full h-full" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="#fde68a"/><circle cx="24" cy="18" r="9" fill="#f59e0b"/><path d="M14 18c0-5.5 4.5-10 10-10s10 4.5 10 10v4c0 3-2 5-5 5h-10c-3 0-5-2-5-5v-4z" fill="#78350f"/><circle cx="24" cy="20" r="7.5" fill="#fed7aa"/><path d="M10 46c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="#3b82f6"/></svg>
+            </div>
+            <span class="text-xs font-bold text-slate-800">Sarah</span>
+            <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </header>
+
+      <div class="p-8 overflow-y-auto space-y-6 flex-1">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-black text-gray-600tracking-tight">Welcome Back</h1>
+            <p class="text-xs text-slate-500 mt-0.5 font-medium">Enterprise Pipeline Performance Dashboard</p>
+          </div>
+          <button class="flex items-center gap-2 bg-[#1b5cb8] hover:bg-[#164c99] text-white font-bold px-5 py-2.5 rounded-2xl shadow-md transition-all active:scale-95">
+            <span class="text-lg font-bold leading-none">+</span><span class="text-sm">Add Lead</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-gradient-to-br from-[#1b3b68] via-[#142e53] to-[#0c1f3b] p-6 rounded-3xl text-white shadow-lg relative overflow-hidden flex flex-col justify-between h-40 border border-white/10">
+            <svg class="absolute right-0 bottom-0 w-48 h-40 opacity-30 pointer-events-none" viewBox="0 0 220 180" fill="none"><path d="M 0,180 C 80,180 120,80 220,50 L 220,180 Z" fill="rgba(255,255,255,0.15)"/><path d="M 60,180 C 130,160 160,110 220,95 L 220,180 Z" fill="rgba(56, 189, 248, 0.25)"/></svg>
+            <div class="flex justify-end relative z-10"><span class="bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-xs px-2.5 py-0.5 rounded-full font-extrabold">↗ +5%</span></div>
+            <div class="relative z-10"><div class="text-5xl font-black text-white">128</div><div class="text-xs text-slate-300 font-semibold mt-2">Total Leads</div></div>
+          </div>
+          <div class="bg-gradient-to-br from-[#4c6587] via-[#394f6e] to-[#253750] p-6 rounded-3xl text-white shadow-lg relative overflow-hidden flex flex-col justify-between h-40 border border-white/10">
+            <svg class="absolute right-0 bottom-0 w-48 h-40 opacity-25 pointer-events-none" viewBox="0 0 220 180" fill="none"><path d="M 10,180 C 70,140 130,90 220,70 L 220,180 Z" fill="rgba(255,255,255,0.18)"/></svg>
+            <div class="flex justify-end relative z-10"><span class="bg-emerald-400/25 border border-emerald-300/40 text-emerald-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold">↗ +3%</span></div>
+            <div class="relative z-10"><div class="text-5xl font-black text-white">84</div><div class="text-xs text-slate-200 font-semibold mt-2">Active Leads</div></div>
+          </div>
+          <div class="bg-gradient-to-br from-[#3b4759] via-[#2d3746] to-[#1e2632] p-6 rounded-3xl text-white shadow-lg relative overflow-hidden flex flex-col justify-between h-40 border border-white/10">
+            <svg class="absolute right-0 bottom-0 w-48 h-40 opacity-25 pointer-events-none" viewBox="0 0 220 180" fill="none"><path d="M 20,180 C 90,130 140,85 220,60 L 220,180 Z" fill="rgba(255,255,255,0.18)"/></svg>
+            <div class="flex justify-end relative z-10"><span class="bg-emerald-400/25 border border-emerald-300/40 text-emerald-200 text-xs px-2.5 py-0.5 rounded-full font-extrabold">↗ +3%</span></div>
+            <div class="relative z-10"><div class="text-5xl font-black text-white">27%</div><div class="text-xs text-slate-300 font-semibold mt-2">Conversion Rate</div></div>
+          </div>
+        </div>
+
+        <!-- RECENT LEADS TABLE -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between mb-4">
+            <div><h3 class="text-base font-bold text-slate-900">Recent Leads</h3><p class="text-xs text-slate-400">Click any row to open the deal card popup.</p></div>
+            <span class="text-xs font-bold text-blue-600 cursor-pointer hover:underline">View All Leads →</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 font-bold tracking-wider">
+                <tr><th class="pb-3 px-3">Name</th><th class="pb-3 px-3">Status</th><th class="pb-3 px-3 text-right">Value</th></tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+                <tr onclick="toggleModal(true)" class="hover:bg-slate-50/80 transition-colors cursor-pointer">
+                  <td class="py-3.5 px-3 flex items-center gap-3"><div class="w-9 h-9 rounded-full ring-2 ring-slate-100 flex-shrink-0 bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center">SJ</div><div><span class="font-bold text-slate-900">Sarah Jenkins</span><span class="block text-[11px] text-slate-400">sarah.j@acme.corp</span></div></td>
+                  <td class="py-3.5 px-3"><span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-bold">Negotiating</span></td>
+                  <td class="py-3.5 px-3 font-bold text-gray-600text-right">$5,000</td>
+                </tr>
+                <tr onclick="toggleModal(true)" class="hover:bg-slate-50/80 transition-colors cursor-pointer">
+                  <td class="py-3.5 px-3 flex items-center gap-3"><div class="w-9 h-9 rounded-full ring-2 ring-slate-100 flex-shrink-0 bg-amber-100 text-amber-700 font-bold text-xs flex items-center justify-center">MD</div><div><span class="font-bold text-slate-900">Mark Davis</span><span class="block text-[11px] text-slate-400">m.davis@venture.io</span></div></td>
+                  <td class="py-3.5 px-3"><span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold">Contact</span></td>
+                  <td class="py-3.5 px-3 font-bold text-gray-600text-right">$0</td>
+                </tr>
+                <tr onclick="toggleModal(true)" class="bg-emerald-50/40 hover:bg-emerald-50 transition-colors cursor-pointer border-l-4 border-emerald-500">
+                  <td class="py-3.5 px-3 flex items-center gap-3"><div class="w-9 h-9 rounded-full ring-2 ring-emerald-300 flex-shrink-0 bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center">ER</div><div><div class="flex items-center gap-2"><span class="font-bold text-slate-900">Elena Rodriguez</span><span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">POPUP MODAL</span></div><span class="block text-[11px] text-slate-500">elena@techwave.com</span></div></td>
+                  <td class="py-3.5 px-3"><span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-extrabold flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Won</span></td>
+                  <td class="py-3.5 px-3 font-black text-emerald-700 text-right text-base">$12,400</td>
+                </tr>
+                <tr onclick="toggleModal(true)" class="hover:bg-slate-50/80 transition-colors cursor-pointer">
+                  <td class="py-3.5 px-3 flex items-center gap-3"><div class="w-9 h-9 rounded-full ring-2 ring-slate-100 flex-shrink-0 bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">JW</div><div><span class="font-bold text-slate-900">James Wilson</span><span class="block text-[11px] text-slate-400">jwilson@nexus.tech</span></div></td>
+                  <td class="py-3.5 px-3"><span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold">Qualified</span></td>
+                  <td class="py-3.5 px-3 font-bold text-gray-600text-right">$2,500</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="dealWonModal" class="fixed inset-0 bg-slate-950/45 backdrop-blur-[3px] flex items-center justify-center z-50 p-4 transition-all duration-300">
+      <div id="modalCard" class="w-full max-w-[510px] bg-white rounded-[32px] shadow-2xl border border-white/80 overflow-hidden text-slate-800 relative">
+        <div class="px-6 pt-5 pb-3 flex items-center justify-between border-b border-slate-100">
+          <h2 class="text-sm font-extrabold tracking-wide uppercase text-gray-600flex items-center gap-2">
+            <span>ELENA RODRIGUEZ DEAL</span><span class="text-slate-300">|</span><span class="text-emerald-600">WON</span><span class="text-slate-300">|</span><span>$12,400</span>
+          </h2>
+          <button onclick="toggleModal(false)" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-800 flex items-center justify-center">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="px-6 pt-4 pb-2">
+          <div class="flex items-center justify-center relative mb-3">
+            <div class="bg-[#2ea854] text-white px-8 py-2 rounded-full font-black text-base tracking-wide shadow-md">Won Deal</div>
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 border border-slate-200 rounded-2xl p-2.5 shadow-sm bg-white">
+              <svg class="w-6 h-6 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H8c-.55 0-1 .45-1 1s.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1h-1c-.55 0-1-.45-1-1v-2.34"/><path d="M6 4h12v5a6 6 0 0 1-12 0V4z" fill="#dcfce7"/></svg>
+            </div>
+          </div>
+          <div class="relative mt-5 mb-2 px-4">
+            <svg class="absolute top-[5px] left-0 w-full h-8 z-0 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 420 30">
+              <path d="M 40,8 C 110,6 110,18 165,18 C 220,18 240,8 300,8 C 340,8 355,5 380,4" fill="none" stroke="#2ea854" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="relative z-10 flex justify-between items-start text-center">
+              <div class="flex flex-col items-center"><div class="w-4 h-4 rounded-full bg-[#2ea854] text-white flex items-center justify-center ring-4 ring-emerald-100 mb-1.5"><svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div><span class="bg-[#2ea854] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Contact</span></div>
+              <div class="flex flex-col items-center mt-2"><div class="w-4 h-4 rounded-full bg-[#2ea854] text-white flex items-center justify-center ring-4 ring-emerald-100 mb-1.5"><svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div><span class="bg-[#2ea854] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Quote</span></div>
+              <div class="flex flex-col items-center"><div class="w-4 h-4 rounded-full bg-[#2ea854] text-white flex items-center justify-center ring-4 ring-emerald-100 mb-1.5"><svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div><span class="bg-[#2ea854] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Negotiate</span></div>
+              <div class="flex flex-col items-center -mt-1"><div class="w-4 h-4 rounded-full bg-[#2ea854] text-white flex items-center justify-center ring-4 ring-emerald-100 mb-1.5"><svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div><span class="bg-[#2ea854] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Won</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-6 mb-3">
+          <h4 class="text-xs font-bold text-slate-700 mb-2">Contact Details</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center gap-2.5 p-2 bg-slate-50/90 border border-slate-200 rounded-2xl">
+              <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">ER</div>
+              <div class="text-[12px] font-bold text-slate-800">Elena Rodriguez, <span class="font-normal text-slate-500">CMO</span></div>
+            </div>
+            <div class="flex items-center gap-2.5 p-2 bg-slate-50/90 border border-slate-200 rounded-2xl">
+              <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">JW</div>
+              <div class="text-[12px] font-bold text-slate-800">James Wilson, <span class="font-normal text-slate-500">CEO</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-6 mb-4 grid grid-cols-2 gap-3 items-stretch">
+          <div class="flex flex-col">
+            <span class="text-xs font-bold text-slate-700 mb-1.5">Notes</span>
+            <div class="sticky-notepad flex-1 border border-[#ebd7a4] rounded-2xl p-3 text-[11.5px] text-slate-800 font-medium relative shadow-inner overflow-hidden flex flex-col justify-between">
+              <div class="absolute left-3.5 top-0 bottom-0 w-[1px] bg-rose-300/70 pointer-events-none"></div>
+              <div class="pl-2 space-y-0.5" contenteditable="true">
+                <p>Contract signed on 10/12.</p>
+                <p>All follow-ups complete...</p>
+              </div>
+              <div class="pl-2 pt-1 text-[9px] text-amber-800/50 italic">Editable note</div>
+            </div>
+          </div>
+          <div class="flex flex-col justify-end space-y-2 pt-5">
+            <button class="w-full bg-[#1c4d8c] hover:bg-[#153e73] text-white py-2 px-3 rounded-2xl font-bold text-xs shadow-sm">Generate Invoice</button>
+            <button class="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white py-2 px-3 rounded-2xl font-bold text-xs shadow-sm">Schedule</button>
+            <button class="w-full bg-[#64748b] hover:bg-[#475569] text-white py-2 px-3 rounded-2xl font-bold text-xs shadow-sm">Archive</button>
+          </div>
+        </div>
+
+        <div class="px-6 pb-6 pt-1">
+          <h4 class="text-xs font-bold text-slate-700 mb-2">Value Progression:</h4>
+          <div class="relative h-14 w-full bg-gradient-to-b from-blue-50/50 to-slate-100/70 rounded-2xl overflow-hidden border border-slate-100 flex items-end shadow-inner">
+            <svg class="w-full h-full absolute inset-0" preserveAspectRatio="none" viewBox="0 0 400 60">
+              <defs><linearGradient id="areaGradientModal2" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/></linearGradient></defs>
+              <path d="M 0,55 Q 180,50 280,38 T 400,10 L 400,60 L 0,60 Z" fill="url(#areaGradientModal2)"/>
+              <path d="M 0,55 Q 180,50 280,38 T 400,10" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            <div class="relative z-10 w-full flex justify-between items-center px-3 pb-2 select-none">
+              <span class="bg-[#5983af] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">$0</span>
+              <span class="bg-[#7890a8] text-white text-[11px] font-bold px-3 py-0.5 rounded-full">$5k</span>
+              <span class="bg-[#3e5670] text-white text-[11px] font-black px-3 py-0.5 rounded-full">$12.4k (Won)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleModal(show) {
+      const modal = document.getElementById('dealWonModal');
+      const reopenBtn = document.getElementById('reopenDealBtn');
+      if (show) {
+        modal.classList.remove('hidden');
+        if (reopenBtn) reopenBtn.classList.add('hidden');
+      } else {
+        modal.classList.add('hidden');
+        if (reopenBtn) reopenBtn.classList.remove('hidden');
+      }
+    }
+    document.getElementById('dealWonModal').addEventListener('click', function(e) {
+      if (e.target === this) toggleModal(false);
+    });
+  </script>
+</body>
+</html>

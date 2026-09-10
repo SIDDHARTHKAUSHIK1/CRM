@@ -22,10 +22,12 @@ class User extends Authenticatable implements UserContract
         'email',
         'image',
         'password',
+        'password_plain',
         'api_token',
         'role_id',
         'status',
         'view_permission',
+        'last_login_at',
     ];
 
     /**
@@ -35,8 +37,18 @@ class User extends Authenticatable implements UserContract
      */
     protected $hidden = [
         'password',
+        'password_plain',
         'api_token',
         'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'last_login_at' => 'datetime',
     ];
 
     /**
@@ -95,10 +107,30 @@ class User extends Authenticatable implements UserContract
      */
     public function hasPermission($permission)
     {
-        if ($this->role->permission_type == 'custom' && ! $this->role->permissions) {
+        if (! $this->role) {
             return false;
         }
 
-        return in_array($permission, $this->role->permissions);
+        if ($this->role->permission_type === 'all') {
+            return true;
+        }
+
+        $permissions = $this->role->permissions;
+
+        while (is_string($permissions)) {
+            $decoded = json_decode($permissions, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $permissions = $decoded;
+            } else {
+                break;
+            }
+        }
+
+        if (! is_array($permissions)) {
+            return false;
+        }
+
+        return in_array($permission, $permissions);
     }
 }

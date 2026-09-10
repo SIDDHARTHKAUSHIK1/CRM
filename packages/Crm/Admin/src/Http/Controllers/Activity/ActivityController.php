@@ -47,7 +47,177 @@ class ActivityController extends Controller
      */
     public function index(): View
     {
-        return view('admin::activities.index');
+        $userIds = bouncer()->getAuthorizedUserIds();
+
+        $activitiesQuery = \Crm\Activity\Models\Activity::query()
+            ->leftJoin('lead_activities', 'activities.id', '=', 'lead_activities.activity_id')
+            ->leftJoin('leads', 'lead_activities.lead_id', '=', 'leads.id')
+            ->leftJoin('users', 'activities.user_id', '=', 'users.id')
+            ->select(
+                'activities.*',
+                'leads.id as lead_id',
+                'leads.title as lead_title',
+                'users.name as user_name'
+            )
+            ->whereIn('activities.type', ['call', 'meeting', 'lunch', 'task', 'note']);
+
+        if ($userIds) {
+            $activitiesQuery->whereIn('activities.user_id', $userIds);
+        }
+
+        $activities = $activitiesQuery
+            ->orderBy('activities.schedule_from', 'desc')
+            ->orderBy('activities.id', 'desc')
+            ->get();
+
+        $leadsQuery = \Crm\Lead\Models\Lead::query()->where('status', 1);
+        if ($userIds) {
+            $leadsQuery->whereIn('leads.user_id', $userIds);
+        }
+        $leads = $leadsQuery->take(50)->get();
+
+        $users = \Crm\User\Models\User::query()->where('status', 1)->get();
+
+        $todayDate = now()->format('Y-m-d');
+        $yesterdayDate = now()->subDay()->format('Y-m-d');
+
+        $todayActivities = $activities->filter(function ($a) use ($todayDate) {
+            return $a->schedule_from && str_starts_with($a->schedule_from, $todayDate);
+        });
+
+        $yesterdayActivities = $activities->filter(function ($a) use ($yesterdayDate) {
+            return $a->schedule_from && str_starts_with($a->schedule_from, $yesterdayDate);
+        });
+
+        $upcomingActivities = $activities->filter(function ($a) use ($todayDate) {
+            return $a->schedule_from && $a->schedule_from > ($todayDate . ' 23:59:59');
+        });
+
+        $todayCount = $todayActivities->count();
+        $todayDoneCount = $todayActivities->where('is_done', 1)->count();
+        $todayPendingCount = $todayActivities->where('is_done', 0)->count();
+        $todayCallsCount = $todayActivities->where('type', 'call')->count();
+        $todayFollowUpsCount = $todayActivities->whereIn('type', ['meeting', 'lunch', 'call'])->count();
+        $toursCount = $activities->whereIn('type', ['meeting'])->count();
+        $callsCount = $activities->where('type', 'call')->count();
+        $totalCompletedCount = $activities->where('is_done', 1)->count();
+        $totalActivitiesCount = $activities->count();
+
+        $upcomingActivity = $activities->firstWhere('is_done', 0) ?? $activities->first();
+        $upcomingTodayActivities = $todayActivities->sortBy('schedule_from')->take(3);
+
+        $recentOrganizationsQuery = \Crm\Contact\Models\Organization::query()->latest();
+        $recentPersonsQuery = \Crm\Contact\Models\Person::query()->latest();
+        if ($userIds) {
+            $recentOrganizationsQuery->whereIn('organizations.user_id', $userIds);
+            $recentPersonsQuery->whereIn('persons.user_id', $userIds);
+        }
+        $recentOrganizations = $recentOrganizationsQuery->take(4)->get();
+        $recentPersons = $recentPersonsQuery->take(4)->get();
+
+        $calendarInitialMonth = now()->format('Y-m');
+        $currentUserId = auth()->guard('user')->user()?->id;
+        $calendarActivities = $activities->map(function ($a) {
+            return [
+                'id'            => $a->id,
+                'title'         => $a->title,
+                'type'          => $a->type,
+                'comment'       => $a->comment,
+                'location'      => $a->location,
+                'is_done'       => (int) $a->is_done,
+                'schedule_from' => $a->schedule_from,
+                'schedule_to'   => $a->schedule_to,
+                'lead_id'       => $a->lead_id,
+                'lead_title'    => $a->lead_title,
+                'user_id'       => $a->user_id,
+                'user_name'     => $a->user_name,
+            ];
+        });
+
+        return view('admin::activities.index', compact(
+            'activities',
+            'leads',
+            'users',
+            'currentUserId',
+            'todayDate',
+            'yesterdayDate',
+            'todayActivities',
+            'yesterdayActivities',
+            'upcomingActivities',
+            'upcomingTodayActivities',
+            'recentOrganizations',
+            'recentPersons',
+            'todayCount',
+            'todayDoneCount',
+            'todayPendingCount',
+            'todayCallsCount',
+            'todayFollowUpsCount',
+            'toursCount',
+            'callsCount',
+            'totalCompletedCount',
+            'totalActivitiesCount',
+            'upcomingActivity',
+            'calendarInitialMonth',
+            'calendarActivities'
+        ));
+    }
+
+    /**
+     * Fetch calendar activities for a given month with ±7 days buffer.
+     */
+    public function calendarEvents(): JsonResponse
+    {
+        $month = request()->get('month', now()->format('Y-m'));
+
+        try {
+            $carbonMonth = Carbon::createFromFormat('Y-m', $month);
+        } catch (\Exception $e) {
+            $carbonMonth = now();
+        }
+
+        $startDate = $carbonMonth->copy()->startOfMonth()->subDays(7)->format('Y-m-d 00:00:00');
+        $endDate = $carbonMonth->copy()->endOfMonth()->addDays(14)->format('Y-m-d 23:59:59');
+
+        $userIds = bouncer()->getAuthorizedUserIds();
+
+        $activitiesQuery = \Crm\Activity\Models\Activity::query()
+            ->leftJoin('lead_activities', 'activities.id', '=', 'lead_activities.activity_id')
+            ->leftJoin('leads', 'lead_activities.lead_id', '=', 'leads.id')
+            ->leftJoin('users', 'activities.user_id', '=', 'users.id')
+            ->select(
+                'activities.id',
+                'activities.title',
+                'activities.type',
+                'activities.comment',
+                'activities.location',
+                'activities.is_done',
+                'activities.schedule_from',
+                'activities.schedule_to',
+                'activities.user_id',
+                'leads.id as lead_id',
+                'leads.title as lead_title',
+                'users.name as user_name'
+            )
+            ->whereIn('activities.type', ['call', 'meeting', 'lunch', 'task', 'note'])
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('activities.schedule_from', [$startDate, $endDate])
+                      ->orWhereBetween('activities.created_at', [$startDate, $endDate]);
+            });
+
+        if ($userIds) {
+            $activitiesQuery->whereIn('activities.user_id', $userIds);
+        }
+
+        $activities = $activitiesQuery
+            ->orderBy('activities.schedule_from', 'asc')
+            ->get();
+
+        return response()->json([
+            'status'     => true,
+            'month'      => $carbonMonth->format('Y-m'),
+            'month_name' => $carbonMonth->format('F Y'),
+            'activities' => $activities,
+        ]);
     }
 
     /**
@@ -55,6 +225,10 @@ class ActivityController extends Controller
      */
     public function get(): JsonResponse
     {
+        if (request()->get('view_type') === 'calendar_events') {
+            return $this->calendarEvents();
+        }
+
         if (! request()->has('view_type')) {
             return datagrid(ActivityDataGrid::class)->process();
         }
@@ -118,12 +292,36 @@ class ActivityController extends Controller
             'user_id' => auth()->guard('user')->user()->id,
         ]));
 
+        $leadId = request()->input('lead_id');
+        if (!empty($leadId)) {
+            $activity->leads()->sync([$leadId]);
+        }
+
         Event::dispatch('activity.create.after', $activity);
+
+        $lead = !empty($leadId) ? \Crm\Lead\Models\Lead::find($leadId) : null;
+        $user = auth()->guard('user')->user();
+
+        $activityShape = [
+            'id'            => $activity->id,
+            'title'         => $activity->title,
+            'type'          => $activity->type,
+            'comment'       => $activity->comment,
+            'location'      => $activity->location,
+            'is_done'       => (int) $activity->is_done,
+            'schedule_from' => $activity->schedule_from ? (string) $activity->schedule_from : null,
+            'schedule_to'   => $activity->schedule_to ? (string) $activity->schedule_to : null,
+            'lead_id'       => $lead?->id,
+            'lead_title'    => $lead?->title,
+            'user_id'       => $user?->id,
+            'user_name'     => $user?->name,
+        ];
 
         if (request()->ajax()) {
             return response()->json([
-                'data' => new ActivityResource($activity),
-                'message' => trans('admin::app.activities.create-success'),
+                'data'     => $activityShape,
+                'activity' => $activityShape,
+                'message'  => trans('admin::app.activities.create-success'),
             ]);
         }
 

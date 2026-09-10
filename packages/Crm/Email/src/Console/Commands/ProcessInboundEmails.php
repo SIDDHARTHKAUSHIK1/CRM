@@ -26,9 +26,8 @@ class ProcessInboundEmails extends Command
      *
      * @return void
      */
-    public function __construct(
-        protected InboundEmailProcessor $inboundEmailProcessor
-    ) {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -37,11 +36,11 @@ class ProcessInboundEmails extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(InboundEmailProcessor $inboundEmailProcessor)
     {
         $this->info('Processing the incoming emails.');
 
-        $this->inboundEmailProcessor->processMessagesFromAllFolders();
+        $inboundEmailProcessor->processMessagesFromAllFolders();
 
         $this->info('Incoming emails processed successfully.');
     }

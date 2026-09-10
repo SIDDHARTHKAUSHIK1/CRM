@@ -21,7 +21,7 @@ class OrganizationDataGrid extends DataGrid
      */
     public function prepareQueryBuilder(): Builder
     {
-        return DB::table('organizations')
+        $queryBuilder = DB::table('organizations')
             ->addSelect(
                 'organizations.id',
                 'organizations.name',
@@ -35,7 +35,9 @@ class OrganizationDataGrid extends DataGrid
 
         $this->addFilter('id', 'organizations.id');
 
-        $this->addFilter('organization', 'organizations.name');
+        $this->addFilter('name', 'organizations.name');
+
+        return $queryBuilder;
     }
 
     /**
@@ -45,7 +47,7 @@ class OrganizationDataGrid extends DataGrid
     {
         $this->addColumn([
             'index' => 'id',
-            'label' => trans('admin::app.contacts.organizations.index.datagrid.id'),
+            'label' => '#',
             'type' => 'integer',
             'filterable' => true,
             'sortable' => true,
@@ -68,9 +70,7 @@ class OrganizationDataGrid extends DataGrid
             'sortable' => false,
             'filterable' => false,
             'closure' => function ($row) {
-                $personsCount = $this->personRepository->findWhere(['organization_id' => $row->id])->count();
-
-                return $personsCount;
+                return $this->personRepository->findWhere(['organization_id' => $row->id])->count();
             },
         ]);
 
@@ -82,7 +82,7 @@ class OrganizationDataGrid extends DataGrid
             'filterable' => true,
             'filterable_type' => 'date_range',
             'sortable' => true,
-            'closure' => fn ($row) => core()->formatDate($row->created_at),
+            'closure' => fn ($row) => \Carbon\Carbon::parse($row->created_at)->format('d M Y h:i A'),
         ]);
     }
 
@@ -92,6 +92,13 @@ class OrganizationDataGrid extends DataGrid
     public function prepareActions(): void
     {
         if (bouncer()->hasPermission('contacts.organizations.edit')) {
+            $this->addAction([
+                'icon' => 'icon-eye',
+                'title' => 'View',
+                'method' => 'GET',
+                'url' => fn ($row) => route('admin.contacts.organizations.edit', $row->id),
+            ]);
+
             $this->addAction([
                 'icon' => 'icon-edit',
                 'title' => trans('admin::app.contacts.organizations.index.datagrid.edit'),

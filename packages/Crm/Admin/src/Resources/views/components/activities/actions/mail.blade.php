@@ -9,10 +9,10 @@
     {!! view_render_event('admin.components.activities.actions.mail.create_btn.before') !!}
 
     <button
-        class="flex h-[74px] w-[84px] flex-col items-center justify-center gap-1 rounded-lg border border-transparent bg-green-200 font-medium text-green-900 transition-all hover:border-green-400"
+        class="flex h-16 w-full flex-col items-center justify-center gap-1 rounded-xl border border-emerald-200/80 bg-emerald-50 text-xs font-bold text-emerald-800 transition-all hover:bg-emerald-100 active:scale-95 shadow-2xs dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300"
         @click="$refs.mailActionComponent.openModal('mail')"
     >
-        <span class="icon-mail text-2xl dark:!text-green-900"></span>
+        <span class="icon-mail text-xl"></span>
 
         @lang('admin::app.components.activities.actions.mail.btn')
     </button>

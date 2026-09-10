@@ -15,14 +15,14 @@
         type="text/x-template"
         id="v-kanban-search-template"
     >
-        <div class="relative flex max-w-[445px] items-center max-md:w-full max-md:max-w-full">
-            <div class="icon-search absolute top-1.5 flex items-center text-2xl ltr:left-3 rtl:right-3"></div>
+        <div class="relative flex w-full max-w-[380px] items-center max-md:w-full max-md:max-w-full">
+            <div class="icon-search absolute top-2.5 flex items-center text-lg text-slate-400 ltr:left-3.5 rtl:right-3.5 pointer-events-none"></div>
 
             <input
                 type="text"
                 name="search"
-                class="block w-full rounded-lg border border-gray-300 bg-white py-1.5 leading-6 text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400 ltr:pl-10 ltr:pr-3 rtl:pl-3 rtl:pr-10"
-                placeholder="@lang('admin::app.leads.index.kanban.toolbar.search.title')"
+                class="block w-full rounded-xl border border-slate-200/90 bg-white py-2 text-sm text-slate-800 transition-all placeholder:text-slate-400 hover:border-purple-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:border-gray-700 dark:focus:border-indigo-500 ltr:pl-10 ltr:pr-4 rtl:pl-4 rtl:pr-10 shadow-2xs"
+                placeholder="Search by client, property, or lead..."
                 autocomplete="off"
                 :value="getSearchedValues()"
                 @keyup.enter="search"

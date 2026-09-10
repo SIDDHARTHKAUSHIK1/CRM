@@ -29,6 +29,7 @@ class PersonDataGrid extends DataGrid
             ->addSelect(
                 'persons.id',
                 'persons.name as person_name',
+                'persons.job_title',
                 'persons.emails',
                 'persons.contact_numbers',
                 'organizations.name as organization',
@@ -91,6 +92,15 @@ class PersonDataGrid extends DataGrid
         $this->addColumn([
             'index' => 'person_name',
             'label' => trans('admin::app.contacts.persons.index.datagrid.name'),
+            'type' => 'string',
+            'sortable' => true,
+            'filterable' => true,
+            'searchable' => true,
+        ]);
+
+        $this->addColumn([
+            'index' => 'job_title',
+            'label' => 'Designation',
             'type' => 'string',
             'sortable' => true,
             'filterable' => true,

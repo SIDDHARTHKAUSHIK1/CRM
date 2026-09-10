@@ -1,6 +1,6 @@
 {!! view_render_event('admin.dashboard.index.revenue_by_types.before') !!}
 
-<!-- Total Leads Vue Component -->
+<!-- Revenue by Types Vue Component -->
 <v-dashboard-revenue-by-types>
     <!-- Shimmer -->
     <x-admin::shimmer.dashboard.index.revenue-by-types />
@@ -18,65 +18,47 @@
             <x-admin::shimmer.dashboard.index.revenue-by-types />
         </template>
 
-        <!-- Total Sales Section -->
+        <!-- Revenue by Types Card -->
         <template v-else>
-            <div class="grid gap-4 rounded-lg border border-gray-300 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                <div class="flex flex-col justify-between gap-1">
-                    <p class="text-base font-semibold dark:text-gray-300">
-                        @lang('admin::app.dashboard.index.revenue-by-types.title')
-                    </p>
+            <div class="flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition-all hover:shadow-xs dark:border-gray-800 dark:bg-gray-900">
+                <!-- Header -->
+                <div class="flex items-start gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 border border-purple-100 dark:border-purple-900/50 dark:bg-purple-950/40">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+                            <path d="M7 7h.01"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                            Revenue by Type
+                        </h4>
+                        <p class="text-xs text-slate-400 font-medium">
+                            What your customers are buying
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Doughnut Chart -->
-                <div
-                    class="flex w-full max-w-full flex-col gap-4 px-8 pt-8"
-                    v-if="report.statistics.length"
-                >
-                    <x-admin::charts.doughnut
-                        ::labels="chartLabels"
-                        ::datasets="chartDatasets"
-                    />
-
-                    <div class="flex flex-wrap justify-center gap-5">
+                <!-- Items List -->
+                <div class="mt-5 space-y-3.5 flex-1">
+                    <template v-if="report.statistics && report.statistics.length">
                         <div
-                            class="flex items-center gap-2 whitespace-nowrap"
-                            v-for="(stat, index) in report.statistics"
+                            class="flex items-center justify-between border-b border-dashed border-slate-100 pb-2.5 last:border-b-0 last:pb-0 dark:border-gray-800"
+                            v-for="stat in report.statistics"
                         >
-                            <span
-                                class="h-3.5 w-3.5 rounded-sm"
-                                :style="{ backgroundColor: colors[index] }"
-                            ></span>
-
-                            <p class="text-xs dark:text-gray-300">
-                                @{{ stat.name }}
-                            </p>
+                            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                @{{ stat.name || 'New Business' }}
+                            </span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white">
+                                @{{ formatPrice(stat.total) }}
+                            </span>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Empty Product Design -->
-                <div
-                    class="flex flex-col gap-8 p-4"
-                    v-else
-                >
-                    <div class="grid justify-center justify-items-center gap-3.5 py-2.5">
-                        <!-- Placeholder Image -->
-                        <img
-                            src="{{ vite()->asset('images/empty-placeholders/default.svg') }}"
-                            class="dark:mix-blend-exclusion dark:invert"
-                        >
-
-                        <!-- Add Variants Information -->
-                        <div class="flex flex-col items-center">
-                            <p class="text-base font-semibold text-gray-400">
-                                @lang('admin::app.dashboard.index.revenue-by-sources.empty-title')
-                            </p>
-
-                            <p class="text-gray-400">
-                                @lang('admin::app.dashboard.index.revenue-by-sources.empty-info')
-                            </p>
+                    </template>
+                    <template v-else>
+                        <div class="py-6 text-center text-xs text-slate-400 font-medium">
+                            No type revenue recorded for this period.
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </template>
@@ -88,35 +70,15 @@
 
             data() {
                 return {
-                    report: [],
-
-                    colors: [
-                        '#8979FF',
-                        '#FF928A',
-                        '#3CC3DF',
-                    ],
-
+                    report: {
+                        statistics: []
+                    },
                     isLoading: true,
-                }
-            },
-
-            computed: {
-                chartLabels() {
-                    return this.report.statistics.map(({ name }) => name);
-                },
-
-                chartDatasets() {
-                    return [{
-                        data: this.report.statistics.map(({ total }) => total),
-                        barThickness: 24,
-                        backgroundColor: this.colors,
-                    }];
                 }
             },
 
             mounted() {
                 this.getStats({});
-
                 this.$emitter.on('reporting-filter-updated', this.getStats);
             },
 
@@ -124,30 +86,23 @@
                 getStats(filters) {
                     this.isLoading = true;
 
-                    var filters = Object.assign({}, filters);
+                    var f = Object.assign({}, filters, { type: 'revenue-by-types' });
 
-                    filters.type = 'revenue-by-types';
-
-                    this.$axios.get("{{ route('admin.dashboard.stats') }}", {
-                            params: filters
-                        })
+                    this.$axios.get("{{ route('admin.dashboard.stats') }}", { params: f })
                         .then(response => {
                             this.report = response.data;
-
-                            this.extendColors(this.report.statistics.length);
-
                             this.isLoading = false;
                         })
-                        .catch(error => {});
+                        .catch(error => {
+                            this.isLoading = false;
+                        });
                 },
 
-                extendColors(length) {
-                    while (this.colors.length < length) {
-                        const hue = Math.floor(Math.random() * 360);
-                        const newColor = `hsl(${hue}, 70%, 60%)`;
-                        this.colors.push(newColor);
-                    }
-                },
+                formatPrice(amount) {
+                    let num = parseFloat(amount || 0);
+                    let currency = '₹';
+                    return currency + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                }
             }
         });
     </script>

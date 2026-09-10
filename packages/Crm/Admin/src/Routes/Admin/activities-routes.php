@@ -6,6 +6,8 @@ use Crm\Admin\Http\Controllers\Activity\ActivityController;
 Route::controller(ActivityController::class)->prefix('activities')->group(function () {
     Route::get('', 'index')->name('admin.activities.index');
 
+    Route::get('calendar-events', 'calendarEvents')->name('admin.activities.calendar_events');
+
     Route::get('get', 'get')->name('admin.activities.get');
 
     Route::post('create', 'store')->name('admin.activities.store');

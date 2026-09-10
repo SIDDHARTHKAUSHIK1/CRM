@@ -5,7 +5,7 @@
 
     <div class="flex flex-col gap-6">
         <!-- Header -->
-        <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+        <div class="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
             <div class="flex flex-col gap-1">
                 <x-admin::breadcrumbs name="whatsapp.gateway" />
                 <div class="text-xl font-bold dark:text-white">
@@ -14,6 +14,11 @@
             </div>
 
             <div class="flex items-center gap-2.5">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    {{ app()->environment('production') ? 'Production Server' : 'Localhost (Isolated Connection)' }}
+                </span>
+
                 <a
                     href="{{ route('admin.whatsapp.index') }}"
                     class="secondary-button"
@@ -51,6 +56,11 @@
                                 Connected phone number: <strong class="text-emerald-600 dark:text-emerald-400" v-text="'+' + (phoneNumber || 'Unknown')"></strong>
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" v-show="pushName" v-text="'Profile: ' + pushName"></p>
+
+                            <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs text-gray-600 dark:text-gray-300">
+                                <span class="font-medium text-gray-400">Device Name:</span>
+                                <span class="font-semibold text-emerald-600 dark:text-emerald-400" v-text="clientName || '{{ app()->environment('production') ? 'CRM Production' : 'CRM Localhost' }}'"></span>
+                            </div>
 
                             <div class="mt-8 flex gap-4">
                                 <a
@@ -92,7 +102,10 @@
                             <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">
                                 Scan this QR code with WhatsApp on your phone
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p class="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">
+                                Pairing device: <span v-text="clientName || '{{ app()->environment('production') ? 'CRM Production' : 'CRM Localhost' }}'"></span>
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                 QR updates automatically. Listening for authentication...
                             </p>
 
@@ -117,14 +130,16 @@
                                 Connecting to WhatsApp Gateway...
                             </h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
-                                If this takes more than a few seconds, verify that the Node.js service is running on <code class="text-brandColor">127.0.0.1:3001</code>.
+                                Connecting to local gateway service (<code class="text-brandColor">127.0.0.1:3001</code>). If the QR does not appear immediately, click below to retry.
                             </p>
                             <button
                                 type="button"
-                                @click="fetchStatus()"
-                                class="secondary-button mt-4"
+                                @click="retryConnection()"
+                                :disabled="isRetrying"
+                                class="secondary-button mt-4 flex items-center gap-1.5"
                             >
-                                Retry Connection
+                                <span class="icon-refresh text-xs" :class="{'animate-spin': isRetrying}"></span>
+                                <span v-text="isRetrying ? 'Checking Gateway...' : 'Retry Connection'"></span>
                             </button>
                         </div>
                     </template>
@@ -165,7 +180,8 @@
                             Important Safety &amp; Multi-Device Notes
                         </h4>
                         <ul class="space-y-2 list-disc list-inside opacity-95">
-                            <li>The session is securely stored locally in the isolated microservice and will survive system restarts.</li>
+                            <li><strong>Multi-Device Isolation:</strong> This instance is registered as an independent companion device (<span class="font-semibold text-amber-950 dark:text-amber-100" v-text="clientName || '{{ app()->environment('production') ? 'CRM Production' : 'CRM Localhost' }}'"></span>). Connecting or disconnecting here will <strong>never</strong> affect your other CRM environments (e.g. deployed VPS vs local machine).</li>
+                            <li>The session is securely stored in an isolated local directory and will survive system restarts.</li>
                             <li>Do not scan with personal accounts that have no prior business interaction history. Use an established WhatsApp number.</li>
                             <li>Keep the default message throttle (15–30s) enabled when broadcasting to maintain healthy account standing.</li>
                         </ul>
@@ -194,7 +210,9 @@
                         connected: !!(this.initialStatus && this.initialStatus.connected),
                         phoneNumber: (this.initialStatus && this.initialStatus.number) ? this.initialStatus.number : '',
                         pushName: (this.initialStatus && this.initialStatus.pushName) ? this.initialStatus.pushName : '',
+                        clientName: (this.initialStatus && this.initialStatus.clientName) ? this.initialStatus.clientName : '',
                         qrImage: (this.initialQr && this.initialQr.qr) ? this.initialQr.qr : '',
+                        isRetrying: false,
                         pollTimer: null,
                     };
                 },
@@ -206,7 +224,7 @@
                     }
                     this.pollTimer = setInterval(() => {
                         this.fetchStatus();
-                        if (!this.connected) {
+                        if (!this.connected && !this.qrImage) {
                             this.fetchQr();
                         }
                     }, 3000);
@@ -227,6 +245,12 @@
                             this.connected = !!data.connected;
                             this.phoneNumber = data.number || '';
                             this.pushName = data.pushName || '';
+                            if (data.clientName) {
+                                this.clientName = data.clientName;
+                            }
+                            if (!this.connected && (data.state === 'qr_ready' || data.qrAvailable)) {
+                                this.fetchQr();
+                            }
                         } catch (e) {
                             console.error('Failed to fetch gateway status:', e);
                         }
@@ -243,6 +267,17 @@
                         } catch (e) {
                             console.error('Failed to fetch QR:', e);
                         }
+                    },
+
+                    async retryConnection() {
+                        this.isRetrying = true;
+                        await this.fetchStatus();
+                        if (!this.connected) {
+                            await this.fetchQr();
+                        }
+                        setTimeout(() => {
+                            this.isRetrying = false;
+                        }, 500);
                     }
                 }
             });

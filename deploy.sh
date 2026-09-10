@@ -167,6 +167,9 @@ cd "$DEPLOY_PATH/whatsapp-gateway"
 npm install
 cat > .env <<EOF
 PORT=3001
+NODE_ENV=production
+CLIENT_NAME=CRM Production (${DOMAIN})
+SESSION_NAME=production
 GATEWAY_KEY=${WHATSAPP_GATEWAY_KEY}
 EOF
 cd "$DEPLOY_PATH"

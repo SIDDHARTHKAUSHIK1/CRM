@@ -62,7 +62,7 @@
                 
                 <button
                     type="button"
-                    class="primary-button border-red-500 !bg-red-500"
+                    class="danger-button"
                     @click="performMassAction(available.massActions.find(action => action.icon === 'icon-delete'))"
                 >
                     @{{ available.massActions.find(action => action.icon === 'icon-delete')?.title }}

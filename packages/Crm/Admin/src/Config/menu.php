@@ -138,6 +138,17 @@ return [
     ],
 
     /**
+     * Admin Panel.
+     */
+    [
+        'key' => 'admin_panel',
+        'name' => 'admin::app.layouts.admin-panel',
+        'route' => 'admin.panel.employees.index',
+        'sort' => 8,
+        'icon-class' => 'icon-role',
+    ],
+
+    /**
      * Settings.
      */
     [

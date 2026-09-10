@@ -24,6 +24,7 @@ class ProductDataGrid extends DataGrid
                 'products.id',
                 'products.sku',
                 'products.name',
+                'products.description',
                 'products.price',
                 'tags.name as tag_name',
             )

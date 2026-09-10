@@ -17,18 +17,7 @@
             <div class="flex items-center gap-x-2.5">
                 {!! view_render_event('admin.settings.users.index.create_button.before') !!}
 
-                <!-- Create button for User -->
-                @if (bouncer()->hasPermission('settings.user.users.create'))
-                    <div class="flex items-center gap-x-2.5">
-                        <button
-                            type="button"
-                            class="primary-button"
-                            @click="$refs.userSettings.openModal()"
-                        >
-                            @lang('admin::app.settings.users.index.create-btn')
-                        </button>
-                    </div>
-                @endif
+                {{-- Create user action is exclusive to Admin Panel (+ Add Employee) --}}
 
                 {!! view_render_event('admin.settings.users.index.create_button.after') !!}
             </div>
@@ -196,7 +185,7 @@
                                 <template v-for="column in available.columns">
                                     <div class="flex flex-wrap items-baseline gap-x-2">
                                         <span class="text-slate-600 dark:text-gray-300" v-html="column.label + ':'"></span>
-                                        <span class="break-words font-medium text-slate-900 dark:text-white" v-html="record[column.index]"></span>
+                                        <span class="break-words font-medium text-gray-600dark:text-white" v-html="record[column.index]"></span>
                                     </div>
                                 </template>
                             </div>

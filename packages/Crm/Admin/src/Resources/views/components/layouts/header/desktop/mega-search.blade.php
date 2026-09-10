@@ -1,11 +1,11 @@
 <v-mega-search>
-    <div class="relative flex w-[550px] max-w-[550px] items-center max-lg:w-[400px] ltr:ml-2.5 rtl:mr-2.5">
-        <i class="icon-search absolute top-2 flex items-center text-2xl ltr:left-3 rtl:right-3"></i>
+    <div class="relative flex w-[480px] max-w-[550px] items-center max-lg:w-[360px] ltr:ml-2 rtl:mr-2">
+        <i class="icon-search absolute top-2.5 flex items-center text-xl text-slate-400 ltr:left-3.5 rtl:right-3.5 pointer-events-none"></i>
 
         <input
             type="text"
-            class="block w-full rounded-3xl border bg-white px-10 py-1.5 leading-6 text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400"
-            placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
+            class="block w-full rounded-full border border-slate-200 bg-slate-50/80 px-10 py-1.5 text-xs text-slate-700 placeholder-slate-400 shadow-2xs transition-all hover:bg-white focus:border-blue-500/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+            placeholder="Search anything..."
         >
     </div>
 </v-mega-search>
@@ -15,14 +15,14 @@
         type="text/x-template"
         id="v-mega-search-template"
     >
-        <div class="relative flex w-[550px] max-w-[550px] items-center max-lg:w-[400px] ltr:ml-2.5 rtl:mr-2.5">
-            <i class="icon-search absolute top-2 flex items-center text-2xl ltr:left-3 rtl:right-3"></i>
+        <div class="relative flex w-[480px] max-w-[550px] items-center max-lg:w-[360px] ltr:ml-2 rtl:mr-2">
+            <i class="icon-search absolute top-2.5 flex items-center text-xl text-slate-400 ltr:left-3.5 rtl:right-3.5 pointer-events-none"></i>
 
             <input
                 type="text"
-                class="peer block w-full rounded-3xl border border-gray-300 bg-white px-10 py-1.5 leading-6 text-gray-600 transition-all hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400"
-                :class="{'border-gray-400': isDropdownOpen}"
-                placeholder="@lang('admin::app.components.layouts.header.mega-search.title')"
+                class="peer block w-full rounded-full border border-slate-200 bg-slate-50/80 px-10 py-1.5 text-xs text-slate-700 placeholder-slate-400 shadow-2xs transition-all hover:bg-white focus:border-blue-500/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                :class="{'border-blue-500 bg-white ring-2 ring-blue-500/20': isDropdownOpen}"
+                placeholder="Search anything..."
                 v-model.lazy="searchTerm"
                 @click="searchTerm.length >= 2 ? isDropdownOpen = true : {}"
                 v-debounce="500"

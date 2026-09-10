@@ -16,4 +16,12 @@ class AclItem
         public int $sort,
         public Collection $children,
     ) {}
+
+    /**
+     * Get key of acl item.
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 }

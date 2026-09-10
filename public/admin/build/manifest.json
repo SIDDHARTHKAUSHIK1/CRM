@@ -264,7 +264,7 @@
     "isDynamicEntry": true
   },
   "src/Resources/assets/css/app.css": {
-    "file": "assets/app-CSnqlRBD.css",
+    "file": "assets/app-DUgDHAVl.css",
     "src": "src/Resources/assets/css/app.css",
     "isEntry": true
   },
@@ -281,7 +281,7 @@
     "src": "src/Resources/assets/images/dark-corner-clip.svg"
   },
   "src/Resources/assets/images/dark-logo.svg": {
-    "file": "assets/dark-logo-DhyuiQo5.svg",
+    "file": "assets/dark-logo-DV7jSKvC.svg",
     "src": "src/Resources/assets/images/dark-logo.svg"
   },
   "src/Resources/assets/images/empty-placeholders/activities.svg": {
@@ -353,23 +353,23 @@
     "src": "src/Resources/assets/images/favicon.ico"
   },
   "src/Resources/assets/images/favicon.svg": {
-    "file": "assets/favicon-CzN8BtqG.svg",
+    "file": "assets/favicon-CJG86Vc6.svg",
     "src": "src/Resources/assets/images/favicon.svg"
   },
   "src/Resources/assets/images/logo.svg": {
-    "file": "assets/logo-D_H3idSs.svg",
+    "file": "assets/logo-5LMcXT1L.svg",
     "src": "src/Resources/assets/images/logo.svg"
   },
   "src/Resources/assets/images/mobile-dark-logo.svg": {
-    "file": "assets/mobile-dark-logo-B7m27av5.svg",
+    "file": "assets/mobile-dark-logo-D97rzqJf.svg",
     "src": "src/Resources/assets/images/mobile-dark-logo.svg"
   },
   "src/Resources/assets/images/mobile-light-logo.svg": {
-    "file": "assets/mobile-light-logo-BVwvJ-EN.svg",
+    "file": "assets/mobile-light-logo-CtuY2lq8.svg",
     "src": "src/Resources/assets/images/mobile-light-logo.svg"
   },
   "src/Resources/assets/js/app.js": {
-    "file": "assets/app-BQ000mbZ.js",
+    "file": "assets/app-BMqb1HmQ.js",
     "name": "app",
     "src": "src/Resources/assets/js/app.js",
     "isEntry": true,
@@ -420,7 +420,7 @@
       "node_modules/vue-cal/dist/drag-and-drop.es.js"
     ],
     "css": [
-      "assets/app-C2Wq9G4i.css"
+      "assets/app-BRNP-qHe.css"
     ]
   },
   "src/Resources/assets/js/chart.js": {

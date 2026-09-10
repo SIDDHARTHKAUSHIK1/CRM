@@ -34,7 +34,7 @@
                             'bg-red-200',
                             'bg-lime-200',
                             'bg-blue-200',
-                            'bg-orange-200',
+                            'bg-purple-200',
                             'bg-green-200',
                             'bg-pink-200',
                             'bg-yellow-400'
@@ -45,7 +45,7 @@
                             'text-red-900',
                             'text-lime-900',
                             'text-blue-900',
-                            'text-orange-900',
+                            'text-purple-900',
                             'text-green-900',
                             'text-pink-900',
                             'text-yellow-900',

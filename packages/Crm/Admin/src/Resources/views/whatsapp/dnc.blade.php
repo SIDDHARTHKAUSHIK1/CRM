@@ -5,7 +5,7 @@
 
     <div class="flex flex-col gap-6">
         <!-- Header -->
-        <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
+        <div class="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
             <div class="flex flex-col gap-1">
                 <x-admin::breadcrumbs name="whatsapp.dnc" />
                 <div class="text-xl font-bold dark:text-white">
@@ -92,7 +92,7 @@
                             <tbody>
                                 @foreach ($dncList as $dnc)
                                     <tr class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50">
-                                        <td class="px-4 py-2.5 font-mono text-xs font-semibold text-gray-900 dark:text-white">
+                                        <td class="px-4 py-2.5 text-xs font-semibold text-gray-900 dark:text-white">
                                             +{{ $dnc->phone_e164 }}
                                         </td>
                                         <td class="px-4 py-2.5 text-xs text-gray-500 dark:text-gray-400">

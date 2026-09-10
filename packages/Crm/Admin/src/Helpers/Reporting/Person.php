@@ -39,10 +39,15 @@ class Person extends AbstractReporting
      */
     public function getTotalPersons($startDate, $endDate): int
     {
-        return $this->personRepository
+        $query = $this->personRepository
             ->resetModel()
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $query->whereIn('persons.user_id', $userIds);
+        }
+
+        return $query->count();
     }
 
     /**
@@ -54,13 +59,18 @@ class Person extends AbstractReporting
     {
         $tablePrefix = DB::getTablePrefix();
 
-        $items = $this->personRepository
+        $query = $this->personRepository
             ->resetModel()
             ->leftJoin('leads', 'persons.id', '=', 'leads.person_id')
             ->select('*', 'persons.id as id')
             ->addSelect(DB::raw('SUM('.$tablePrefix.'leads.lead_value) as revenue'))
-            ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate])
-            ->having(DB::raw('SUM('.$tablePrefix.'leads.lead_value)'), '>', 0)
+            ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate]);
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $query->whereIn('persons.user_id', $userIds);
+        }
+
+        $items = $query->having(DB::raw('SUM('.$tablePrefix.'leads.lead_value)'), '>', 0)
             ->groupBy('person_id')
             ->orderBy('revenue', 'DESC')
             ->limit($limit)

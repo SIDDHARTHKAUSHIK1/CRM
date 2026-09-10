@@ -37,9 +37,14 @@ class Quote extends AbstractReporting
      */
     public function getTotalQuotes($startDate, $endDate): int
     {
-        return $this->quoteRepository
+        $query = $this->quoteRepository
             ->resetModel()
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($userIds = bouncer()->getAuthorizedUserIds()) {
+            $query->whereIn('quotes.user_id', $userIds);
+        }
+
+        return $query->count();
     }
 }

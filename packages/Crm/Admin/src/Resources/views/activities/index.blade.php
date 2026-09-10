@@ -1,1161 +1,1060 @@
 <x-admin::layouts>
     <x-slot:title>
-        @lang('admin::app.activities.index.title')
+        Activities &amp; Daily Schedule - RealEstate CRM
     </x-slot>
-
-    {!! view_render_event('admin.activities.index.activities.before') !!}
-
-    <!-- Activities Datagrid -->
-    <v-activities>
-        <div class="flex flex-col gap-4">
-            <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                <div class="flex flex-col gap-2">
-                    <x-admin::breadcrumbs name="activities" />
-
-                    <div class="text-xl font-bold dark:text-white">
-                        @lang('admin::app.activities.index.title')
-                    </div>
-                </div>
-
-                <div class="flex gap-2">
-                    <i class="icon-list cursor-pointer rounded p-2 text-2xl"></i>
-
-                    <i class="icon-calendar cursor-pointe rounded p-2 text-2xl"></i>
-                </div>
-            </div>
-
-            <!-- DataGrid Shimmer -->
-            @if (
-                request()->get('view-type') == 'table'
-                || ! request()->has('view-type')
-            )
-                <x-admin::shimmer.datagrid :is-multi-row="true"/>
-            @endif
-        </div>
-    </v-activities>
-
-    {!! view_render_event('admin.activities.index.activities.after') !!}
-
-    @pushOnce('scripts')
-        <script
-            type="text/x-template"
-            id="v-activities-template"
-        >
-            <div class="flex flex-col gap-4">
-                <div class="scroll-reactive-sticky sticky top-[60px] z-[1000] flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
-                    <div class="flex flex-col gap-2">
-                        <x-admin::breadcrumbs name="activities" />
-
-                        <div class="text-xl font-bold dark:text-white">
-                            @lang('admin::app.activities.index.title')
-                        </div>
-                    </div>
-
-                    {!! view_render_event('admin.activities.index.toggle_view.before') !!}
-
-                    <div class="flex">
-                        <i
-                            class="icon-list cursor-pointer rounded-md p-2 text-2xl"
-                            :class="{'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white': viewType == 'table'}"
-                            @click="toggleView('table')"
-                        ></i>
-
-                        <i
-                            class="icon-calendar cursor-pointer rounded-md p-2 text-2xl"
-                            :class="{'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white': viewType == 'calendar'}"
-                            @click="toggleView('calendar')"
-                        ></i>
-                    </div>
-
-                    {!! view_render_event('admin.activities.index.toggle_view.after') !!}
-                </div>
-
-                <!-- DataGrid Shimmer -->
-                <div>
-                    <template v-if="viewType == 'table'">
-                        {!! view_render_event('admin.activities.index.datagrid.before') !!}
-
-                        <x-admin::datagrid
-                            src="{{ route('admin.activities.get') }}"
-                            :isMultiRow="true"
-                            ref="datagrid"
-                        >
-                            <template #header="{
-                                isLoading,
-                                available,
-                                applied,
-                                selectAll,
-                                sort,
-                                performAction
-                            }">
-                                <template v-if="isLoading">
-                                    <x-admin::shimmer.datagrid.table.head :isMultiRow="true" />
-                                </template>
-
-                                <template v-else>
-                                    <div class="row grid grid-cols-[.3fr_.1fr_.3fr_.5fr] grid-rows-1 items-center gap-x-2.5 border-b px-4 py-2.5 dark:border-gray-800 max-lg:hidden">
-                                        <div
-                                            class="flex min-w-0 select-none items-center gap-2.5"
-                                            v-for="(columnGroup, index) in [['id', 'title', 'created_by_id'], ['is_done'], ['comment', 'lead_title', 'type'], ['schedule_from', 'schedule_to', 'created_at']]"
-                                        >
-                                            <label
-                                                class="flex w-max cursor-pointer select-none items-center gap-1"
-                                                for="mass_action_select_all_records"
-                                                v-if="! index"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    name="mass_action_select_all_records"
-                                                    id="mass_action_select_all_records"
-                                                    class="peer hidden"
-                                                    :checked="['all', 'partial'].includes(applied.massActions.meta.mode)"
-                                                    @change="selectAll"
-                                                >
-
-                                                <span
-                                                    class="icon-checkbox-outline cursor-pointer rounded-md text-2xl text-gray-600 dark:text-gray-300"
-                                                    :class="[
-                                                        applied.massActions.meta.mode === 'all' ? 'peer-checked:icon-checkbox-select peer-checked:text-brandColor' : (
-                                                            applied.massActions.meta.mode === 'partial' ? 'peer-checked:icon-checkbox-multiple peer-checked:text-brandColor' : ''
-                                                        ),
-                                                    ]"
-                                                >
-                                                </span>
-                                            </label>
-
-                                            <p class="text-gray-600 dark:text-gray-300">
-                                                <span class="[&>*]:after:content-['_/_']">
-                                                    <template v-for="column in columnGroup">
-                                                        <span
-                                                            class="after:content-['/'] last:after:content-['']"
-                                                            :class="{
-                                                                'font-medium text-gray-800 dark:text-white': applied.sort.column == column,
-                                                                'cursor-pointer hover:text-gray-800 dark:hover:text-white': available.columns.find(columnTemp => columnTemp.index === column)?.sortable,
-                                                            }"
-                                                            @click="
-                                                                available.columns.find(columnTemp => columnTemp.index === column)?.sortable ? sort(available.columns.find(columnTemp => columnTemp.index === column)): {}
-                                                            "
-                                                        >
-                                                            @{{ available.columns.find(columnTemp => columnTemp.index === column)?.label }}
-                                                        </span>
-                                                    </template>
-                                                </span>
-
-                                                <i
-                                                    class="align-text-bottom text-base text-gray-800 dark:text-white ltr:ml-1.5 rtl:mr-1.5"
-                                                    :class="[applied.sort.order === 'asc' ? 'icon-stats-down': 'icon-stats-up']"
-                                                    v-if="columnGroup.includes(applied.sort.column)"
-                                                ></i>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Mobile Sort/Filter Header -->
-                                    <div class="hidden border-b bg-gray-50 px-4 py-3 text-black dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 max-lg:block">
-                                        <div class="flex items-center justify-between">
-                                            <!-- Mass Actions for Mobile -->
-                                            <div v-if="available.massActions.length">
-                                                <label
-                                                    class="flex w-max cursor-pointer select-none items-center gap-1"
-                                                    for="mass_action_select_all_records"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        name="mass_action_select_all_records"
-                                                        id="mass_action_select_all_records"
-                                                        class="peer hidden"
-                                                        :checked="['all', 'partial'].includes(applied.massActions.meta.mode)"
-                                                        @change="selectAll"
-                                                    >
-
-                                                    <span
-                                                        class="icon-checkbox-outline cursor-pointer rounded-md text-2xl text-gray-600 dark:text-gray-300"
-                                                        :class="[
-                                                            applied.massActions.meta.mode === 'all' ? 'peer-checked:icon-checkbox-select peer-checked:text-brandColor' : (
-                                                                applied.massActions.meta.mode === 'partial' ? 'peer-checked:icon-checkbox-multiple peer-checked:text-brandColor' : ''
-                                                            ),
-                                                        ]"
-                                                    >
-                                                    </span>
-                                                </label>
-                                            </div>
-
-                                            <!-- Mobile Sort Dropdown -->
-                                            <div v-if="available.columns.some(column => column.sortable)">
-                                                <x-admin::dropdown position="bottom-{{ in_array(app()->getLocale(), ['fa', 'ar']) ? 'left' : 'right' }}">
-                                                    <x-slot:toggle>
-                                                        <div class="flex items-center gap-1">
-                                                            <button
-                                                                type="button"
-                                                                class="inline-flex w-full max-w-max cursor-pointer appearance-none items-center justify-between gap-x-2 rounded-md border bg-white px-2.5 py-1.5 text-center leading-6 text-gray-600 transition-all marker:shadow hover:border-gray-400 focus:border-gray-400 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-400 dark:focus:border-gray-400"
-                                                            >
-                                                                <span>
-                                                                    Sort
-                                                                </span>
-
-                                                                <span class="icon-down-arrow text-2xl"></span>
-                                                            </button>
-                                                        </div>
-                                                    </x-slot>
-
-                                                    <x-slot:menu>
-                                                        <x-admin::dropdown.menu.item
-                                                            v-for="column in available.columns.filter(column => column.sortable && column.visibility)"
-                                                            @click="sort(column)"
-                                                        >
-                                                            <div class="flex items-center gap-2">
-                                                                <span v-html="column.label"></span>
-                                                                <i
-                                                                    class="align-text-bottom text-base text-gray-600 dark:text-gray-300"
-                                                                    :class="[applied.sort.order === 'asc' ? 'icon-stats-down': 'icon-stats-up']"
-                                                                    v-if="column.index == applied.sort.column"
-                                                                ></i>
-                                                            </div>
-                                                        </x-admin::dropdown.menu.item>
-                                                    </x-slot>
-                                                </x-admin::dropdown>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </template>
-
-                            <template #body="{
-                                isLoading,
-                                available,
-                                applied,
-                                selectAll,
-                                sort,
-                                performAction
-                            }">
-                                <template v-if="isLoading">
-                                    <x-admin::shimmer.datagrid.table.body :isMultiRow="true" />
-                                </template>
-
-                                <template v-else>
-                                    <div
-                                        class="row grid grid-cols-[.3fr_.1fr_.3fr_.5fr] grid-rows-1 gap-x-2.5 border-b px-4 py-2.5 transition-all hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-950 max-lg:hidden"
-                                        v-for="record in available.records"
-                                    >
-                                        <!-- Mass Actions, Title and Created By -->
-                                        <div class="flex min-w-0 gap-2.5">
-                                            <input
-                                                type="checkbox"
-                                                :name="`mass_action_select_record_${record.id}`"
-                                                :id="`mass_action_select_record_${record.id}`"
-                                                :value="record.id"
-                                                class="peer hidden"
-                                                v-model="applied.massActions.indices"
-                                            >
-
-                                            <label
-                                                class="icon-checkbox-outline peer-checked:icon-checkbox-select cursor-pointer rounded-md text-2xl text-gray-600 peer-checked:text-brandColor dark:text-gray-300"
-                                                :for="`mass_action_select_record_${record.id}`"
-                                            ></label>
-
-                                            <div class="flex min-w-0 flex-col gap-1.5">
-                                                <p class="text-gray-600 dark:text-gray-300">
-                                                    @{{ record.id }}
-                                                </p>
-
-                                                <p class="break-words text-gray-600 dark:text-gray-300">
-                                                    @{{ record.title }}
-                                                </p>
-
-                                                <p
-                                                    class="break-words text-gray-600 dark:text-gray-300"
-                                                    v-html="record.created_by_id"
-                                                >
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Is Done -->
-                                        <div class="flex min-w-0 gap-1.5">
-                                            <div class="flex min-w-0 flex-col gap-1.5">
-                                                <p
-                                                    class="text-gray-600 dark:text-gray-300"
-                                                    v-html="record.is_done"
-                                                >
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Comment, Lead Title and Type -->
-                                        <div class="flex min-w-0 gap-1.5">
-                                            <div class="flex min-w-0 flex-col gap-1.5">
-                                                <p class="break-words text-gray-600 dark:text-gray-300">
-                                                    {{-- @{{ record.comment }} --}}
-                                                    @{{ (record.comment || '').length > 180 ? (record.comment || '').slice(0, 180) + '...' : (record.comment || '') }}
-                                                </p>
-
-                                                <p
-                                                    class="break-words"
-                                                    v-html="record.lead_title"
-                                                ></p>
-
-                                                <p class="text-gray-600 dark:text-gray-300">
-                                                    @{{ record.type ?? 'N/A'}}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex min-w-0 items-start justify-between gap-x-4">
-                                            <div class="flex flex-col gap-1.5">
-                                                <p class="text-gray-600 dark:text-gray-300">
-                                                    @{{ record.schedule_from ?? 'N/A' }}
-                                                </p>
-
-                                                <p class="text-gray-600 dark:text-gray-300">
-                                                    @{{ record.schedule_to }}
-                                                </p>
-
-                                                <p class="text-gray-600 dark:text-gray-300">
-                                                    @{{ record.created_at }}
-                                                </p>
-                                            </div>
-
-                                            <div class="flex items-center gap-1.5">
-                                                <p
-                                                    class="place-self-end"
-                                                    v-if="available.actions.length"
-                                                >
-                                                    <span
-                                                        class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 max-sm:place-self-center"
-                                                        :class="action.icon"
-                                                        v-text="! action.icon ? action.title : ''"
-                                                        v-for="action in record.actions"
-                                                        @click="performAction(action)"
-                                                    ></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Mobile Card View -->
-                                    <div
-                                        class="hidden border-b px-4 py-4 text-black dark:border-gray-800 dark:text-gray-300 max-lg:block"
-                                        v-for="record in available.records"
-                                    >
-                                        <div class="mb-2 flex items-center justify-between">
-                                            <!-- Mass Actions for Mobile Cards -->
-                                            <div class="flex w-full items-center justify-between gap-2">
-                                                <p v-if="available.massActions.length">
-                                                    <label :for="`mass_action_select_record_${record[available.meta.primary_column]}`">
-                                                        <input
-                                                            type="checkbox"
-                                                            :name="`mass_action_select_record_${record[available.meta.primary_column]}`"
-                                                            :value="record[available.meta.primary_column]"
-                                                            :id="`mass_action_select_record_${record[available.meta.primary_column]}`"
-                                                            class="peer hidden"
-                                                            v-model="applied.massActions.indices"
-                                                        >
-
-                                                        <span class="icon-checkbox-outline peer-checked:icon-checkbox-select cursor-pointer rounded-md text-2xl text-gray-500 peer-checked:text-brandColor">
-                                                        </span>
-                                                    </label>
-                                                </p>
-
-                                                <!-- Actions for Mobile -->
-                                                <div
-                                                    class="flex w-full items-center justify-end"
-                                                    v-if="available.actions.length"
-                                                >
-                                                    <span
-                                                        class="dark:hover:bg-gray-80 cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200"
-                                                        :class="action.icon"
-                                                        v-text="! action.icon ? action.title : ''"
-                                                        v-for="action in record.actions"
-                                                        @click="performAction(action)"
-                                                    >
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Card Content -->
-                                        <div class="grid gap-2">
-                                            <template v-for="column in available.columns">
-                                                <div class="flex flex-wrap items-baseline gap-x-2">
-                                                    <span class="text-slate-600 dark:text-gray-300" v-html="column.label + ':'"></span>
-                                                    <span class="break-words font-medium text-slate-900 dark:text-white" v-html="record[column.index]"></span>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </template>
-                            </template>
-                        </x-admin::datagrid>
-
-                        {!! view_render_event('admin.activities.index.datagrid.after') !!}
-                    </template>
-
-                    <template v-else>
-                        {!! view_render_event('admin.activities.index.vue_calender.before') !!}
-
-                        <v-calendar></v-calendar>
-
-                        {!! view_render_event('admin.activities.index.vue_calender.after') !!}
-                    </template>
-                </div>
-            </div>
-        </script>
-
-        <script
-            type="text/x-template"
-            id="v-calendar-template"
-        >
-            <div class="relative">
-                <v-vue-cal
-                    ref="calendar"
-                    hide-view-selector
-                    :watchRealTime="true"
-                    :twelveHour="true"
-                    :disable-views="['years', 'year', 'month', 'day']"
-                    style="height: calc(100vh - 240px);"
-                    :class="{'vuecal--dark': theme === 'dark'}"
-                    :events="events"
-                    :editable-events="false"
-                    :time-format="'H:mm'"
-                    :events-on-month-view="'stack'"
-                    :events-count-on-year-view="3"
-                    :overlaps-per-time-step="false"
-                    :cell-click-hold="false"
-                    :sticky-events="true"
-                    :events-overlap="true"
-                    :detailed-time="true"
-                    @ready="getActivities"
-                    @view-change="getActivities"
-                    @event-click="goToActivity"
-                    locale="{{ app()->getLocale() }}"
-                >
-                    <template #event="{ event }">
-                        <div
-                            class="event-resize-handle event-resize-handle--top"
-                            title="Drag to change start time"
-                            @mousedown.stop.prevent="beginResize($event, event, 'start')"
-                        >
-                            <span class="event-resize-handle__grip"></span>
-                        </div>
-
-                        <div
-                            class="vuecal__event-content"
-                            :style="{ backgroundColor: event._bgColor || '#F97316' }"
-                            draggable="false"
-                            @dragstart.prevent
-                            v-tooltip="{
-                                content: `
-                                    <div class='mb-1 font-semibold text-white'>${event.title}</div>
-                                    <div class='mb-1 text-xs text-gray-300'>${formatTime(event.start)} - ${formatTime(event.end)}</div>
-                                    ${event.description ? `<div class='text-xs text-gray-200'>${event.description}</div>` : ''
-                                }`,
-                                html: true,
-                                placement: 'top',
-                                trigger: 'hover',
-                                delay: { show: 200, hide: 100 }
-                            }"
-                        >
-                            <div class="vuecal__event-title font-medium">
-                                @{{ event.title }}
-                            </div>
-
-                            <div class="vuecal__event-time text-sm">
-                                @{{ formatTime(event.start) }} - @{{ formatTime(event.end) }}
-                            </div>
-                        </div>
-
-                        <div
-                            class="event-resize-handle event-resize-handle--bottom"
-                            title="Drag to change end time"
-                            @mousedown.stop.prevent="beginResize($event, event, 'end')"
-                        >
-                            <span class="event-resize-handle__grip"></span>
-                        </div>
-                    </template>
-                </v-vue-cal>
-
-                <div
-                    class="activity-drag-preview"
-                    v-if="dragPreview.visible"
-                    :style="{ left: dragPreview.x + 'px', top: dragPreview.y + 'px' }"
-                >
-                    <div class="font-semibold">
-                        @{{ dragPreview.title }}
-                    </div>
-
-                    <div class="text-xs opacity-90">
-                        @{{ dragPreview.currentLabel }}
-                    </div>
-
-                    <div class="text-xs opacity-90" v-if="dragPreview.targetLabel">
-                        @{{ dragPreview.targetLabel }}
-                    </div>
-
-                    <div class="text-xs opacity-80 mt-1" v-if="dragPreview.actionLabel">
-                        @{{ dragPreview.actionLabel }}
-                    </div>
-                </div>
-            </div>
-        </script>
-
-        <script type="module">
-            app.component('v-activities', {
-                template: '#v-activities-template',
-
-                data() {
-                    return {
-                        viewType: "{{ request('view-type') }}" || 'table',
-                    };
-                },
-
-                methods: {
-                    /**
-                     * Toggle view type.
-                     *
-                     * @param {String} type
-                     * @return {void}
-                     */
-                    toggleView(type) {
-                        this.viewType = type;
-
-                        let currentUrl = new URL(window.location);
-
-                        currentUrl.searchParams.set('view-type', type);
-
-                        window.history.pushState({}, '', currentUrl);
-                    },
-                },
-            });
-        </script>
-
-        <script type="module">
-            app.component('v-calendar', {
-                template: '#v-calendar-template',
-
-                data() {
-                    return {
-                        events: [],
-                        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
-                        lastViewRange: null,
-                        lastDragUpdateAt: 0,
-                        isUpdatingTimeline: false,
-                        resizeContext: null,
-                        dragPreview: {
-                            visible: false,
-                            x: 0,
-                            y: 0,
-                            title: '',
-                            currentLabel: '',
-                            targetLabel: '',
-                            actionLabel: '',
-                        },
-                    };
-                },
-
-                mounted() {
-                    /**
-                     * Listen for the theme change event.
-                     *
-                     * @return {void}
-                     */
-                    this.$emitter.on('change-theme', (theme) => this.theme = theme);
-                },
-
-                beforeUnmount() {
-                    window.removeEventListener('mousemove', this.onResizeMove);
-                    window.removeEventListener('mouseup', this.onResizeEnd);
-                },
-
-                methods: {
-                    /**
-                     * Get the activities for the calendar.
-                     *
-                     * @param {Object} {startDate}
-                     * @param {Object} {endDate}
-                     * @return {void}
-                     */
-                    getActivities({startDate, endDate}) {
-                        this.lastViewRange = { startDate, endDate };
-
-                        this.$root.pageLoaded = false;
-
-                        this.$axios.get("{{ route('admin.activities.get', ['view_type' => 'calendar']) }}" + `&startDate=${new window['Date'](startDate).toLocaleDateString("en-US")}&endDate=${new window['Date'](endDate).toLocaleDateString("en-US")}`)
-                            .then(response => {
-                                this.events = this.processEvents(response.data.activities);
-                            })
-                            .catch(error => {});
-                    },
-
-                    /**
-                     * Process events to improve their display
-                     *
-                     * @param {Array} events
-                     * @return {Array}
-                     */
-                    processEvents(events) {
-                        const segments = [];
-
-                        events.forEach(event => {
-                            const startDate = new window['Date'](event.start);
-                            const endDate = new window['Date'](event.end);
-
-                            const startDay = new window['Date'](startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-                            const endDay = new window['Date'](endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-
-                            if (startDay.getTime() === endDay.getTime()) {
-                                segments.push(Object.assign({}, event, {
-                                    _originalStart: event.start,
-                                    _originalEnd: event.end,
-                                    _segmentBaseStart: event.start,
-                                }));
-                            } else {
-                                let currentDay = new window['Date'](startDay);
-
-                                while (currentDay.getTime() <= endDay.getTime()) {
-                                    const y = currentDay.getFullYear();
-                                    const m = currentDay.getMonth();
-                                    const d = currentDay.getDate();
-
-                                    let segStart;
-                                    let segEnd;
-
-                                    if (currentDay.getTime() === startDay.getTime()) {
-                                        segStart = this.formatDateTime(new window['Date'](y, m, d, startDate.getHours(), startDate.getMinutes()));
-                                        segEnd = this.formatDateTime(new window['Date'](y, m, d, 23, 59));
-                                    } else if (currentDay.getTime() === endDay.getTime()) {
-                                        segStart = this.formatDateTime(new window['Date'](y, m, d, 0, 0));
-                                        segEnd = this.formatDateTime(new window['Date'](y, m, d, endDate.getHours(), endDate.getMinutes()));
-                                    } else {
-                                        segStart = this.formatDateTime(new window['Date'](y, m, d, 0, 0));
-                                        segEnd = this.formatDateTime(new window['Date'](y, m, d, 23, 59));
-                                    }
-
-                                    segments.push(Object.assign({}, event, {
-                                        start: segStart,
-                                        end: segEnd,
-                                        _originalStart: event.start,
-                                        _originalEnd: event.end,
-                                        _segmentBaseStart: segStart,
-                                    }));
-
-                                    currentDay.setDate(currentDay.getDate() + 1);
-                                }
-                            }
-                        });
-
-                        return segments.map(event => {
-                            if (! event._bgColor) {
-                                event._bgColor = this.generateEventColor(String(event.id ?? event.title ?? ''));
-                            }
-
-                            event.background = false;
-
-                            return event;
-                        });
-                    },
-
-                    beginResize(domEvent, event, mode) {
-                        if (! event?.id || ! event?.start || ! event?.end || this.isUpdatingTimeline) {
-                            return;
-                        }
-
-                        const fullOriginalStart = new window['Date'](event._originalStart ?? event.start);
-                        const fullOriginalEnd = new window['Date'](event._originalEnd ?? event.end);
-
-                        if (Number.isNaN(fullOriginalStart.getTime()) || Number.isNaN(fullOriginalEnd.getTime())) {
-                            return;
-                        }
-
-                        this.resizeContext = {
-                            id: event.id,
-                            mode: mode,
-                            originalStart: fullOriginalStart,
-                            originalEnd: fullOriginalEnd,
-                            nextValue: null,
-                            title: event.title || 'Activity',
-                        };
-
-                        const label = mode === 'start' ? 'start time' : 'end time';
-
-                        this.dragPreview.visible = true;
-                        this.dragPreview.title = this.resizeContext.title;
-                        this.dragPreview.currentLabel = `${this.formatDayTime(fullOriginalStart)} - ${this.formatDayTime(fullOriginalEnd)}`;
-                        this.dragPreview.targetLabel = '';
-                        this.dragPreview.actionLabel = `Drag to change ${label}`;
-
-                        this.updateDragPreviewPosition(domEvent.clientX, domEvent.clientY);
-
-                        document.body.style.cursor = 'ns-resize';
-                        document.body.style.userSelect = 'none';
-
-                        window.addEventListener('mousemove', this.onResizeMove);
-                        window.addEventListener('mouseup', this.onResizeEnd);
-                    },
-
-                    onResizeMove(domEvent) {
-                        if (! this.resizeContext) {
-                            return;
-                        }
-
-                        this.updateDragPreviewPosition(domEvent.clientX, domEvent.clientY);
-
-                        const slotTime = this.getSlotDateFromPoint(domEvent.clientX, domEvent.clientY);
-
-                        if (! slotTime) {
-                            this.dragPreview.targetLabel = '';
-
-                            return;
-                        }
-
-                        const ctx = this.resizeContext;
-
-                        if (ctx.mode === 'start') {
-                            const maxMs = ctx.originalEnd.getTime() - (15 * 60 * 1000);
-                            const clamped = new window['Date'](Math.min(slotTime.getTime(), maxMs));
-
-                            ctx.nextValue = clamped;
-                            this.dragPreview.targetLabel = `New: ${this.formatDayTime(clamped)} - ${this.formatDayTime(ctx.originalEnd)}`;
-                        } else {
-                            const minMs = ctx.originalStart.getTime() + (15 * 60 * 1000);
-                            const clamped = new window['Date'](Math.max(slotTime.getTime(), minMs));
-
-                            ctx.nextValue = clamped;
-                            this.dragPreview.targetLabel = `New: ${this.formatDayTime(ctx.originalStart)} - ${this.formatDayTime(clamped)}`;
-                        }
-                    },
-
-                    onResizeEnd() {
-                        window.removeEventListener('mousemove', this.onResizeMove);
-                        window.removeEventListener('mouseup', this.onResizeEnd);
-
-                        document.body.style.cursor = '';
-                        document.body.style.userSelect = '';
-
-                        if (! this.resizeContext) {
-                            return;
-                        }
-
-                        const { id, mode, originalStart, originalEnd, nextValue } = this.resizeContext;
-
-                        this.resizeContext = null;
-                        this.dragPreview.visible = false;
-                        this.dragPreview.targetLabel = '';
-                        this.dragPreview.actionLabel = '';
-
-                        if (! id || ! nextValue) {
-                            return;
-                        }
-
-                        let scheduleFrom;
-                        let scheduleTo;
-
-                        if (mode === 'start') {
-                            if (nextValue.getTime() === originalStart.getTime()) {
-                                return;
-                            }
-
-                            scheduleFrom = nextValue;
-                            scheduleTo = originalEnd;
-                        } else {
-                            if (nextValue.getTime() === originalEnd.getTime()) {
-                                return;
-                            }
-
-                            scheduleFrom = originalStart;
-                            scheduleTo = nextValue;
-                        }
-
-                        this.persistTimelineUpdate(id, scheduleFrom, scheduleTo);
-                    },
-
-                    persistTimelineUpdate(activityId, scheduleFrom, scheduleTo) {
-                        if (this.isUpdatingTimeline) {
-                            return;
-                        }
-
-                        this.isUpdatingTimeline = true;
-
-                        const url = `{{ route('admin.activities.update', ':id') }}`.replace(':id', activityId);
-
-                        this.$axios.put(url, {
-                            schedule_from: this.formatDateTimeForApi(scheduleFrom),
-                            schedule_to: this.formatDateTimeForApi(scheduleTo),
-                        })
-                            .then(() => {
-                                this.lastDragUpdateAt = window['Date'].now();
-                            })
-                            .catch(() => {})
-                            .finally(() => {
-                                this.isUpdatingTimeline = false;
-
-                                if (this.lastViewRange) {
-                                    this.getActivities(this.lastViewRange);
-                                }
-                            });
-                    },
-
-                    getSlotDateFromPoint(clientX, clientY) {
-                        const cal = this.$refs.calendar;
-
-                        if (! this.lastViewRange?.startDate || ! cal?.$el) {
-                            return null;
-                        }
-
-                        const cellsEl = cal.cellsEl || cal.$el.querySelector('.vuecal__bg');
-
-                        if (! cellsEl) {
-                            return null;
-                        }
-
-                        const cellsRect = cellsEl.getBoundingClientRect();
-
-                        const timeStep = cal.timeStep ?? cal.$props?.timeStep ?? 60;
-                        const timeCellHeight = cal.timeCellHeight ?? cal.$props?.timeCellHeight ?? 40;
-                        const timeFrom = cal.timeFrom ?? cal.$props?.timeFrom ?? 0;
-
-                        const tolerance = 20;
-
-                        if (
-                            clientX < cellsRect.left - tolerance
-                            || clientX > cellsRect.right + tolerance
-                            || clientY < cellsRect.top - tolerance
-                            || clientY > cellsRect.bottom + tolerance
-                        ) {
-                            return null;
-                        }
-
-                        const viewStart = new window['Date'](this.lastViewRange.startDate);
-                        viewStart.setHours(0, 0, 0, 0);
-
-                        const viewEnd = new window['Date'](this.lastViewRange.endDate);
-                        viewEnd.setHours(0, 0, 0, 0);
-
-                        const dayMs = 24 * 60 * 60 * 1000;
-                        const totalDays = Math.max(Math.round((viewEnd.getTime() - viewStart.getTime()) / dayMs) + 1, 1);
-                        const dayWidth = cellsRect.width / totalDays;
-                        const dayIndex = Math.min(Math.max(Math.floor((clientX - cellsRect.left) / dayWidth), 0), totalDays - 1);
-
-                        const slotDate = new window['Date'](viewStart.getTime() + (dayIndex * dayMs));
-
-                        const clampedY = Math.max(cellsRect.top, Math.min(clientY, cellsRect.bottom));
-                        const y = clampedY - cellsRect.top;
-                        const rawMinutes = Math.round(y * timeStep / timeCellHeight + timeFrom);
-
-                        const snappedMinutes = Math.round(rawMinutes / 15) * 15;
-                        const boundedMinutes = Math.max(0, Math.min(snappedMinutes, 23 * 60 + 45));
-
-                        slotDate.setHours(Math.floor(boundedMinutes / 60), boundedMinutes % 60, 0, 0);
-
-                        return slotDate;
-                    },
-
-                    updateDragPreviewPosition(clientX, clientY) {
-                        const safeX = Number.isFinite(clientX) ? clientX : 0;
-                        const safeY = Number.isFinite(clientY) ? clientY : 0;
-
-                        this.dragPreview.x = safeX + 16;
-                        this.dragPreview.y = safeY + 16;
-                    },
-
-                    formatDayTime(date) {
-                        const day = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-                        return `${day} ${this.formatTime(date)}`;
-                    },
-
-                    formatDateTimeForApi(date) {
-                        const year = date.getFullYear();
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const hours = String(date.getHours()).padStart(2, '0');
-                        const minutes = String(date.getMinutes()).padStart(2, '0');
-                        const seconds = String(date.getSeconds()).padStart(2, '0');
-
-                        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                    },
-
-                    formatDateTime(date) {
-                        const year = date.getFullYear();
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const hours = String(date.getHours()).padStart(2, '0');
-                        const minutes = String(date.getMinutes()).padStart(2, '0');
-
-                        return `${year}-${month}-${day} ${hours}:${minutes}`;
-                    },
-
-                    /**
-                     * Simple string hash function for consistent color generation
-                     *
-                     * @param {string} str
-                     * @return {number}
-                     */
-                    hashString(str) {
-                        let hash = 0;
-
-                        for (let i = 0; i < str.length; i++) {
-                            hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                            hash |= 0;
-                        }
-
-                        return hash;
-                    },
-
-                    generateEventColor(value) {
-                        const hash = this.hashString(value);
-
-                        const colors = [
-                            '#e11d48',
-                            '#f97316',
-                            '#eab308',
-                            '#22c55e',
-                            '#14b8a6',
-                            '#06b6d4',
-                            '#3b82f6',
-                            '#6366f1',
-                            '#8b5cf6',
-                            '#d946ef',
-                            '#ec4899',
-                            '#84cc16',
-                        ];
-
-                        return colors[Math.abs(hash) % colors.length];
-                    },
-
-                    /**
-                     * Format time for display in event template
-                     *
-                     * @param {object} date
-                     * @return {string}
-                     */
-                    formatTime(date) {
-                        if (! date) {
-                            return '';
-                        }
-
-                        const dateObj = new (window['Date'])(date);
-
-                        let hours = dateObj.getHours().toString().padStart(2, '0');
-
-                        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
-
-                        return `${hours}:${minutes}`;
-                    },
-
-                    /**
-                     * Redirect to the activity edit page.
-                     *
-                     * @param {Object} event
-                     * @return {void}
-                     */
-                    goToActivity(event) {
-                        if (window['Date'].now() - this.lastDragUpdateAt < 350) {
-                            return;
-                        }
-
-                        if (event.id) {
-                            window.location.href = `{{ route('admin.activities.edit', ':id') }}`.replace(':id', event.id);
-                        }
-                    },
-                },
-            });
-        </script>
-
-        <script>
-            /**
-             * Update status for `is_done`.
-             *
-             * @param {Event} {target}
-             * @return {void}
-             */
-            const updateStatus = ({ target }, url) => {
-                axios
-                    .post(url, {
-                        _method: 'put',
-                        is_done: target.checked,
-                    })
-                    .then(response => {
-                        window.emitter.emit('add-flash', { type: 'success', message: response.data.message });
-                    })
-                    .catch(error => {});
-            };
-        </script>
-    @endPushOnce
 
     @pushOnce('styles')
         <style>
-            /* Base Event Styling */
-            .vuecal__event {
-                background-color: transparent;
-                color: #fff !important;
-                cursor: pointer;
-                min-height: 20px;
-                overflow: hidden;
-                padding: 0;
-                transition: box-shadow 0.2s ease, transform 0.2s ease;
-                -webkit-user-select: none;
-                user-select: none;
+            .activity-card {
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             }
-
-            .vuecal__event-content {
-                position: absolute;
-                inset: 3px;
-                padding: 6px 8px;
-                font-size: 14px;
-                color: #fff;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
-                text-align: center;
+            .activity-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
             }
-
-            .vuecal__event:hover .vuecal__event-content {
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-                filter: brightness(1.1);
+            @keyframes modalFadeIn {
+                from { opacity: 0; transform: scale(0.96) translateY(8px); }
+                to { opacity: 1; transform: scale(1) translateY(0); }
             }
-
-            .event-resize-handle {
-                position: absolute;
-                left: 0;
-                right: 0;
-                height: 12px;
-                z-index: 10;
-                cursor: ns-resize;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .event-resize-handle--top {
-                top: 0;
-                border-radius: 4px 4px 0 0;
-            }
-
-            .event-resize-handle--bottom {
-                bottom: 0;
-                border-radius: 0 0 4px 4px;
-            }
-
-            .event-resize-handle__grip {
-                width: 28px;
-                height: 3px;
-                border-radius: 2px;
-                background: rgba(255, 255, 255, 0.5);
-                opacity: 0;
-                transition: opacity 0.15s ease;
-            }
-
-            .vuecal__event:hover .event-resize-handle__grip,
-            .event-resize-handle:hover .event-resize-handle__grip {
-                opacity: 1;
-            }
-
-            .event-resize-handle:hover .event-resize-handle__grip {
-                background: rgba(255, 255, 255, 0.9);
-            }
-
-            .vuecal__event .vuecal__event-resize-handle {
-                display: none;
-            }
-
-            .vuecal__event.done .vuecal__event-content {
-                background-color: #53c41a !important;
-            }
-
-            /* Event Title & Time */
-            .vuecal__event-title {
-                font-weight: 500;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 100%;
-            }
-
-            .vuecal__event-time {
-                font-size: 12px;
-                opacity: 0.8;
-                width: 100%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            /* More Events Indicator */
-            .vuecal__cell-more-events {
-                font-size: 12px;
-                color: #666;
-                padding: 2px 5px;
-                text-align: center;
-                cursor: pointer;
-                background-color: rgba(0, 0, 0, 0.04);
-            }
-
-            /* Events Count Badge */
-            .vuecal__cell-events-count {
-                background-color: rgba(66, 92, 240, 0.85);
-                padding: 0 4px;
-                font-size: 11px;
-            }
-
-            /* Week View Stacking */
-            .vuecal--week-view .vuecal__event-container {
-                padding: 1px;
-            }
-
-            .vuecal__event-container--overlapped .vuecal__event {
-                margin-top: 2px;
-                min-height: 28px;
-            }
-
-            /* Dark Mode Styles */
-            .vuecal--dark {
-                background-color: #1F2937 !important;
-                color: #FFFFFF !important;
-            }
-
-            .vuecal--dark .vuecal__header,
-            .vuecal--dark .vuecal__header-weekdays,
-            .vuecal--dark .vuecal__header-months {
-                background-color: #374151 !important;
-                color: #FFFFFF !important;
-            }
-
-            .vuecal--dark .vuecal__day,
-            .vuecal--dark .vuecal__month-view,
-            .vuecal--dark .vuecal__week-view,
-            .vuecal--dark .vuecal__day--weekend,
-            .vuecal--dark .vuecal__day--selected {
-                background-color: #1F2937 !important;
-                color: #FFFFFF !important;
-            }
-
-            .vuecal--dark .vuecal__event .vuecal__event-content {
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            }
-
-            .vuecal--dark .vuecal__cell-more-events {
-                color: #ddd;
-                background-color: rgba(255, 255, 255, 0.1);
-            }
-
-            .activity-drag-preview {
-                position: fixed;
-                z-index: 9999;
-                pointer-events: none;
-                min-width: 180px;
-                max-width: 280px;
-                padding: 8px 10px;
-                border-radius: 8px;
-                color: #fff;
-                background: rgba(17, 24, 39, 0.92);
-                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                line-height: 1.3;
+            .animate-modal-in {
+                animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
         </style>
+    @endPushOnce
+
+    <div class="flex flex-col gap-6" id="activities-workspace">
+
+        <!-- ========================================================= -->
+        <!-- 1. TOP HEADER SECTION -->
+        <!-- ========================================================= -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-transparent">
+            <!-- Greeting & Titles -->
+            <div class="flex flex-col gap-1 min-w-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Good Morning, 👋</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-800 dark:text-white flex items-center gap-2.5">
+                    Activities &amp; Daily Schedule
+                </h1>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    Manage tasks, client calls, meetings &amp; follow-ups
+                </p>
+            </div>
+
+            <!-- View Switchers, Date Widget & + Add Activity Action -->
+            <div class="flex items-center gap-3 flex-wrap">
+                
+                <!-- View Switcher: Timeline Feed vs Full View Calendar -->
+                <div class="inline-flex rounded-2xl p-1 bg-slate-100 dark:bg-gray-800/90 border border-slate-200/90 dark:border-gray-700 shadow-2xs">
+                    <button
+                        type="button"
+                        id="btn-header-feed"
+                        onclick="switchMainView('feed')"
+                        class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-gray-900 shadow-2xs text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span>Timeline Feed</span>
+                    </button>
+                    
+                    <button
+                        type="button"
+                        id="btn-header-calendar"
+                        onclick="switchMainView('calendar')"
+                        class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-gray-600 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Full View Calendar</span>
+                    </button>
+                </div>
+
+                <!-- Date Pill Card with Motivational Badge -->
+                <div class="flex items-center gap-3 bg-white dark:bg-gray-900 border border-slate-200/90 dark:border-gray-800 rounded-2xl px-4 py-2 shadow-2xs">
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>{{ now()->format('l, j M Y') }}</span>
+                    </div>
+
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800">
+                        ⭐ Keep going! You're doing great!
+                    </span>
+                </div>
+
+                <!-- + Add Activity Button -->
+                <button
+                    type="button"
+                    onclick="window.openScheduleModal('{{ now()->format('Y-m-d') }}')"
+                    class="primary-button !px-4 !py-2.5 !rounded-2xl !text-xs font-bold shadow-sm cursor-pointer transition active:scale-95 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span>Add Activity</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 2. TOP 4 METRICS CARDS -->
+        <!-- ========================================================= -->
+        <div id="activities-metrics-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-200">
+            
+            <!-- Card 1: Total Activities (Rose / Pink Icon) -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Total Activities</span>
+                    <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-100 dark:border-rose-900/50 flex items-center justify-center">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <path d="M9 3v18M14 9h4M14 15h4"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                        {{ $totalActivitiesCount }}
+                    </h3>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                        <span>Today +3%</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M7 17l10-10M17 7H7m10 0v10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Completed (Emerald / Green Icon) -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Completed</span>
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                        {{ $totalCompletedCount }}
+                    </h3>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                        <span>Today +1</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M7 17l10-10M17 7H7m10 0v10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Pending (Blue Icon) -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Pending</span>
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                        {{ $todayPendingCount }}
+                    </h3>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                        <span>Today +2</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M7 17l10-10M17 7H7m10 0v10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Calls (Purple Icon) -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Calls</span>
+                    <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 border border-purple-100 dark:border-purple-900/50 flex items-center justify-center">
+                        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                        {{ $callsCount }}
+                    </h3>
+                    <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                        <span>Today 0</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 3A. VIEW 1: TIMELINE FEED & SIDEBAR (2 COLUMNS)           -->
+        <!-- ========================================================= -->
+        <div id="container-feed-view" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- LEFT COLUMN: SEARCH/FILTERS + TIMELINE GROUPS (8 COLS) -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Live Search & Filter Bar (Sub Section Controls) -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-gray-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-gray-800 shadow-2xs">
+                    
+                    <!-- Search Input -->
+                    <div class="relative flex-1 min-w-[180px]">
+                        <input
+                            type="text"
+                            oninput="filterActivitiesBySearch(this.value)"
+                            placeholder="Search activities..."
+                            class="w-full pl-9 pr-4 py-2 text-xs font-semibold bg-slate-50 dark:bg-gray-800/80 border border-slate-200 dark:border-gray-700 rounded-xl focus:border-blue-500 focus:bg-white dark:focus:bg-gray-900 text-gray-600dark:text-white placeholder:text-slate-400 transition"
+                        >
+                        <span class="absolute left-3 top-2.5 text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- Filter Options & Full View Calendar Button in Sub Section -->
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <!-- All Activities Pill Button -->
+                        <button
+                            type="button"
+                            onclick="filterActivitiesByType('all', this)"
+                            class="filter-pill-btn px-3.5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-2xs transition cursor-pointer"
+                        >
+                            All Activities
+                        </button>
+
+                        <!-- Date Range Select -->
+                        <select
+                            id="filter-date-period"
+                            onchange="filterActivitiesByPeriod(this.value)"
+                            class="px-3 py-2 rounded-xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 text-xs font-bold text-slate-700 dark:text-slate-300 focus:border-blue-500 transition cursor-pointer"
+                        >
+                            <option value="all">All Dates</option>
+                            <option value="today" selected>Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="upcoming">Upcoming</option>
+                        </select>
+
+                        <!-- Type Select -->
+                        <select
+                            id="filter-type-select"
+                            onchange="filterActivitiesByTypeSelect(this.value)"
+                            class="px-3 py-2 rounded-xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 text-xs font-bold text-slate-700 dark:text-slate-300 focus:border-blue-500 transition cursor-pointer"
+                        >
+                            <option value="all">All Types</option>
+                            <option value="call">Calls</option>
+                            <option value="meeting">Meetings</option>
+                            <option value="lunch">Luncheons</option>
+                            <option value="task">Tasks</option>
+                        </select>
+
+                        <!-- Full View Calendar Button in Sub Section -->
+                        <button
+                            type="button"
+                            onclick="switchMainView('calendar')"
+                            id="btn-sub-calendar-toggle"
+                            class="px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-gray-700 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                            title="Open Full View Calendar Workspace"
+                        >
+                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>Full View Calendar</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- TIMELINE FEED SECTION -->
+                <div id="container-feed-list" class="space-y-6">
+
+                    <!-- TIMELINE GROUP 1: TODAY -->
+                    <div class="space-y-3.5 activity-date-group" id="group-today">
+                        <div class="flex items-center justify-between pb-1 border-b border-slate-200/80 dark:border-gray-800">
+                            <h2 class="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                <span>Today · {{ now()->format('l, j M Y') }}</span>
+                            </h2>
+                            <span class="text-xs font-bold text-slate-400">
+                                {{ count($todayActivities) }}
+                            </span>
+                        </div>
+
+                        <div class="space-y-3" id="activities-list-today">
+                            @forelse ($todayActivities as $act)
+                                @include('admin::activities.card-item', ['activity' => $act])
+                            @empty
+                                <div class="p-6 bg-slate-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-gray-700 text-center text-xs font-bold text-slate-500">
+                                    No touchpoints recorded for today. Click <strong>+ Add Activity</strong> to log tasks or calls.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- TIMELINE GROUP 2: YESTERDAY -->
+                    <div class="space-y-3.5 activity-date-group" id="group-yesterday">
+                        <div class="flex items-center justify-between pb-1 border-b border-slate-200/80 dark:border-gray-800">
+                            <h2 class="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                <span>Yesterday · {{ now()->subDay()->format('l, j M Y') }}</span>
+                            </h2>
+                            <span class="text-xs font-bold text-slate-400">
+                                {{ count($yesterdayActivities) }}
+                            </span>
+                        </div>
+
+                        <div class="space-y-3" id="activities-list-yesterday">
+                            @forelse ($yesterdayActivities as $act)
+                                @include('admin::activities.card-item', ['activity' => $act])
+                            @empty
+                                <div class="p-6 bg-slate-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-gray-700 text-center text-xs font-bold text-slate-500">
+                                    No activities recorded for yesterday.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- TIMELINE GROUP 3: UPCOMING -->
+                    <div class="space-y-3.5 activity-date-group" id="group-upcoming">
+                        <div class="flex items-center justify-between pb-1 border-b border-slate-200/80 dark:border-gray-800">
+                            <h2 class="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                <span>Upcoming · {{ now()->addDay()->format('l, j M Y') }}</span>
+                            </h2>
+                            <span class="text-xs font-bold text-slate-400">
+                                {{ count($upcomingActivities) }}
+                            </span>
+                        </div>
+
+                        <div class="space-y-3" id="activities-list-upcoming">
+                            @forelse ($upcomingActivities as $act)
+                                @include('admin::activities.card-item', ['activity' => $act])
+                            @empty
+                                <div class="p-6 bg-slate-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-gray-700 text-center text-xs font-bold text-slate-500">
+                                    No future upcoming activities found.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: 4 WIDGETS (4 COLS) -->
+            <div class="lg:col-span-4 space-y-5 sticky top-20">
+                
+                <!-- WIDGET 1: QUICK STATS -->
+                <div class="bg-white dark:bg-gray-900 p-5 rounded-2xl border border-slate-200/90 dark:border-gray-800 shadow-2xs space-y-4">
+                    <h3 class="text-sm font-bold text-gray-800 dark:text-white">
+                        Quick Stats
+                    </h3>
+
+                    <div class="space-y-3 text-xs font-bold">
+                        <!-- Row 1: Completed Today -->
+                        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-gray-800">
+                            <span class="text-slate-500 dark:text-slate-400">Completed Today</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">{{ $todayDoneCount }}</span>
+                        </div>
+
+                        <!-- Row 2: Pending Today -->
+                        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-gray-800">
+                            <span class="text-slate-500 dark:text-slate-400">Pending Today</span>
+                            <span class="text-amber-600 dark:text-amber-400 font-bold text-sm">{{ $todayPendingCount }}</span>
+                        </div>
+
+                        <!-- Row 3: Calls Today -->
+                        <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-gray-800">
+                            <span class="text-slate-500 dark:text-slate-400">Calls Today</span>
+                            <span class="text-blue-600 dark:text-blue-400 font-bold text-sm">{{ $todayCallsCount }}</span>
+                        </div>
+
+                        <!-- Row 4: Follow Ups -->
+                        <div class="flex items-center justify-between py-1">
+                            <span class="text-slate-500 dark:text-slate-400">Follow Ups</span>
+                            <span class="text-purple-600 dark:text-purple-400 font-bold text-sm">{{ $todayFollowUpsCount }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WIDGET 2: UPCOMING TODAY -->
+                <div class="bg-white dark:bg-gray-900 p-5 rounded-2xl border border-slate-200/90 dark:border-gray-800 shadow-2xs space-y-4">
+                    <h3 class="text-sm font-bold text-gray-800 dark:text-white">
+                        Upcoming Today
+                    </h3>
+
+                    <div class="space-y-3">
+                        @forelse ($upcomingTodayActivities as $item)
+                            @php
+                                $itemTime = $item->schedule_from ? date('h:i A', strtotime($item->schedule_from)) : '11:30 AM';
+                                $leadName = $item->lead_title ?: ($item->user_name ?: 'Apex Corp');
+                            @endphp
+                            <div class="flex items-start gap-3 p-2.5 rounded-xl bg-slate-50/60 dark:bg-gray-800/40 border border-slate-100 dark:border-gray-800">
+                                <span class="px-2 py-1 rounded-lg text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 shrink-0">
+                                    {{ $itemTime }}
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs font-bold text-gray-800 dark:text-white truncate">
+                                        {{ $item->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-slate-400 truncate">
+                                        {{ $leadName }}
+                                    </p>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="flex items-start gap-3 p-2.5 rounded-xl bg-slate-50/60 dark:bg-gray-800/40 border border-slate-100 dark:border-gray-800">
+                                <span class="px-2 py-1 rounded-lg text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 shrink-0">
+                                    11:30 AM
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs font-bold text-gray-800 dark:text-white truncate">
+                                        Client Meeting
+                                    </h4>
+                                    <p class="text-[11px] text-slate-400 truncate">
+                                        Apex Corp
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-2.5 rounded-xl bg-slate-50/60 dark:bg-gray-800/40 border border-slate-100 dark:border-gray-800">
+                                <span class="px-2 py-1 rounded-lg text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800 shrink-0">
+                                    02:00 PM
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs font-bold text-gray-800 dark:text-white truncate">
+                                        Follow up on Quotation
+                                    </h4>
+                                    <p class="text-[11px] text-slate-400 truncate">
+                                        Skyline Ventures
+                                    </p>
+                                </div>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- WIDGET 3: RECENT CUSTOMERS -->
+                <div class="bg-white dark:bg-gray-900 p-5 rounded-2xl border border-slate-200/90 dark:border-gray-800 shadow-2xs space-y-4">
+                    <h3 class="text-sm font-bold text-gray-800 dark:text-white">
+                        Recent Customers
+                    </h3>
+
+                    <div class="space-y-3">
+                        @php
+                            $mockCustomers = [
+                                ['initials' => 'RE', 'color' => 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950 dark:text-blue-400', 'name' => 'Real Estate Lead', 'time' => 'Last contact: Today'],
+                                ['initials' => 'TS', 'color' => 'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-950 dark:text-purple-400', 'name' => 'Tech Support Deal', 'time' => 'Last contact: Today'],
+                                ['initials' => 'GT', 'color' => 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400', 'name' => 'Global Traders Ltd', 'time' => 'Last contact: Yesterday'],
+                                ['initials' => 'AL', 'color' => 'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-950 dark:text-amber-400', 'name' => 'Apex Logistics', 'time' => 'Last contact: 2 days ago'],
+                            ];
+                        @endphp
+
+                        @foreach ($mockCustomers as $c)
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl {{ $c['color'] }} border flex items-center justify-center font-bold text-xs shrink-0">
+                                    {{ $c['initials'] }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs font-bold text-gray-600dark:text-white truncate">
+                                        {{ $c['name'] }}
+                                    </h4>
+                                    <p class="text-[11px] text-slate-400">
+                                        {{ $c['time'] }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- WIDGET 4: MOTIVATION CARD -->
+                <div class="rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white p-5 shadow-sm space-y-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">🎯</span>
+                        <h4 class="text-sm font-bold">Small Steps Big Results!</h4>
+                    </div>
+                    <p class="text-xs font-medium text-white/80 leading-relaxed">
+                        Complete 2 more activities to hit your daily goal.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 3B. VIEW 2: TRUE FULL-WIDTH CALENDAR WORKSPACE (100% WIDE)-->
+        <!-- ========================================================= -->
+        <div id="container-calendar-workspace" class="hidden w-full space-y-4">
+            <!-- Full Calendar Header Card -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-gray-900 p-4 sm:p-5 rounded-2xl border border-slate-200/90 dark:border-gray-800 shadow-2xs">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 flex items-center justify-center font-bold text-lg shadow-2xs shrink-0">
+                        📅
+                    </div>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-bold tracking-tight text-gray-800 dark:text-white flex items-center gap-2">
+                            <span>Full View Calendar Workspace</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </h2>
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400">
+                            Interactive month, week, day &amp; year scheduling agenda
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+                    <button
+                        type="button"
+                        onclick="window.openScheduleModal('{{ now()->format('Y-m-d') }}')"
+                        class="primary-button !px-3 sm:!px-4 !py-2 !rounded-xl !text-xs font-bold shadow-sm cursor-pointer transition active:scale-95 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white shrink-0"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span>+ Schedule</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="switchMainView('feed')"
+                        class="px-3 sm:px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0"
+                    >
+                        <span>✕</span>
+                        <span><span class="hidden sm:inline">Return to </span>Feed</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Full-Width Interactive Vue Component -->
+            <div class="w-full">
+                <v-activities-calendar
+                    initial-month="{{ $calendarInitialMonth ?? now()->format('Y-m') }}"
+                    :initial-activities='@json($calendarActivities ?? [], JSON_HEX_APOS)'
+                    :users='@json($users ?? [], JSON_HEX_APOS)'
+                    :leads='@json($leads ?? [], JSON_HEX_APOS)'
+                    :current-user-id="{{ $currentUserId ?? 0 }}"
+                ></v-activities-calendar>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 4. SCHEDULE ACTIVITY POPUP MODAL -->
+    <!-- ========================================================= -->
+    <div
+        id="schedule-modal"
+        class="fixed inset-0 z-[10005] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 overflow-y-auto hidden transition-all duration-300"
+        onclick="handleModalBackdropClick(event)"
+    >
+        <div
+            id="schedule-modal-content"
+            class="animate-modal-in bg-white dark:bg-gray-900 rounded-3xl border border-slate-200/90 dark:border-gray-800 max-w-xl w-full mx-auto my-auto shadow-2xl overflow-hidden flex flex-col"
+            onclick="event.stopPropagation()"
+        >
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-5 sm:p-6 border-b border-slate-100 dark:border-gray-800 bg-slate-50/50 dark:bg-gray-800/40">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20 shrink-0">
+                        🗓️
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold tracking-tight text-gray-800 dark:text-white">
+                            Schedule Activity
+                        </h3>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                            Add client meetings, calls, notes, or tasks
+                        </p>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    onclick="closeScheduleModal()"
+                    class="w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/70 dark:hover:bg-gray-800 dark:hover:text-white flex items-center justify-center transition cursor-pointer"
+                    title="Close (Esc)"
+                >
+                    ✕
+                </button>
+            </div>
+
+            <!-- Modal Form -->
+            <form action="{{ route('admin.activities.store') }}" method="POST" id="schedule-activity-form" onsubmit="handleScheduleActivitySubmit(event)" class="p-5 sm:p-6 space-y-4">
+                @csrf
+
+                <!-- Activity Type Picker -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Touchpoint Category <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" value="call" checked class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-slate-200 dark:border-gray-700 text-center peer-checked:border-blue-500 peer-checked:bg-blue-50/70 dark:peer-checked:bg-blue-950/60 peer-checked:text-blue-700 dark:peer-checked:text-blue-300 transition text-xs font-bold flex flex-col items-center gap-1">
+                                <span class="text-base">📞</span>
+                                <span>Phone Call</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" value="lunch" class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-slate-200 dark:border-gray-700 text-center peer-checked:border-amber-500 peer-checked:bg-amber-50/70 dark:peer-checked:bg-amber-950/60 peer-checked:text-amber-700 dark:peer-checked:text-amber-300 transition text-xs font-bold flex flex-col items-center gap-1">
+                                <span class="text-base">🍽️</span>
+                                <span>Luncheon</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" value="meeting" class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-slate-200 dark:border-gray-700 text-center peer-checked:border-purple-500 peer-checked:bg-purple-50/70 dark:peer-checked:bg-purple-950/60 peer-checked:text-purple-700 dark:peer-checked:text-purple-300 transition text-xs font-bold flex flex-col items-center gap-1">
+                                <span class="text-base">🏢</span>
+                                <span>Site Tour</span>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer">
+                            <input type="radio" name="type" value="note" class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-slate-200 dark:border-gray-700 text-center peer-checked:border-emerald-500 peer-checked:bg-emerald-50/70 dark:peer-checked:bg-emerald-950/60 peer-checked:text-emerald-700 dark:peer-checked:text-emerald-300 transition text-xs font-bold flex flex-col items-center gap-1">
+                                <span class="text-base">📝</span>
+                                <span>Task / Note</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Title & Client Name -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Activity Title / Subject <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="title"
+                        id="modal-activity-title"
+                        required
+                        placeholder="e.g. Follow up on proposal with client"
+                        class="w-full text-xs font-semibold border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl px-3.5 py-2 focus:border-blue-500 shadow-2xs transition"
+                    >
+                </div>
+
+                <!-- Link Deal / Lead -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Associate Deal / Lead (Optional)
+                    </label>
+                    <select
+                        name="lead_id"
+                        id="modal-activity-lead"
+                        class="w-full text-xs font-bold border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl px-3 py-2 focus:border-blue-500 shadow-2xs transition cursor-pointer"
+                    >
+                        <option value="">-- Standalone Activity / General Follow-up --</option>
+                        @foreach($leads as $lead)
+                            <option value="{{ $lead->id }}">
+                                #{{ $lead->id }} · {{ $lead->title }} ({{ optional($lead->person)->name ?? 'Client' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Schedule From & To -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            Start Date &amp; Time <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="datetime-local"
+                            name="schedule_from"
+                            id="modal-schedule-from"
+                            required
+                            value="{{ now()->format('Y-m-dTH:00') }}"
+                            class="w-full text-xs font-bold border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl px-3 py-2 focus:border-blue-500 shadow-2xs transition"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                            End Date &amp; Time <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="datetime-local"
+                            name="schedule_to"
+                            id="modal-schedule-to"
+                            required
+                            value="{{ now()->addHour()->format('Y-m-dTH:00') }}"
+                            class="w-full text-xs font-bold border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl px-3 py-2 focus:border-blue-500 shadow-2xs transition"
+                        >
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Location / Venue
+                    </label>
+                    <input
+                        type="text"
+                        name="location"
+                        id="modal-activity-location"
+                        placeholder="e.g. Office HQ or Zoom"
+                        class="w-full text-xs font-semibold border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl px-3.5 py-2 focus:border-blue-500 shadow-2xs transition"
+                    >
+                </div>
+
+                <!-- Discussion Comment / Agenda Notes -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                        Meeting Notes &amp; Agenda
+                    </label>
+                    <textarea
+                        name="comment"
+                        id="modal-activity-comment"
+                        rows="2.5"
+                        placeholder="Key client requirements, brochure copies, payment schedule discussion points..."
+                        class="w-full text-xs font-medium border-slate-300 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 text-gray-600dark:text-white rounded-xl p-3 focus:border-blue-500 resize-none shadow-2xs transition"
+                    ></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-gray-800">
+                    <button
+                        type="button"
+                        onclick="closeScheduleModal()"
+                        class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-gray-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-gray-800 transition cursor-pointer"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-button !px-6 !py-2.5 !rounded-xl !text-xs font-bold shadow-md cursor-pointer transition active:scale-95 bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                        Confirm &amp; Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @pushOnce('scripts')
+        <script>
+            // Switch main view: 'feed' or 'calendar'
+            function switchMainView(mode) {
+                const feedView = document.getElementById('container-feed-view');
+                const calView = document.getElementById('container-calendar-workspace');
+                const btnFeed = document.getElementById('btn-header-feed');
+                const btnCal = document.getElementById('btn-header-calendar');
+                const btnSubCal = document.getElementById('btn-sub-calendar-toggle');
+                const metricsCards = document.getElementById('activities-metrics-section');
+
+                const activeHeaderClass = 'px-3.5 py-1.5 rounded-xl bg-white dark:bg-gray-900 shadow-2xs text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 transition cursor-pointer';
+                const inactiveHeaderClass = 'px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-gray-800 dark:hover:text-white flex items-center gap-1.5 transition cursor-pointer';
+
+                if (mode === 'calendar') {
+                    if (feedView) feedView.classList.add('hidden');
+                    if (calView) calView.classList.remove('hidden');
+                    if (metricsCards) metricsCards.classList.add('hidden');
+                    if (btnFeed) btnFeed.className = inactiveHeaderClass;
+                    if (btnCal) btnCal.className = activeHeaderClass;
+                    if (btnSubCal) {
+                        btnSubCal.className = 'px-3.5 py-2 rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border border-blue-300 dark:border-blue-700 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-2xs';
+                    }
+
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 60);
+                } else {
+                    if (calView) calView.classList.add('hidden');
+                    if (feedView) feedView.classList.remove('hidden');
+                    if (metricsCards) metricsCards.classList.remove('hidden');
+                    if (btnFeed) btnFeed.className = activeHeaderClass;
+                    if (btnCal) btnCal.className = inactiveHeaderClass;
+                    if (btnSubCal) {
+                        btnSubCal.className = 'px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-gray-800 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-gray-700 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-2xs';
+                    }
+
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 60);
+                }
+            }
+
+            // Filter Feed Activities by Category / Type
+            function filterActivitiesByType(type, btn) {
+                // If currently in calendar view, switch back to feed view
+                switchMainView('feed');
+
+                document.querySelectorAll('.filter-pill-btn').forEach(b => {
+                    b.className = 'filter-pill-btn px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition cursor-pointer';
+                });
+                if (btn) {
+                    btn.className = 'filter-pill-btn px-3.5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-2xs transition cursor-pointer';
+                }
+
+                document.querySelectorAll('.activity-card').forEach(card => {
+                    const cardType = card.getAttribute('data-type');
+                    const isDone = card.getAttribute('data-done');
+
+                    if (type === 'all') {
+                        card.style.display = '';
+                    } else if (type === 'done') {
+                        card.style.display = isDone === '1' ? '' : 'none';
+                    } else if (type === 'pending') {
+                        card.style.display = isDone === '0' ? '' : 'none';
+                    } else {
+                        card.style.display = cardType === type ? '' : 'none';
+                    }
+                });
+
+                updateGroupVisibilities();
+            }
+
+            function filterActivitiesByTypeSelect(type) {
+                filterActivitiesByType(type, null);
+            }
+
+            function filterActivitiesByPeriod(period) {
+                switchMainView('feed');
+
+                const groupToday = document.getElementById('group-today');
+                const groupYesterday = document.getElementById('group-yesterday');
+                const groupUpcoming = document.getElementById('group-upcoming');
+
+                if (period === 'all') {
+                    if (groupToday) groupToday.style.display = '';
+                    if (groupYesterday) groupYesterday.style.display = '';
+                    if (groupUpcoming) groupUpcoming.style.display = '';
+                } else if (period === 'today') {
+                    if (groupToday) groupToday.style.display = '';
+                    if (groupYesterday) groupYesterday.style.display = 'none';
+                    if (groupUpcoming) groupUpcoming.style.display = 'none';
+                } else if (period === 'yesterday') {
+                    if (groupToday) groupToday.style.display = 'none';
+                    if (groupYesterday) groupYesterday.style.display = '';
+                    if (groupUpcoming) groupUpcoming.style.display = 'none';
+                } else if (period === 'upcoming') {
+                    if (groupToday) groupToday.style.display = 'none';
+                    if (groupYesterday) groupYesterday.style.display = 'none';
+                    if (groupUpcoming) groupUpcoming.style.display = '';
+                }
+            }
+
+            // Live Search Filter across activities feed
+            function filterActivitiesBySearch(query) {
+                switchMainView('feed');
+
+                const q = query.toLowerCase().trim();
+                document.querySelectorAll('.activity-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (!q || text.includes(q)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                updateGroupVisibilities();
+            }
+
+            function updateGroupVisibilities() {
+                document.querySelectorAll('.activity-date-group').forEach(group => {
+                    const visibleCards = group.querySelectorAll('.activity-card:not([style*="display: none"])');
+                    group.style.display = visibleCards.length > 0 ? '' : 'none';
+                });
+            }
+
+            // 1-Click Interactive Activity Completion Toggle
+            function toggleActivityStatus(activityId, currentStatus, btn) {
+                const newStatus = currentStatus === 1 ? 0 : 1;
+                btn.disabled = true;
+
+                axios.put(`{{ url('admin/activities/edit') }}/${activityId}`, {
+                    is_done: newStatus,
+                }, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(res => {
+                    const card = document.getElementById(`activity-card-${activityId}`);
+                    const statusPill = document.getElementById(`status-pill-${activityId}`);
+                    
+                    if (newStatus === 1) {
+                        btn.className = 'w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs transition-colors cursor-pointer';
+                        btn.innerHTML = '<svg class="w-4 h-4 stroke-white stroke-[2.5]" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+                        if (statusPill) {
+                            statusPill.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800';
+                            statusPill.textContent = 'Completed';
+                        }
+                        btn.setAttribute('onclick', `toggleActivityStatus(${activityId}, 1, this)`);
+                        if (card) card.setAttribute('data-done', '1');
+                    } else {
+                        btn.className = 'w-8 h-8 rounded-xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-400 dark:border-gray-700 flex items-center justify-center transition-colors cursor-pointer';
+                        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle></svg>';
+                        if (statusPill) {
+                            statusPill.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800';
+                            statusPill.textContent = 'Scheduled';
+                        }
+                        btn.setAttribute('onclick', `toggleActivityStatus(${activityId}, 0, this)`);
+                        if (card) card.setAttribute('data-done', '0');
+                    }
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                });
+            }
+
+            // Modal Handlers
+            function adjustModalSidebarOffset() {
+                const modal = document.getElementById('schedule-modal');
+                if (!modal) return;
+
+                if (window.innerWidth >= 1024) {
+                    const sidebar = document.querySelector('aside') || 
+                                    document.querySelector('.group\\/container > aside') || 
+                                    document.querySelector('[ref="sidebar"]') ||
+                                    document.querySelector('[ref="appLayout"] > div:first-child');
+                    
+                    let sidebarWidth = 215;
+                    if (sidebar) {
+                        const rect = sidebar.getBoundingClientRect();
+                        if (rect.width > 0) sidebarWidth = rect.width;
+                    } else if (document.querySelector('.sidebar-collapsed')) {
+                        sidebarWidth = 85;
+                    }
+
+                    modal.style.paddingLeft = sidebarWidth + 'px';
+                    modal.style.paddingRight = '1.5rem';
+                } else {
+                    modal.style.paddingLeft = '1rem';
+                    modal.style.paddingRight = '1rem';
+                }
+            }
+
+            window.openScheduleModal = function(prefillDate) {
+                const modal = document.getElementById('schedule-modal');
+                if (modal) {
+                    adjustModalSidebarOffset();
+
+                    if (prefillDate) {
+                        const fromInput = document.getElementById('modal-schedule-from');
+                        const toInput = document.getElementById('modal-schedule-to');
+                        if (fromInput) fromInput.value = `${prefillDate}T10:00`;
+                        if (toInput) toInput.value = `${prefillDate}T11:30`;
+                    }
+
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+            };
+
+            window.closeScheduleModal = function() {
+                const modal = document.getElementById('schedule-modal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            };
+
+            function handleModalBackdropClick(event) {
+                if (event.target.id === 'schedule-modal') {
+                    closeScheduleModal();
+                }
+            }
+
+            window.addEventListener('resize', () => {
+                const modal = document.getElementById('schedule-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    adjustModalSidebarOffset();
+                }
+            });
+
+            async function handleScheduleActivitySubmit(e) {
+                e.preventDefault();
+                const form = e.target;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="inline-block animate-spin mr-1.5">⟳</span> Scheduling...';
+                }
+
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                try {
+                    const res = await axios.post("{{ route('admin.activities.store') }}", data, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    });
+
+                    const created = (res.data && (res.data.activity || res.data.data)) || null;
+
+                    if (created) {
+                        // Dispatch event for reactive calendar marking across Month, Week, Day, Year, and Mini Calendar
+                        window.dispatchEvent(new CustomEvent('activity:created', { detail: created }));
+                    }
+
+                    closeScheduleModal();
+                    form.reset();
+
+                    // Optional toast indicator
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed bottom-5 right-5 z-[10006] bg-emerald-600 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold transition-all duration-300';
+                    toast.innerHTML = '<span>✓</span><span>Activity scheduled and marked on calendar!</span>';
+                    document.body.appendChild(toast);
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => toast.remove(), 300);
+                    }, 3000);
+
+                } catch (err) {
+                    console.error('Failed to schedule activity:', err);
+                    let msg = 'Failed to schedule activity. Please check required fields.';
+                    if (err.response && err.response.data) {
+                        if (err.response.data.message) {
+                            msg = err.response.data.message;
+                        } else if (err.response.data.errors) {
+                            msg = Object.values(err.response.data.errors).flat().join('\n');
+                        }
+                    }
+                    alert(msg);
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origBtnHtml;
+                    }
+                }
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    closeScheduleModal();
+                }
+            });
+        </script>
     @endPushOnce
 </x-admin::layouts>

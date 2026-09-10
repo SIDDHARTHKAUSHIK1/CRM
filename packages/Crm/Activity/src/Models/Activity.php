@@ -82,7 +82,7 @@ class Activity extends Model implements ActivityContract
      */
     public function leads()
     {
-        return $this->belongsToMany(LeadProxy::modelClass(), 'lead_activities');
+        return $this->belongsToMany(LeadProxy::modelClass(), 'lead_activities', 'activity_id', 'lead_id');
     }
 
     /**
@@ -90,15 +90,15 @@ class Activity extends Model implements ActivityContract
      */
     public function persons()
     {
-        return $this->belongsToMany(PersonProxy::modelClass(), 'person_activities');
+        return $this->belongsToMany(PersonProxy::modelClass(), 'person_activities', 'activity_id', 'person_id');
     }
 
     /**
-     * The leads that belong to the activity.
+     * The products that belong to the activity.
      */
     public function products()
     {
-        return $this->belongsToMany(ProductProxy::modelClass(), 'product_activities');
+        return $this->belongsToMany(ProductProxy::modelClass(), 'product_activities', 'activity_id', 'product_id');
     }
 
     /**
@@ -106,6 +106,6 @@ class Activity extends Model implements ActivityContract
      */
     public function warehouses()
     {
-        return $this->belongsToMany(WarehouseProxy::modelClass(), 'warehouse_activities');
+        return $this->belongsToMany(WarehouseProxy::modelClass(), 'warehouse_activities', 'activity_id', 'warehouse_id');
     }
 }

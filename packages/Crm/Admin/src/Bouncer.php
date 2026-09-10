@@ -39,7 +39,8 @@ class Bouncer
     }
 
     /**
-     * This function will return user ids of current user's groups
+     * This function will return user ids of current user's groups or self.
+     * Only full administrators (permission_type === 'all') receive null (unrestricted global access).
      *
      * @return array|null
      */
@@ -47,14 +48,20 @@ class Bouncer
     {
         $user = auth()->guard('user')->user();
 
-        if ($user->view_permission == 'global') {
+        if (! $user) {
+            return [];
+        }
+
+        // Full administrators have unrestricted global visibility across the entire CRM
+        if ($user->role && $user->role->permission_type === 'all') {
             return null;
         }
 
-        if ($user->view_permission == 'group') {
+        if ($user->view_permission === 'group') {
             return app(UserRepository::class)->getCurrentUserGroupsUserIds();
-        } else {
-            return [$user->id];
         }
+
+        // Standard employees are strictly confined to their own user records
+        return [$user->id];
     }
 }

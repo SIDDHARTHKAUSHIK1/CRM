@@ -18,6 +18,8 @@ window.app = createApp({
 
             hoveringMenu: '',
 
+            activeSubmenu: '',
+
             lastScrollY: 0,
         };
     },
@@ -75,6 +77,8 @@ window.app = createApp({
                 !sidebar.contains(event.target)
             ) {
                 this.isMenuActive = false;
+                this.hoveringMenu = '';
+                this.activeSubmenu = '';
             }
         },
 
@@ -125,6 +129,13 @@ import VueCal from "./plugins/vue-cal";
     VeeValidate,
     VueCal,
 ].forEach((plugin) => app.use(plugin));
+
+/**
+ * Global components.
+ */
+import ActivitiesCalendar from "./components/ActivitiesCalendar.vue";
+
+app.component("v-activities-calendar", ActivitiesCalendar);
 
 /**
  * Global directives.

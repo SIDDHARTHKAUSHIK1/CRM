@@ -69,6 +69,17 @@ class QuoteDataGrid extends DataGrid
             'filterable' => true,
             'searchable' => true,
             'sortable' => true,
+            'closure' => function ($row) {
+                $editUrl = route('admin.quotes.edit', $row->id);
+                return '<div class="flex flex-col pr-1">'
+                    . '<a href="' . $editUrl . '" class="font-semibold text-sm text-gray-600hover:text-purple-600 transition dark:text-white dark:hover:text-purple-400 leading-snug line-clamp-2" title="' . e($row->subject) . '">'
+                    . e($row->subject)
+                    . '</a>'
+                    . '<span class="text-xs text-slate-400 dark:text-slate-500 mt-1 whitespace-nowrap">'
+                    . 'Quote #' . $row->id . ' · Created: ' . core()->formatDate($row->created_at, 'd M Y')
+                    . '</span>'
+                    . '</div>';
+            },
         ]);
 
         $this->addColumn([
@@ -86,6 +97,14 @@ class QuoteDataGrid extends DataGrid
                     'value' => 'name',
                 ],
             ],
+            'closure' => function ($row) {
+                $hasUser = ! empty($row->sales_person);
+                $dotColor = $hasUser ? 'bg-emerald-500' : 'bg-slate-400';
+                return '<span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">'
+                    . '<span class="w-1.5 h-1.5 rounded-full ' . $dotColor . ' shrink-0"></span>'
+                    . e($row->sales_person ?? 'Unassigned')
+                    . '</span>';
+            },
         ]);
 
         $this->addColumn([
@@ -104,9 +123,16 @@ class QuoteDataGrid extends DataGrid
                 ],
             ],
             'closure' => function ($row) {
+                if (! $row->person_name) {
+                    return '<span class="text-slate-400 text-xs">-</span>';
+                }
+                $initials = strtoupper(substr($row->person_name, 0, 2));
                 $route = route('admin.contacts.persons.view', $row->person_id);
 
-                return "<a class=\"text-brandColor transition-all hover:underline\" href='".$route."'>".$row->person_name.'</a>';
+                return '<div class="flex items-center gap-2 min-w-0">'
+                    . '<div class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300 font-bold text-[10px] flex items-center justify-center shrink-0">' . $initials . '</div>'
+                    . '<a class="text-xs font-semibold text-slate-800 hover:text-purple-600 transition hover:underline dark:text-slate-200 truncate" href="' . $route . '">' . e($row->person_name) . '</a>'
+                    . '</div>';
             },
         ]);
 
@@ -116,16 +142,14 @@ class QuoteDataGrid extends DataGrid
             'type' => 'string',
             'sortable' => true,
             'filterable' => true,
-            'closure' => fn ($row) => core()->formatBasePrice($row->sub_total, 2),
-        ]);
-
-        $this->addColumn([
-            'index' => 'discount_amount',
-            'label' => trans('admin::app.quotes.index.datagrid.discount'),
-            'type' => 'string',
-            'sortable' => true,
-            'filterable' => true,
-            'closure' => fn ($row) => core()->formatBasePrice($row->discount_amount, 2),
+            'closure' => function ($row) {
+                $subtotal = core()->formatBasePrice($row->sub_total, 2);
+                $discount = $row->discount_amount > 0 ? '<div class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 whitespace-nowrap">Disc: -'.core()->formatBasePrice($row->discount_amount, 2).'</div>' : '';
+                return '<div class="flex flex-col items-start">'
+                    . '<span class="text-xs font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap tracking-tight tabular-nums">' . $subtotal . '</span>'
+                    . $discount
+                    . '</div>';
+            },
         ]);
 
         $this->addColumn([
@@ -134,16 +158,12 @@ class QuoteDataGrid extends DataGrid
             'type' => 'string',
             'filterable' => true,
             'sortable' => true,
-            'closure' => fn ($row) => core()->formatBasePrice($row->tax_amount, 2),
-        ]);
-
-        $this->addColumn([
-            'index' => 'adjustment_amount',
-            'label' => trans('admin::app.quotes.index.datagrid.adjustment'),
-            'type' => 'string',
-            'sortable' => true,
-            'filterable' => false,
-            'closure' => fn ($row) => core()->formatBasePrice($row->adjustment_amount, 2),
+            'closure' => function ($row) {
+                return '<div class="flex flex-col items-start">'
+                    . '<span class="text-xs font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap tracking-tight tabular-nums">' . core()->formatBasePrice($row->tax_amount, 2) . '</span>'
+                    . '<span class="text-[11px] text-slate-400 font-medium whitespace-nowrap">GST / Tax</span>'
+                    . '</div>';
+            },
         ]);
 
         $this->addColumn([
@@ -152,7 +172,14 @@ class QuoteDataGrid extends DataGrid
             'type' => 'string',
             'sortable' => true,
             'filterable' => true,
-            'closure' => fn ($row) => core()->formatBasePrice($row->grand_total, 2),
+            'closure' => function ($row) {
+                $total = core()->formatBasePrice($row->grand_total, 2);
+                return '<div class="flex items-center">'
+                    . '<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold text-gray-600bg-slate-100 border border-slate-200/80 dark:bg-gray-800 dark:border-gray-700 dark:text-white whitespace-nowrap tracking-tight tabular-nums shadow-2xs">'
+                    . $total
+                    . '</span>'
+                    . '</div>';
+            },
         ]);
 
         $this->addColumn([
@@ -162,7 +189,19 @@ class QuoteDataGrid extends DataGrid
             'searchable' => false,
             'sortable' => true,
             'filterable' => true,
-            'closure' => fn ($row) => core()->formatDate($row->expired_at, 'd M Y'),
+            'closure' => function ($row) {
+                $isExpired = $row->expired_at && strtotime($row->expired_at) < time();
+                if ($isExpired) {
+                    return '<div class="flex flex-col items-start gap-1">'
+                        . '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-900 whitespace-nowrap">Expired</span>'
+                        . '<span class="text-[11px] text-rose-600 dark:text-rose-400 font-medium whitespace-nowrap">' . core()->formatDate($row->expired_at, 'd M Y') . '</span>'
+                        . '</div>';
+                }
+                return '<div class="flex flex-col items-start gap-1">'
+                    . '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900 whitespace-nowrap">Valid / Active</span>'
+                    . '<span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap">Expires ' . core()->formatDate($row->expired_at, 'd M Y') . '</span>'
+                    . '</div>';
+            },
         ]);
 
         $this->addColumn([
@@ -172,7 +211,12 @@ class QuoteDataGrid extends DataGrid
             'searchable' => false,
             'sortable' => true,
             'filterable' => true,
-            'closure' => fn ($row) => core()->formatDate($row->created_at),
+            'closure' => function ($row) {
+                return '<div class="flex flex-col items-start">'
+                    . '<span class="text-xs font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">' . core()->formatDate($row->created_at, 'd M Y') . '</span>'
+                    . '<span class="text-[11px] text-slate-400 whitespace-nowrap">' . core()->formatDate($row->created_at, 'h:i A') . '</span>'
+                    . '</div>';
+            },
         ]);
     }
 

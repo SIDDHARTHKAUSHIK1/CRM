@@ -104,9 +104,10 @@
             },
 
             mounted() {
-                this.toggleBlockWidth = this.$refs.toggleBlock.clientWidth;
-
-                this.toggleBlockHeight = this.$refs.toggleBlock.clientHeight;
+                if (this.$refs.toggleBlock) {
+                    this.toggleBlockWidth = this.$refs.toggleBlock.clientWidth || 0;
+                    this.toggleBlockHeight = this.$refs.toggleBlock.clientHeight || 0;
+                }
             },
 
             beforeDestroy() {
@@ -156,11 +157,16 @@
 
             methods: {
                 toggle() {
+                    if (this.$refs.toggleBlock) {
+                        this.toggleBlockWidth = this.$refs.toggleBlock.clientWidth || 0;
+                        this.toggleBlockHeight = this.$refs.toggleBlock.clientHeight || 0;
+                    }
                     this.isActive = ! this.isActive;
                 },
 
                 handleFocusOut(e) {
-                    if (! this.$el.contains(e.target) || (this.closeOnClick && this.$el.children[1].contains(e.target))) {
+                    if (! this.$el || ! this.$el.contains) return;
+                    if (! this.$el.contains(e.target) || (this.closeOnClick && this.$el.children && this.$el.children[1] && this.$el.children[1].contains(e.target))) {
                         this.isActive = false;
                     }
                 },

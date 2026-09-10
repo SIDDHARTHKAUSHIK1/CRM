@@ -25,11 +25,14 @@
             <x-slot:toggle>
                 {!! view_render_event('admin.leads.index.kanban.filter.drawer.toggle_button.before') !!}
 
-                <div class="relative flex cursor-pointer items-center rounded-md bg-sky-100 px-4 py-[9px] font-semibold text-sky-600 dark:bg-brandColor dark:text-white">
-                    @lang('admin::app.leads.index.kanban.toolbar.filters.filter')
+                <div class="relative inline-flex cursor-pointer items-center gap-2 rounded-xl border border-sky-200/80 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-600 shadow-2xs transition hover:bg-sky-100 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300">
+                    <svg class="h-4 w-4 text-sky-600 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>@lang('admin::app.leads.index.kanban.toolbar.filters.filter')</span>
 
                     <span
-                        class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-sky-600 dark:bg-white"
+                        class="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-sky-600 ring-2 ring-white dark:ring-gray-900"
                         v-if="hasAnyAppliedColumn()"
                     >
                     </span>

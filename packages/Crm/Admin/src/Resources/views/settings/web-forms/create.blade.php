@@ -214,7 +214,7 @@
                         <v-color-picker
                             name="form_submit_button_color"
                             title="@lang('admin::app.settings.webforms.create.form-submit-btn-color')"
-                            value="{{ old('form_submit_button_color') ?? '#F97316' }}"
+                            value="{{ old('form_submit_button_color') ?? '#7C3AED' }}"
                             class="w-1/5"
                         >
                             <x-admin::form.control-group>

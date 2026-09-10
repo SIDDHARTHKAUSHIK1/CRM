@@ -1,16 +1,18 @@
-<div class="grid gap-4 rounded-lg border border-gray-300 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-    <div class="flex items-center justify-between">
-        <div class="shimmer h-[17px] w-28"></div>
+<div class="flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs dark:border-gray-800 dark:bg-gray-900">
+    <div class="flex items-start gap-3">
+        <div class="shimmer h-10 w-10 rounded-xl"></div>
+        <div class="space-y-2">
+            <div class="shimmer h-4 w-36 rounded-md"></div>
+            <div class="shimmer h-3 w-44 rounded-md"></div>
+        </div>
     </div>
 
-    <div class="flex w-full max-w-full flex-col gap-4">
-        <div class="flex w-full flex-col">
-            @for ($i = 0; $i < 4; $i++)
-                <div class="flex w-full flex-col gap-1 border-b border-gray-300 pb-[9px] pt-2.5 last:border-none dark:border-gray-800">
-                    <div class="shimmer h-[18px] w-[76px] rounded-sm"></div>
-                    <div class="shimmer h-[18px] w-[76px] rounded-sm"></div>
-                </div>
-            @endfor
-        </div>
+    <div class="mt-5 space-y-3.5 flex-1">
+        @for ($i = 0; $i < 4; $i++)
+            <div class="flex items-center justify-between pb-2">
+                <div class="shimmer h-3.5 w-24 rounded-md"></div>
+                <div class="shimmer h-4 w-12 rounded-md"></div>
+            </div>
+        @endfor
     </div>
 </div>
