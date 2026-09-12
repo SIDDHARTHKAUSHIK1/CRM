@@ -15,6 +15,11 @@ class TenantContext
     protected static bool $resolved = false;
 
     /**
+     * Whether tenant ID is currently being resolved (prevents infinite recursion during auth checks).
+     */
+    protected static bool $resolving = false;
+
+    /**
      * Get the current tenant ID.
      */
     public static function getTenantId(): ?int
@@ -23,12 +28,22 @@ class TenantContext
             return static::$tenantId;
         }
 
-        if (auth()->guard('user')->check()) {
-            $user = auth()->guard('user')->user();
-            static::$tenantId = $user?->tenant_id ? (int) $user->tenant_id : null;
-            static::$resolved = true;
+        if (static::$resolving) {
+            return null;
+        }
 
-            return static::$tenantId;
+        static::$resolving = true;
+
+        try {
+            if (auth()->guard('user')->check()) {
+                $user = auth()->guard('user')->user();
+                static::$tenantId = $user?->tenant_id ? (int) $user->tenant_id : null;
+                static::$resolved = true;
+
+                return static::$tenantId;
+            }
+        } finally {
+            static::$resolving = false;
         }
 
         return null;
