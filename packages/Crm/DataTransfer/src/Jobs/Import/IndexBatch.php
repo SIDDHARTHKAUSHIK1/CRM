@@ -32,10 +32,19 @@ class IndexBatch implements ShouldQueue
      */
     public function handle()
     {
-        $typeImported = app(ImportHelper::class)
-            ->setImport($this->importBatch->import)
-            ->getTypeImporter();
+        $tenantId = $this->importBatch->import?->tenant_id;
+        if ($tenantId) {
+            \Crm\Core\TenantContext::setTenantId($tenantId);
+        }
 
-        $typeImported->indexBatch($this->importBatch);
+        try {
+            $typeImported = app(ImportHelper::class)
+                ->setImport($this->importBatch->import)
+                ->getTypeImporter();
+
+            $typeImported->indexBatch($this->importBatch);
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
     }
 }

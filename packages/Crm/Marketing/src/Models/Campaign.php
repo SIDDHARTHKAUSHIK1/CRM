@@ -2,12 +2,16 @@
 
 namespace Crm\Marketing\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\EmailTemplate\Models\EmailTemplateProxy;
 use Crm\Marketing\Contracts\Campaign as CampaignContract;
 
 class Campaign extends Model implements CampaignContract
 {
+    use BelongsToTenant;
+
     /**
      * Define the table for the model.
      *
@@ -21,6 +25,7 @@ class Campaign extends Model implements CampaignContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'subject',
         'status',

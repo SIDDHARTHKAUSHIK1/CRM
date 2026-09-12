@@ -21,6 +21,8 @@ class WorkflowDataGrid extends DataGrid
 
         $this->addFilter('id', 'workflows.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'workflows');
+
         return $queryBuilder;
     }
 

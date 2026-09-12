@@ -23,6 +23,8 @@ class PipelineDataGrid extends DataGrid
 
         $this->addFilter('id', 'lead_pipelines.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'lead_pipelines');
+
         return $queryBuilder;
     }
 

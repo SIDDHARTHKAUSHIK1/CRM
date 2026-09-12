@@ -2,6 +2,8 @@
 
 namespace Crm\GoogleContact\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Crm\GoogleContact\Contracts\GoogleContactAccount as GoogleContactAccountContract;
@@ -9,6 +11,8 @@ use Crm\User\Models\UserProxy;
 
 class GoogleContactAccount extends Model implements GoogleContactAccountContract
 {
+    use BelongsToTenant;
+
     /**
      * Table name.
      *
@@ -22,6 +26,7 @@ class GoogleContactAccount extends Model implements GoogleContactAccountContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'google_email',
         'access_token',

@@ -22,6 +22,8 @@ class GroupDataGrid extends DataGrid
 
         $this->addFilter('id', 'groups.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'groups');
+
         return $queryBuilder;
     }
 

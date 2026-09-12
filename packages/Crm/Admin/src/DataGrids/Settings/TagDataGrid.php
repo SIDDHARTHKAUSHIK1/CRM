@@ -32,6 +32,8 @@ class TagDataGrid extends DataGrid
         $this->addFilter('created_at', 'tags.created_at');
         $this->addFilter('user_name', 'users.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'tags');
+
         return $queryBuilder;
     }
 

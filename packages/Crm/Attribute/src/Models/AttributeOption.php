@@ -2,11 +2,15 @@
 
 namespace Crm\Attribute\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Attribute\Contracts\AttributeOption as AttributeOptionContract;
 
 class AttributeOption extends Model implements AttributeOptionContract
 {
+    use BelongsToTenant;
+
     public $timestamps = false;
 
     /**
@@ -15,6 +19,7 @@ class AttributeOption extends Model implements AttributeOptionContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'sort_order',
         'attribute_id',

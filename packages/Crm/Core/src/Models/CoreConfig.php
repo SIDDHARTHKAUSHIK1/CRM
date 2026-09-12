@@ -2,11 +2,15 @@
 
 namespace Crm\Core\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Core\Contracts\CoreConfig as CoreConfigContract;
 
 class CoreConfig extends Model implements CoreConfigContract
 {
+    use BelongsToTenant;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -15,6 +19,7 @@ class CoreConfig extends Model implements CoreConfigContract
     protected $table = 'core_config';
 
     protected $fillable = [
+        'tenant_id',
         'code',
         'value',
         'locale',

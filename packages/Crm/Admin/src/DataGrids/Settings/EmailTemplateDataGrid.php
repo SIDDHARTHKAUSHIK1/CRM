@@ -21,6 +21,8 @@ class EmailTemplateDataGrid extends DataGrid
 
         $this->addFilter('id', 'email_templates.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'email_templates');
+
         return $queryBuilder;
     }
 

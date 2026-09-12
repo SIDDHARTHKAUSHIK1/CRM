@@ -2,15 +2,20 @@
 
 namespace Crm\WhatsApp\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\User\Models\UserProxy;
 use Crm\WhatsApp\Contracts\WhatsappCampaign as WhatsappCampaignContract;
 
 class WhatsappCampaign extends Model implements WhatsappCampaignContract
 {
+    use BelongsToTenant;
+
     protected $table = 'whatsapp_campaigns';
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'brochure_path',
         'brochure_name',

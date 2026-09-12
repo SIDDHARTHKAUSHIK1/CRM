@@ -2,6 +2,8 @@
 
 namespace Crm\Email\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Contact\Models\PersonProxy;
 use Crm\Email\Contracts\Email as EmailContract;
@@ -10,6 +12,8 @@ use Crm\Tag\Models\TagProxy;
 
 class Email extends Model implements EmailContract
 {
+    use BelongsToTenant;
+
     /**
      * The table associated with the model.
      *
@@ -47,6 +51,7 @@ class Email extends Model implements EmailContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'subject',
         'source',
         'name',

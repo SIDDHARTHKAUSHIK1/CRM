@@ -109,6 +109,26 @@ abstract class DataGrid
     public function prepareActions() {}
 
     /**
+     * Scope query builder to current tenant.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $queryBuilder
+     * @param  string|null  $table
+     * @return \Illuminate\Database\Query\Builder
+     */
+    protected function scopeToCurrentTenant(Builder $queryBuilder, ?string $table = null): Builder
+    {
+        $tenantId = current_tenant_id();
+
+        if ($tenantId !== null) {
+            $column = $table ? "{$table}.tenant_id" : 'tenant_id';
+            $queryBuilder->where($column, $tenantId);
+        }
+
+        return $queryBuilder;
+    }
+
+
+    /**
      * Prepare mass actions.
      */
     public function prepareMassActions() {}

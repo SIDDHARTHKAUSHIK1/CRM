@@ -31,8 +31,17 @@ class Linking implements ShouldQueue
      */
     public function handle()
     {
-        app(ImportHelper::class)
-            ->setImport($this->import)
-            ->linking();
+        $tenantId = $this->import?->tenant_id;
+        if ($tenantId) {
+            \Crm\Core\TenantContext::setTenantId($tenantId);
+        }
+
+        try {
+            app(ImportHelper::class)
+                ->setImport($this->import)
+                ->linking();
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
     }
 }

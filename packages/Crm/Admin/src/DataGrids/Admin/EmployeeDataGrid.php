@@ -45,6 +45,8 @@ class EmployeeDataGrid extends DataGrid
             $queryBuilder->where('users.id', '!=', $currentUserId);
         }
 
+        $this->scopeToCurrentTenant($queryBuilder, 'users');
+
         return $queryBuilder;
     }
 

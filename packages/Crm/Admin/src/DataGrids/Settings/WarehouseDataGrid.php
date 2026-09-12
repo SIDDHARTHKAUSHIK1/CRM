@@ -31,6 +31,8 @@ class WarehouseDataGrid extends DataGrid
         $this->addFilter('id', 'warehouses.id');
         $this->addFilter('created_at', 'warehouses.created_at');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'warehouses');
+
         return $queryBuilder;
     }
 

@@ -21,6 +21,8 @@ class WebFormDataGrid extends DataGrid
 
         $this->addFilter('id', 'web_forms.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'web_forms');
+
         return $queryBuilder;
     }
 

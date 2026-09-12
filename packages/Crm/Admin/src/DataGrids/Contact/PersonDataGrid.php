@@ -72,6 +72,8 @@ class PersonDataGrid extends DataGrid
         $this->addFilter('organization', 'organizations.name');
         $this->addFilter('tag_name', 'tags.name');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'persons');
+
         return $queryBuilder;
     }
 

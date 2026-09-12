@@ -6,11 +6,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
+use Crm\Core\Traits\BelongsToTenant;
 use Crm\User\Contracts\User as UserContract;
 
 class User extends Authenticatable implements UserContract
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +19,7 @@ class User extends Authenticatable implements UserContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'email',
         'image',

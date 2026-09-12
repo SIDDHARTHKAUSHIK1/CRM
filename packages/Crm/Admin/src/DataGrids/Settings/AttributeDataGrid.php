@@ -31,6 +31,8 @@ class AttributeDataGrid extends DataGrid
         $this->addFilter('attribute_type', 'attributes.is_user_defined');
         $this->addFilter('quick_add', 'attributes.quick_add');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'attributes');
+
         return $queryBuilder;
     }
 

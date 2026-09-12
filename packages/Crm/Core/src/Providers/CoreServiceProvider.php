@@ -85,6 +85,7 @@ class CoreServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Version::class,
+                \Crm\Core\Console\Commands\CreateTenantCommand::class,
             ]);
         }
     }

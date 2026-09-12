@@ -23,6 +23,8 @@ class WebhookDataGrid extends DataGrid
 
         $this->addFilter('id', 'webhooks.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'webhooks');
+
         return $queryBuilder;
     }
 

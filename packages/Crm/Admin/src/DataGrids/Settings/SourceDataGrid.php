@@ -21,6 +21,8 @@ class SourceDataGrid extends DataGrid
 
         $this->addFilter('id', 'lead_sources.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'lead_sources');
+
         return $queryBuilder;
     }
 

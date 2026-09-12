@@ -37,7 +37,12 @@ class WebFormController extends Controller
      */
     public function formJS(string $formId): Response
     {
-        $webForm = $this->webFormRepository->findOneByField('form_id', $formId);
+        $webForm = $this->webFormRepository->getModel()
+            ->withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)
+            ->where('form_id', $formId)
+            ->firstOrFail();
+
+        \Crm\Core\TenantContext::setTenantId($webForm->tenant_id);
 
         return response()->view('web_form::settings.web-forms.embed', compact('webForm'))
             ->header('Content-Type', 'text/javascript');
@@ -48,93 +53,101 @@ class WebFormController extends Controller
      */
     public function formStore(int $id): JsonResponse
     {
-        $person = $this->personRepository
-            ->getModel()
-            ->where('emails', 'like', '%'.request('persons.emails.0.value').'%')
-            ->first();
+        $webForm = $this->webFormRepository->getModel()
+            ->withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)
+            ->findOrFail($id);
 
-        if ($person) {
-            request()->request->add(['persons' => array_merge(request('persons'), ['id' => $person->id])]);
-        }
+        \Crm\Core\TenantContext::setTenantId($webForm->tenant_id);
 
-        app(WebForm::class);
+        try {
+            $person = $this->personRepository
+                ->getModel()
+                ->where('emails', 'like', '%'.request('persons.emails.0.value').'%')
+                ->first();
 
-        $webForm = $this->webFormRepository->findOrFail($id);
-
-        if ($webForm->create_lead) {
-            request()->request->add(['entity_type' => 'leads']);
-
-            Event::dispatch('lead.create.before');
-
-            $data = request('leads');
-
-            $data['entity_type'] = 'leads';
-
-            $data['person'] = request('persons');
-
-            $data['status'] = 1;
-
-            /**
-             * The pipeline is configured on the web form by the admin, so the default pipeline is
-             * only used when the web form does not point to one.
-             */
-            $pipeline = $webForm->lead_pipeline_id
-                ? $this->pipelineRepository->find($webForm->lead_pipeline_id)
-                : null;
-
-            if (! $pipeline) {
-                $pipeline = $this->pipelineRepository->getDefaultPipeline();
+            if ($person) {
+                request()->request->add(['persons' => array_merge(request('persons'), ['id' => $person->id])]);
             }
 
-            $stage = $pipeline->stages()->first();
+            app(WebForm::class);
 
-            $data['lead_pipeline_id'] = $pipeline->id;
+            if ($webForm->create_lead) {
+                request()->request->add(['entity_type' => 'leads']);
 
-            $data['lead_pipeline_stage_id'] = $stage->id;
+                Event::dispatch('lead.create.before');
 
-            $data['title'] = request('leads.title') ?: 'Lead From Web Form';
+                $data = request('leads');
 
-            $data['lead_value'] = request('leads.lead_value') ?: 0;
+                $data['entity_type'] = 'leads';
 
-            if (! request('leads.lead_source_id')) {
-                $source = $this->sourceRepository->findOneByField('name', 'Web Form');
+                $data['person'] = request('persons');
 
-                if (! $source) {
-                    $source = $this->sourceRepository->first();
+                $data['status'] = 1;
+
+                /**
+                 * The pipeline is configured on the web form by the admin, so the default pipeline is
+                 * only used when the web form does not point to one.
+                 */
+                $pipeline = $webForm->lead_pipeline_id
+                    ? $this->pipelineRepository->find($webForm->lead_pipeline_id)
+                    : null;
+
+                if (! $pipeline) {
+                    $pipeline = $this->pipelineRepository->getDefaultPipeline();
                 }
 
-                $data['lead_source_id'] = $source->id;
+                $stage = $pipeline->stages()->first();
+
+                $data['lead_pipeline_id'] = $pipeline->id;
+
+                $data['lead_pipeline_stage_id'] = $stage->id;
+
+                $data['title'] = request('leads.title') ?: 'Lead From Web Form';
+
+                $data['lead_value'] = request('leads.lead_value') ?: 0;
+
+                if (! request('leads.lead_source_id')) {
+                    $source = $this->sourceRepository->findOneByField('name', 'Web Form');
+
+                    if (! $source) {
+                        $source = $this->sourceRepository->first();
+                    }
+
+                    $data['lead_source_id'] = $source->id;
+                }
+
+                $data['lead_type_id'] = request('leads.lead_type_id') ?: $this->typeRepository->first()->id;
+
+                $lead = $this->leadRepository->create($data);
+
+                Event::dispatch('lead.create.after', $lead);
+            } else {
+                if (! $person) {
+                    Event::dispatch('contacts.person.create.before');
+
+                    $data = request('persons');
+
+                    request()->request->add(['entity_type' => 'persons']);
+
+                    $data['entity_type'] = 'persons';
+
+                    $person = $this->personRepository->create($data);
+
+                    Event::dispatch('contacts.person.create.after', $person);
+                }
             }
 
-            $data['lead_type_id'] = request('leads.lead_type_id') ?: $this->typeRepository->first()->id;
-
-            $lead = $this->leadRepository->create($data);
-
-            Event::dispatch('lead.create.after', $lead);
-        } else {
-            if (! $person) {
-                Event::dispatch('contacts.person.create.before');
-
-                $data = request('persons');
-
-                request()->request->add(['entity_type' => 'persons']);
-
-                $data['entity_type'] = 'persons';
-
-                $person = $this->personRepository->create($data);
-
-                Event::dispatch('contacts.person.create.after', $person);
+            if ($webForm->submit_success_action == 'message') {
+                return response()->json([
+                    'message' => $webForm->submit_success_content,
+                ], 200);
+            } else {
+                return response()->json([
+                    'redirect' => $webForm->submit_success_content,
+                ], 301);
             }
-        }
-
-        if ($webForm->submit_success_action == 'message') {
-            return response()->json([
-                'message' => $webForm->submit_success_content,
-            ], 200);
-        } else {
-            return response()->json([
-                'redirect' => $webForm->submit_success_content,
-            ], 301);
+        } finally {
+            \Crm\Core\TenantContext::reset();
         }
     }
 
@@ -143,11 +156,12 @@ class WebFormController extends Controller
      */
     public function preview(string $id): View
     {
-        $webForm = $this->webFormRepository->findOneByField('form_id', $id);
+        $webForm = $this->webFormRepository->getModel()
+            ->withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)
+            ->where('form_id', $id)
+            ->firstOrFail();
 
-        if (is_null($webForm)) {
-            abort(404);
-        }
+        \Crm\Core\TenantContext::setTenantId($webForm->tenant_id);
 
         return view('web_form::settings.web-forms.preview', compact('webForm'));
     }

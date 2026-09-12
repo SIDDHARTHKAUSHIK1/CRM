@@ -2,11 +2,15 @@
 
 namespace Crm\Lead\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Lead\Contracts\Pipeline as PipelineContract;
 
 class Pipeline extends Model implements PipelineContract
 {
+    use BelongsToTenant;
+
     protected $table = 'lead_pipelines';
 
     /**
@@ -15,6 +19,7 @@ class Pipeline extends Model implements PipelineContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'rotten_days',
         'is_default',

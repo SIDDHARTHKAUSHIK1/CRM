@@ -128,6 +128,8 @@ class LeadDataGrid extends DataGrid
         $this->addFilter('created_at', 'leads.created_at');
         $this->addFilter('rotten_lead', DB::raw('DATEDIFF(NOW(), '.$tablePrefix.'leads.created_at) >= '.$tablePrefix.'lead_pipelines.rotten_days'));
 
+        $this->scopeToCurrentTenant($queryBuilder, 'leads');
+
         return $queryBuilder;
     }
 

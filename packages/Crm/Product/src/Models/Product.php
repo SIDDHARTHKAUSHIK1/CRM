@@ -2,6 +2,8 @@
 
 namespace Crm\Product\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +17,8 @@ use Crm\Warehouse\Models\WarehouseProxy;
 
 class Product extends Model implements ProductContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute, LogsActivity;
 
     /**
@@ -23,6 +27,7 @@ class Product extends Model implements ProductContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'sku',
         'description',

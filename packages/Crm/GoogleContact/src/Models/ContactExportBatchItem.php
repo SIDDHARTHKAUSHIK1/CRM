@@ -2,6 +2,8 @@
 
 namespace Crm\GoogleContact\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Crm\Contact\Models\PersonProxy;
@@ -9,6 +11,8 @@ use Crm\GoogleContact\Contracts\ContactExportBatchItem as ContactExportBatchItem
 
 class ContactExportBatchItem extends Model implements ContactExportBatchItemContract
 {
+    use BelongsToTenant;
+
     public const STATUS_PENDING = 'pending';
 
     public const STATUS_DUPLICATE = 'duplicate';
@@ -30,6 +34,7 @@ class ContactExportBatchItem extends Model implements ContactExportBatchItemCont
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'batch_id',
         'person_id',
         'status',

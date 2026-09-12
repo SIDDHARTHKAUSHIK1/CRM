@@ -21,6 +21,8 @@ class TypeDataGrid extends DataGrid
 
         $this->addFilter('id', 'lead_types.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'lead_types');
+
         return $queryBuilder;
     }
 

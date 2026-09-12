@@ -46,6 +46,8 @@ class ProductDataGrid extends DataGrid
         $this->addFilter('total_on_hand', DB::raw('SUM('.$tablePrefix.'product_inventories.in_stock - '.$tablePrefix.'product_inventories.allocated'));
         $this->addFilter('tag_name', 'tags.name');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'products');
+
         return $queryBuilder;
     }
 

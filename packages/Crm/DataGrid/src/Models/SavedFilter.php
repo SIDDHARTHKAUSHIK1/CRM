@@ -2,12 +2,16 @@
 
 namespace Crm\DataGrid\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Crm\DataGrid\Contracts\SavedFilter as SavedFilterContract;
 
 class SavedFilter extends Model implements SavedFilterContract
 {
+    use BelongsToTenant;
+
     use HasFactory;
 
     /**
@@ -23,6 +27,7 @@ class SavedFilter extends Model implements SavedFilterContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'src',
         'name',

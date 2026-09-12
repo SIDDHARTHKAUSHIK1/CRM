@@ -37,6 +37,8 @@ class OrganizationDataGrid extends DataGrid
 
         $this->addFilter('name', 'organizations.name');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'organizations');
+
         return $queryBuilder;
     }
 

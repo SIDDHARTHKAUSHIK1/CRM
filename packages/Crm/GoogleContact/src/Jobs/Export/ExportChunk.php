@@ -35,8 +35,38 @@ class ExportChunk implements ShouldQueue
             return;
         }
 
-        $batch = $batchRepository->find($this->exportBatchId);
+        $batch = ContactExportBatch::withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)->find($this->exportBatchId);
 
+        if (! $batch) {
+            return;
+        }
+
+        if ($batch->tenant_id) {
+            \Crm\Core\TenantContext::setTenantId($batch->tenant_id);
+        }
+
+        try {
+            $this->processChunk(
+                $batch,
+                $batchRepository,
+                $batchItemRepository,
+                $googleContactAccountRepository,
+                $googleContactsService,
+                $personRepository
+            );
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
+    }
+
+    protected function processChunk(
+        ContactExportBatch $batch,
+        ContactExportBatchRepository $batchRepository,
+        ContactExportBatchItemRepository $batchItemRepository,
+        GoogleContactAccountRepository $googleContactAccountRepository,
+        GoogleContactsService $googleContactsService,
+        PersonRepository $personRepository,
+    ): void {
         $account = $googleContactAccountRepository->findOneByField('user_id', $batch->user_id);
 
         $items = $batchItemRepository->findWhereIn('id', $this->itemIds);

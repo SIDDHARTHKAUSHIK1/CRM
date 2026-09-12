@@ -2,11 +2,15 @@
 
 namespace Crm\Marketing\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Marketing\Contracts\Event as EventContract;
 
 class Event extends Model implements EventContract
 {
+    use BelongsToTenant;
+
     /**
      * The table associated with the model.
      *
@@ -20,6 +24,7 @@ class Event extends Model implements EventContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'description',
         'date',

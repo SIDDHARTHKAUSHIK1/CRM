@@ -2,12 +2,16 @@
 
 namespace Crm\Tag\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Tag\Contracts\Tag as TagContract;
 use Crm\User\Models\UserProxy;
 
 class Tag extends Model implements TagContract
 {
+    use BelongsToTenant;
+
     protected $table = 'tags';
 
     /**
@@ -16,6 +20,7 @@ class Tag extends Model implements TagContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'color',
         'user_id',

@@ -48,6 +48,8 @@ class ActivityDataGrid extends DataGrid
         $this->addFilter('created_at', 'activities.created_at');
         $this->addFilter('lead_title', 'leads.title');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'activities');
+
         return $queryBuilder;
     }
 

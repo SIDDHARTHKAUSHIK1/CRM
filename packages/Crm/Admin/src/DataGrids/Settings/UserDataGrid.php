@@ -30,6 +30,8 @@ class UserDataGrid extends DataGrid
             $queryBuilder->whereIn('id', $userIds);
         }
 
+        $this->scopeToCurrentTenant($queryBuilder, 'users');
+
         return $queryBuilder;
     }
 

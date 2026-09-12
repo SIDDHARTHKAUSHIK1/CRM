@@ -47,6 +47,8 @@ class EmailDataGrid extends DataGrid
         $this->addFilter('tags', 'tags.name');
         $this->addFilter('created_at', 'emails.created_at');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'emails');
+
         return $queryBuilder;
     }
 

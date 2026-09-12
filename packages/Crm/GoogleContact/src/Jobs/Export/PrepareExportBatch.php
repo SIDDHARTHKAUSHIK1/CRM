@@ -32,8 +32,38 @@ class PrepareExportBatch implements ShouldQueue
         GoogleContactsService $googleContactsService,
         PersonRepository $personRepository,
     ): void {
-        $batch = $batchRepository->find($this->batchId);
+        $batch = ContactExportBatch::withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)->find($this->batchId);
 
+        if (! $batch) {
+            return;
+        }
+
+        if ($batch->tenant_id) {
+            \Crm\Core\TenantContext::setTenantId($batch->tenant_id);
+        }
+
+        try {
+            $this->processBatch(
+                $batch,
+                $batchRepository,
+                $batchItemRepository,
+                $googleContactAccountRepository,
+                $googleContactsService,
+                $personRepository
+            );
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
+    }
+
+    protected function processBatch(
+        ContactExportBatch $batch,
+        ContactExportBatchRepository $batchRepository,
+        ContactExportBatchItemRepository $batchItemRepository,
+        GoogleContactAccountRepository $googleContactAccountRepository,
+        GoogleContactsService $googleContactsService,
+        PersonRepository $personRepository,
+    ): void {
         $account = $googleContactAccountRepository->findOneByField('user_id', $batch->user_id);
 
         if (! $account) {

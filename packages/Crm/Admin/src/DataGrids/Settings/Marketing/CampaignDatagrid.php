@@ -22,6 +22,8 @@ class CampaignDatagrid extends DataGrid
 
         $this->addFilter('id', 'marketing_campaigns.id');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'marketing_campaigns');
+
         return $queryBuilder;
     }
 

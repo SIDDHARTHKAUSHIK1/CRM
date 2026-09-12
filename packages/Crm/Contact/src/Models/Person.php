@@ -2,6 +2,8 @@
 
 namespace Crm\Contact\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +20,8 @@ use Crm\User\Models\UserProxy;
 
 class Person extends Model implements PersonContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute, HasFactory, LogsActivity;
 
     /**
@@ -50,6 +54,7 @@ class Person extends Model implements PersonContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'emails',
         'contact_numbers',

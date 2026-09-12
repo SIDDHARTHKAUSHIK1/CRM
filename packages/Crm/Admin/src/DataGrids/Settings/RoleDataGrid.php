@@ -24,6 +24,8 @@ class RoleDataGrid extends DataGrid
         $this->addFilter('id', 'roles.id');
         $this->addFilter('name', 'roles.name');
 
+        $this->scopeToCurrentTenant($queryBuilder, 'roles');
+
         return $queryBuilder;
     }
 

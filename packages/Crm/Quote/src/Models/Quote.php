@@ -2,6 +2,8 @@
 
 namespace Crm\Quote\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Attribute\Traits\CustomAttribute;
 use Crm\Contact\Models\PersonProxy;
@@ -11,6 +13,8 @@ use Crm\User\Models\UserProxy;
 
 class Quote extends Model implements QuoteContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute;
 
     protected $table = 'quotes';
@@ -27,6 +31,7 @@ class Quote extends Model implements QuoteContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'subject',
         'description',
         'billing_address',

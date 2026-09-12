@@ -2,12 +2,16 @@
 
 namespace Crm\DataTransfer\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Crm\DataTransfer\Contracts\ImportBatch as ImportBatchContract;
 
 class ImportBatch extends Model implements ImportBatchContract
 {
+    use BelongsToTenant;
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -21,6 +25,7 @@ class ImportBatch extends Model implements ImportBatchContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'state',
         'data',
         'summary',

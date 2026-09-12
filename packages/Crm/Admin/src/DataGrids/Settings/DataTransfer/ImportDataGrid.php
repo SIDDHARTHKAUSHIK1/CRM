@@ -13,7 +13,7 @@ class ImportDataGrid extends DataGrid
      */
     public function prepareQueryBuilder(): Builder
     {
-        return DB::table('imports')
+        $queryBuilder = DB::table('imports')
             ->select(
                 'id',
                 'state',
@@ -24,6 +24,10 @@ class ImportDataGrid extends DataGrid
                 'type',
                 'summary',
             );
+
+        $this->scopeToCurrentTenant($queryBuilder, 'imports');
+
+        return $queryBuilder;
     }
 
     /**

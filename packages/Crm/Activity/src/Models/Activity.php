@@ -2,6 +2,8 @@
 
 namespace Crm\Activity\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Activity\Contracts\Activity as ActivityContract;
 use Crm\Contact\Models\PersonProxy;
@@ -12,6 +14,8 @@ use Crm\Warehouse\Models\WarehouseProxy;
 
 class Activity extends Model implements ActivityContract
 {
+    use BelongsToTenant;
+
     /**
      * Define table name of property
      *
@@ -42,6 +46,7 @@ class Activity extends Model implements ActivityContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'title',
         'type',
         'location',

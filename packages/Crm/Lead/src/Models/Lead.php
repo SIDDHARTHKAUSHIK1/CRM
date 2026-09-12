@@ -2,6 +2,8 @@
 
 namespace Crm\Lead\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +21,8 @@ use Crm\User\Models\UserProxy;
 
 class Lead extends Model implements LeadContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute, LogsActivity;
 
     /**
@@ -27,6 +31,7 @@ class Lead extends Model implements LeadContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'title',
         'description',
         'lead_value',

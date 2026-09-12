@@ -54,6 +54,8 @@ class QuoteDataGrid extends DataGrid
             $this->addFilter('expired_quotes', DB::raw('DATEDIFF(NOW(), '.$tablePrefix.'quotes.expired_at) < '.$tablePrefix.'NOW()'));
         }
 
+        $this->scopeToCurrentTenant($queryBuilder, 'quotes');
+
         return $queryBuilder;
     }
 

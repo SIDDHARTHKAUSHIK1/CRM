@@ -2,6 +2,8 @@
 
 namespace Crm\Contact\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Crm\Attribute\Traits\CustomAttribute;
@@ -10,6 +12,8 @@ use Crm\User\Models\UserProxy;
 
 class Organization extends Model implements OrganizationContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute;
 
     protected $casts = [
@@ -22,6 +26,7 @@ class Organization extends Model implements OrganizationContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'address',
         'user_id',

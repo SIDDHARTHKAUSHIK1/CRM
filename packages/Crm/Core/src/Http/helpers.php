@@ -72,3 +72,14 @@ if (! function_exists('vite')) {
         return app(Vite::class);
     }
 }
+
+if (! function_exists('current_tenant_id')) {
+    /**
+     * Current Tenant ID helper.
+     */
+    function current_tenant_id(): ?int
+    {
+        return \Crm\Core\TenantContext::getTenantId();
+    }
+}
+

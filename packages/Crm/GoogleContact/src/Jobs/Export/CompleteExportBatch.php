@@ -20,17 +20,29 @@ class CompleteExportBatch implements ShouldQueue
 
     public function handle(ContactExportBatchRepository $batchRepository): void
     {
-        $batch = $batchRepository->find($this->exportBatchId);
+        $batch = ContactExportBatch::withoutGlobalScope(\Crm\Core\Scopes\TenantScope::class)->find($this->exportBatchId);
 
-        if ($batch->isFinished()) {
+        if (! $batch) {
             return;
         }
 
-        $batchRepository->update([
-            'state' => $batch->failed_count > 0
-                ? ContactExportBatch::STATE_COMPLETED_WITH_ERRORS
-                : ContactExportBatch::STATE_COMPLETED,
-            'completed_at' => now(),
-        ], $batch->id);
+        if ($batch->tenant_id) {
+            \Crm\Core\TenantContext::setTenantId($batch->tenant_id);
+        }
+
+        try {
+            if ($batch->isFinished()) {
+                return;
+            }
+
+            $batchRepository->update([
+                'state' => $batch->failed_count > 0
+                    ? ContactExportBatch::STATE_COMPLETED_WITH_ERRORS
+                    : ContactExportBatch::STATE_COMPLETED,
+                'completed_at' => now(),
+            ], $batch->id);
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
     }
 }

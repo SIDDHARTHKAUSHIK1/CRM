@@ -2,6 +2,8 @@
 
 namespace Crm\Warehouse\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\Activity\Models\ActivityProxy;
 use Crm\Activity\Traits\LogsActivity;
@@ -11,6 +13,8 @@ use Crm\Warehouse\Contracts\Warehouse as WarehouseContract;
 
 class Warehouse extends Model implements WarehouseContract
 {
+    use BelongsToTenant;
+
     use CustomAttribute, LogsActivity;
 
     /**
@@ -19,6 +23,7 @@ class Warehouse extends Model implements WarehouseContract
      * @var array
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'description',
         'contact_name',

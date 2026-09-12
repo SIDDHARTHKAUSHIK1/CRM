@@ -25,8 +25,10 @@ class SendWhatsappCampaignMessageJob implements ShouldQueue
 
     public function __construct(
         public int $campaignId,
-        public int $recipientId
+        public int $recipientId,
+        public ?int $tenantId = null
     ) {
+        $this->tenantId = $tenantId ?: current_tenant_id();
         $this->onConnection('database');
     }
 
@@ -34,6 +36,22 @@ class SendWhatsappCampaignMessageJob implements ShouldQueue
      * Execute the job.
      */
     public function handle(WhatsAppClientService $client): void
+    {
+        if ($this->tenantId) {
+            \Crm\Core\TenantContext::setTenantId($this->tenantId);
+        }
+
+        try {
+            $this->processMessage($client);
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
+    }
+
+    /**
+     * Process sending the WhatsApp message.
+     */
+    protected function processMessage(WhatsAppClientService $client): void
     {
         $campaign = WhatsappCampaign::find($this->campaignId);
         $recipient = WhatsappCampaignRecipient::find($this->recipientId);

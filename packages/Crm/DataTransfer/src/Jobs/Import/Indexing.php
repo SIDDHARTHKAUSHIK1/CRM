@@ -31,8 +31,17 @@ class Indexing implements ShouldQueue
      */
     public function handle()
     {
-        app(ImportHelper::class)
-            ->setImport($this->import)
-            ->indexing();
+        $tenantId = $this->import?->tenant_id;
+        if ($tenantId) {
+            \Crm\Core\TenantContext::setTenantId($tenantId);
+        }
+
+        try {
+            app(ImportHelper::class)
+                ->setImport($this->import)
+                ->indexing();
+        } finally {
+            \Crm\Core\TenantContext::reset();
+        }
     }
 }

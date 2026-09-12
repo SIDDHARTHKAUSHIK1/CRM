@@ -2,12 +2,17 @@
 
 namespace Crm\WebForm\Models;
 
+use Crm\Core\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Model;
 use Crm\WebForm\Contracts\WebForm as WebFormContract;
 
 class WebForm extends Model implements WebFormContract
 {
+    use BelongsToTenant;
+
     protected $fillable = [
+        'tenant_id',
         'form_id',
         'title',
         'description',
