@@ -400,8 +400,8 @@
                                     required
                                     class="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
                                 >
-                                    <option v-for="role in roles" :key="role.id" :value="role.id">
-                                        @{{ role.permission_type === 'all' ? 'Administrator (Full Access)' : (role.name === 'Employee' ? 'Employee (Limited Access)' : role.name + ' (Limited Access)') }}
+                                    <option v-for="role in formattedRoles" :key="role.id" :value="role.id">
+                                        @{{ role.label }}
                                     </option>
                                 </select>
                                 <span v-if="createErrors.role_id" class="text-xs text-rose-500">@{{ createErrors.role_id[0] }}</span>
@@ -410,35 +410,6 @@
                                 <div v-if="selectedCreateRoleIsAdmin" class="mt-2 rounded-lg bg-amber-50 p-3 border border-amber-300 text-xs font-semibold text-amber-900 dark:bg-amber-950/50 dark:border-amber-700/60 dark:text-amber-200 flex items-start gap-2">
                                     <svg class="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                     <span>@lang('admin::app.admin-panel.employees.admin-role-warning')</span>
-                                </div>
-                            </div>
-
-                            <!-- View Permission -->
-                            <div class="flex flex-col gap-1">
-                                <label class="text-xs font-bold text-gray-800 dark:text-white required">
-                                    @lang('admin::app.admin-panel.employees.create.view-permission')
-                                </label>
-                                <select
-                                    v-model="createData.view_permission"
-                                    required
-                                    class="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
-                                >
-                                    <option value="global">@lang('admin::app.admin-panel.employees.create.global')</option>
-                                    <option value="group">@lang('admin::app.admin-panel.employees.create.group')</option>
-                                    <option value="individual">@lang('admin::app.admin-panel.employees.create.individual')</option>
-                                </select>
-                            </div>
-
-                            <!-- Groups if group permission -->
-                            <div v-if="createData.view_permission === 'group'" class="flex flex-col gap-1">
-                                <label class="text-xs font-bold text-gray-800 dark:text-white">
-                                    @lang('admin::app.admin-panel.employees.create.groups')
-                                </label>
-                                <div class="grid grid-cols-2 gap-2 border border-gray-200 p-2 rounded-md dark:border-gray-800">
-                                    <label v-for="group in groups" :key="group.id" class="flex items-center gap-2 text-xs cursor-pointer">
-                                        <input type="checkbox" :value="group.id" v-model="createData.groups" class="rounded" />
-                                        <span>@{{ group.name }}</span>
-                                    </label>
                                 </div>
                             </div>
 
@@ -923,6 +894,21 @@
                 },
 
                 computed: {
+                    formattedRoles() {
+                        return [...this.roles].sort((a, b) => {
+                            if (a.permission_type === 'all' && b.permission_type !== 'all') return 1;
+                            if (a.permission_type !== 'all' && b.permission_type === 'all') return -1;
+                            return 0;
+                        }).map(r => ({
+                            id: r.id,
+                            name: r.name,
+                            permission_type: r.permission_type,
+                            label: r.permission_type === 'all'
+                                ? 'Administrator (Full Access)'
+                                : (r.name === 'Employee' ? 'Employee (Limited Access)' : r.name + ' (Limited Access)')
+                        }));
+                    },
+
                     selectedCreateRoleIsAdmin() {
                         const role = this.roles.find(r => r.id == this.createData.role_id);
                         return role && role.permission_type === 'all';
@@ -931,15 +917,15 @@
 
                 methods: {
                     openCreateModal() {
-                        const defaultNonAdminRole = this.roles.find(r => r.permission_type !== 'all') || this.roles[0];
+                        const defaultRole = this.formattedRoles.find(r => r.permission_type !== 'all') || this.formattedRoles[0];
                         this.createData = {
                             name: '',
                             email: '',
                             password: '',
                             confirm_password: '',
-                            role_id: defaultNonAdminRole ? defaultNonAdminRole.id : '',
+                            role_id: defaultRole ? defaultRole.id : '',
                             status: true,
-                            view_permission: 'individual',
+                            view_permission: 'global',
                             groups: [],
                         };
                         this.showCreatePassword = true;

@@ -46,6 +46,77 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Get or create tenant roles ensuring standard Employee role is present.
+     */
+    protected function getTenantRoles()
+    {
+        $tenantId = current_tenant_id();
+
+        // Check if standard Employee role exists for this tenant
+        $employeeRole = $this->roleRepository->getModel()
+            ->where('tenant_id', $tenantId)
+            ->where('name', 'Employee')
+            ->first();
+
+        if (! $employeeRole) {
+            $employeePermissions = [
+                'dashboard',
+                'leads', 'leads.create', 'leads.create.quick-create', 'leads.view', 'leads.edit', 'leads.delete',
+                'quotes', 'quotes.create', 'quotes.mail', 'quotes.edit', 'quotes.print', 'quotes.delete',
+                'whatsapp', 'whatsapp.create', 'whatsapp.manage', 'whatsapp.delete',
+                'mail', 'mail.inbox', 'mail.draft', 'mail.outbox', 'mail.sent', 'mail.trash', 'mail.compose', 'mail.compose.quick-create', 'mail.view', 'mail.edit', 'mail.delete',
+                'activities', 'activities.create', 'activities.edit', 'activities.delete',
+                'contacts', 'contacts.persons', 'contacts.persons.create', 'contacts.persons.create.quick-create', 'contacts.persons.edit', 'contacts.persons.delete', 'contacts.persons.export_google', 'contacts.persons.view', 'contacts.organizations', 'contacts.organizations.create', 'contacts.organizations.create.quick-create', 'contacts.organizations.edit', 'contacts.organizations.delete',
+                'products', 'products.create', 'products.create.quick-create', 'products.edit', 'products.delete', 'products.view',
+                'settings',
+                'settings.user', 'settings.user.groups', 'settings.user.groups.create', 'settings.user.groups.edit', 'settings.user.groups.delete',
+                'settings.user.roles', 'settings.user.roles.create', 'settings.user.roles.edit', 'settings.user.roles.delete',
+                'settings.user.users', 'settings.user.users.create', 'settings.user.users.edit', 'settings.user.users.delete',
+                'settings.lead', 'settings.lead.pipelines', 'settings.lead.pipelines.create', 'settings.lead.pipelines.edit', 'settings.lead.pipelines.delete',
+                'settings.lead.sources', 'settings.lead.sources.create', 'settings.lead.sources.edit', 'settings.lead.sources.delete',
+                'settings.lead.types', 'settings.lead.types.create', 'settings.lead.types.edit', 'settings.lead.types.delete',
+                'settings.inventory', 'settings.inventory.warehouse', 'settings.inventory.warehouse.create', 'settings.inventory.warehouse.edit', 'settings.inventory.warehouse.delete',
+                'settings.automation', 'settings.automation.attributes', 'settings.automation.attributes.create', 'settings.automation.attributes.edit', 'settings.automation.attributes.delete',
+                'settings.automation.email_templates', 'settings.automation.email_templates.create', 'settings.automation.email_templates.edit', 'settings.automation.email_templates.delete',
+                'settings.automation.workflows', 'settings.automation.workflows.create', 'settings.automation.workflows.edit', 'settings.automation.workflows.delete',
+                'settings.automation.events', 'settings.automation.events.create', 'settings.automation.events.edit', 'settings.automation.events.delete',
+                'settings.automation.campaigns', 'settings.automation.campaigns.create', 'settings.automation.campaigns.edit', 'settings.automation.campaigns.delete',
+                'settings.automation.webhooks', 'settings.automation.webhooks.create', 'settings.automation.webhooks.edit', 'settings.automation.webhooks.delete',
+                'settings.automation.data_transfer', 'settings.automation.data_transfer.imports', 'settings.automation.data_transfer.imports.create', 'settings.automation.data_transfer.imports.edit', 'settings.automation.data_transfer.imports.delete', 'settings.automation.data_transfer.imports.import',
+                'settings.other_settings', 'settings.other_settings.tags', 'settings.other_settings.tags.create', 'settings.other_settings.tags.edit', 'settings.other_settings.tags.delete',
+                'settings.other_settings.web_forms', 'settings.other_settings.web_forms.view', 'settings.other_settings.web_forms.create', 'settings.other_settings.web_forms.edit', 'settings.other_settings.web_forms.delete',
+                'settings.other_settings.google_contacts',
+                'configuration',
+                'help',
+            ];
+
+            // If there is an existing role named 'Test Employee Role', update it to 'Employee'
+            $existingTestRole = $this->roleRepository->getModel()
+                ->where('tenant_id', $tenantId)
+                ->where('name', 'Test Employee Role')
+                ->first();
+
+            if ($existingTestRole) {
+                $existingTestRole->update([
+                    'name'        => 'Employee',
+                    'description' => 'Employee role with standard access',
+                    'permissions' => $employeePermissions,
+                ]);
+            } else {
+                $this->roleRepository->create([
+                    'tenant_id'       => $tenantId,
+                    'name'            => 'Employee',
+                    'description'     => 'Employee role with standard access',
+                    'permission_type' => 'custom',
+                    'permissions'     => $employeePermissions,
+                ]);
+            }
+        }
+
+        return $this->roleRepository->all();
+    }
+
+    /**
      * Display a listing of employees.
      */
     public function index(): View|JsonResponse
@@ -56,7 +127,7 @@ class EmployeeController extends Controller
             return datagrid(EmployeeDataGrid::class)->process();
         }
 
-        $roles = $this->roleRepository->all();
+        $roles = $this->getTenantRoles();
         $groups = $this->groupRepository->all();
 
         $totalEmployees = $this->userRepository->count();
@@ -79,7 +150,7 @@ class EmployeeController extends Controller
     {
         $this->ensureIsAdmin();
 
-        $roles = $this->roleRepository->all();
+        $roles = $this->getTenantRoles();
         $groups = $this->groupRepository->all();
 
         return new JsonResponse([
@@ -106,12 +177,12 @@ class EmployeeController extends Controller
             'role_id'          => 'required|integer|exists:roles,id',
             'status'           => 'nullable|boolean|in:0,1',
             'view_permission'  => 'nullable|string|in:global,group,individual',
-            'groups'           => 'required_if:view_permission,group|array',
+            'groups'           => 'nullable|array',
             'groups.*'         => 'integer|exists:groups,id',
         ]);
 
         $data = request()->all();
-        $data['view_permission'] = $data['view_permission'] ?: 'individual';
+        $data['view_permission'] = $data['view_permission'] ?? 'global';
 
         if (isset($data['password']) && $data['password']) {
             $data['password_plain'] = Crypt::encryptString($data['password']);
