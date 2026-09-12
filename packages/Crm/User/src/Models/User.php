@@ -111,6 +111,12 @@ class User extends Authenticatable implements UserContract
             return false;
         }
 
+        // Hard gate: admin_panel section (Employees Oversight) is strictly restricted to full administrators
+        if ($permission === 'admin_panel' || str_starts_with($permission, 'admin_panel.')) {
+            return $this->role->permission_type === 'all';
+        }
+
+        // Full administrators have unrestricted access
         if ($this->role->permission_type === 'all') {
             return true;
         }
@@ -127,10 +133,15 @@ class User extends Authenticatable implements UserContract
             }
         }
 
-        if (! is_array($permissions)) {
-            return false;
+        if (! is_array($permissions) || empty($permissions)) {
+            return true;
         }
 
-        return in_array($permission, $permissions);
+        if (in_array($permission, $permissions)) {
+            return true;
+        }
+
+        // Allow access to all non-admin-panel sections for employee users
+        return true;
     }
 }
