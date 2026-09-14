@@ -756,3 +756,78 @@
         -webkit-overflow-scrolling: touch;
     }
 }
+
+/* =========================================================
+   Dashboard KPI cards — ambient color-motion
+   ========================================================= */
+.kpi-card {
+    position: relative;
+    --kpi-accent: 100 116 139; /* neutral fallback (slate-500) if no variant class matches */
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+}
+
+.kpi-card--success { --kpi-accent: 16 185 129; }
+.kpi-card--danger  { --kpi-accent: 239 68 68; }
+.kpi-card--info    { --kpi-accent: 59 130 246; }
+.kpi-card--warning { --kpi-accent: 245 158 11; }
+
+.kpi-card .kpi-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 12px;
+    right: 12px;
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, rgb(var(--kpi-accent) / 0), rgb(var(--kpi-accent) / 0.9), rgb(var(--kpi-accent) / 0));
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .kpi-card {
+        animation: kpi-card-glow 2.6s ease-in-out infinite;
+    }
+
+    .kpi-card .kpi-icon-chip {
+        animation: kpi-icon-pulse 3.2s ease-in-out infinite;
+    }
+
+    .kpi-card .kpi-accent-bar {
+        animation: kpi-accent-bar 2.6s ease-in-out infinite;
+    }
+
+    .kpi-card:hover,
+    .kpi-card:focus-within {
+        animation-play-state: paused;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px -8px rgb(var(--kpi-accent) / 0.35), 0 0 0 1.5px rgb(var(--kpi-accent) / 0.7);
+    }
+
+    .kpi-card:hover .kpi-icon-chip,
+    .kpi-card:hover .kpi-accent-bar {
+        animation-play-state: paused;
+    }
+
+    /* One-shot ping, toggled via JS/Vue when a value just changed */
+    .kpi-card.kpi-card--pinged {
+        animation: kpi-ring-ping 900ms ease-out 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kpi-card,
+    .kpi-card .kpi-icon-chip,
+    .kpi-card .kpi-accent-bar {
+        animation: none !important;
+    }
+
+    .kpi-card:hover,
+    .kpi-card:focus-within {
+        transform: none;
+        box-shadow: 0 0 0 1.5px rgb(var(--kpi-accent) / 0.6);
+    }
+}
+
+.dark .kpi-card {
+    --kpi-glow-dark-boost: 1;
+}

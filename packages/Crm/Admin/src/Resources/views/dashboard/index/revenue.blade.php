@@ -22,8 +22,10 @@
         <template v-else>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 
-                <!-- 1. Total Revenue Won (White Card) -->
-                <div class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-emerald-400 dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <!-- 1. Total Revenue Won (Success Variant) -->
+                <div class="kpi-card kpi-card--success group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                    <span class="kpi-accent-bar"></span>
+
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -43,7 +45,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400 shadow-xs">
+                        <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400 shadow-xs">
                             <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2a3 3 0 0 0-3 3c0 .34.06.67.17.97L4.5 9A3.5 3.5 0 0 0 1 12.5v4A6.5 6.5 0 0 0 7.5 23h9a6.5 6.5 0 0 0 6.5-6.5v-4A3.5 3.5 0 0 0 19.5 9l-4.67-3.03c.11-.3.17-.63.17-.97a3 3 0 0 0-3-3Zm0 2a1 1 0 0 1 1 1c0 .24-.09.47-.24.64l-.16.16-1.2.8-1.2-.8-.16-.16A1 1 0 0 1 11 5a1 1 0 0 1 1-1Zm0 8a2 2 0 0 1 2 2v2a2 2 0 1 1-4 0v-2a2 2 0 0 1 2-2Z"/>
                             </svg>
@@ -57,8 +59,10 @@
                     </div>
                 </div>
 
-                <!-- 2. Total Revenue Lost (White Card) -->
-                <div class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-rose-400 dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <!-- 2. Total Revenue Lost (Danger Variant) -->
+                <div class="kpi-card kpi-card--danger group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                    <span class="kpi-accent-bar"></span>
+
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -78,7 +82,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400 shadow-xs">
+                        <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400 shadow-xs">
                             <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
                                 <polyline points="17 18 23 18 23 12"/>
@@ -93,8 +97,10 @@
                     </div>
                 </div>
 
-                <!-- 3. Total Leads (White Card) -->
-                <div class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-blue-400 dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <!-- 3. Total Leads (Info Variant) -->
+                <div class="kpi-card kpi-card--info group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                    <span class="kpi-accent-bar"></span>
+
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -114,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-400 shadow-xs">
+                        <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-400 shadow-xs">
                             <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
                             </svg>
@@ -128,8 +134,10 @@
                     </div>
                 </div>
 
-                <!-- 4. Avg. Lead Value (White Card) -->
-                <div class="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-amber-400 dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <!-- 4. Avg. Lead Value (Warning Variant) -->
+                <div class="kpi-card kpi-card--warning group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                    <span class="kpi-accent-bar"></span>
+
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -149,7 +157,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-400 shadow-xs font-bold text-xl sm:text-2xl">
+                        <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-400 shadow-xs font-bold text-xl sm:text-2xl">
                             ₹
                         </div>
                     </div>
