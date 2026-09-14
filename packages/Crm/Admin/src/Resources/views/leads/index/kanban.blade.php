@@ -532,13 +532,7 @@
                     const formatCurrency = (num) => {
                         num = parseFloat(num) || 0;
                         if (num <= 0) return '₹0.00';
-                        if (num >= 10000000) {
-                            return '₹' + (num / 10000000).toFixed(2).replace(/\.00$/, '') + ' Cr';
-                        } else if (num >= 100000) {
-                            return '₹' + (num / 100000).toFixed(2).replace(/\.00$/, '') + ' L';
-                        } else {
-                            return '₹' + Math.round(num).toLocaleString('en-IN');
-                        }
+                        return '₹' + Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     };
 
                     const conversionRate = totalDeals > 0 
@@ -840,9 +834,7 @@
                     if (!stage || !stage.lead_value) return '₹0.00';
                     const num = parseFloat(stage.lead_value) || 0;
                     if (num <= 0) return '₹0.00';
-                    if (num >= 10000000) return '₹' + (num / 10000000).toFixed(2).replace(/\.00$/, '') + ' Cr';
-                    if (num >= 100000) return '₹' + (num / 100000).toFixed(2).replace(/\.00$/, '') + ' L';
-                    return '₹' + Number(num).toLocaleString('en-IN');
+                    return '₹' + Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 },
 
                 getCardTitle(element) {
@@ -876,12 +868,7 @@
                     const val = element.lead_value !== undefined && element.lead_value !== null ? parseFloat(element.lead_value) : null;
                     if (val !== null && !isNaN(val)) {
                         if (val <= 0) return '₹0.00';
-                        if (val >= 10000000) {
-                            return '₹' + (val / 10000000).toFixed(2).replace(/\.00$/, '') + ' Cr';
-                        } else if (val >= 100000) {
-                            return '₹' + (val / 100000).toFixed(2).replace(/\.00$/, '') + ' L';
-                        }
-                        return '₹' + Number(val).toLocaleString('en-IN');
+                        return '₹' + Number(val).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     }
                     return element.formatted_lead_value || '₹0.00';
                 },

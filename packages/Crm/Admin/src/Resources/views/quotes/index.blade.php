@@ -5,13 +5,7 @@
 
     @php
         $formatIndian = function($num) {
-            if ($num >= 10000000) {
-                return '₹' . number_format($num / 10000000, 2) . ' Cr';
-            } elseif ($num >= 100000) {
-                return '₹' . number_format($num / 100000, 2) . ' L';
-            } else {
-                return core()->formatBasePrice($num, 2);
-            }
+            return core()->formatBasePrice($num, 2);
         };
 
         $totalVal = $stats['totalValue'] ?? 0;
