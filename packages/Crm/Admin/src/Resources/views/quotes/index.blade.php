@@ -87,8 +87,8 @@
                 <!-- Executive KPIs Banner (4 Summary Cards) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
                     <!-- Metric Card 1: Total Quote Value -->
-                    <div class="flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-2xs mt-0.5">
+                    <div class="group flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-2xs mt-0.5 transition-transform duration-200 group-hover:scale-110">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -105,7 +105,7 @@
                                 </span>
                             </div>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block" data-auto-fit data-min-font-size="12" data-max-font-size="24">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400" data-auto-fit data-min-font-size="12" data-max-font-size="24">
                                     {{ $formatIndian($totalVal) }}
                                 </span>
                             </div>
@@ -119,8 +119,8 @@
                     </div>
 
                     <!-- Metric Card 2: Active Quotes -->
-                    <div class="flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 shadow-2xs mt-0.5">
+                    <div class="group flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 shadow-2xs mt-0.5 transition-transform duration-200 group-hover:scale-110">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -134,7 +134,7 @@
                                 </span>
                             </div>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block" data-auto-fit data-min-font-size="12" data-max-font-size="24">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block transition-colors duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400" data-auto-fit data-min-font-size="12" data-max-font-size="24">
                                     {{ $actCnt }}
                                 </span>
                             </div>
@@ -148,8 +148,8 @@
                     </div>
 
                     <!-- Metric Card 3: Biggest Deals -->
-                    <div class="flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-100 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 shadow-2xs mt-0.5">
+                    <div class="group flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-purple-100 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 shadow-2xs mt-0.5 transition-transform duration-200 group-hover:scale-110">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                             </svg>
@@ -162,7 +162,7 @@
                                 </span>
                             </div>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block" data-auto-fit data-min-font-size="12" data-max-font-size="24">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block transition-colors duration-200 group-hover:text-purple-600 dark:group-hover:text-purple-400" data-auto-fit data-min-font-size="12" data-max-font-size="24">
                                     {{ $formatIndian($maxVal) }}
                                 </span>
                             </div>
@@ -173,8 +173,8 @@
                     </div>
 
                     <!-- Metric Card 4: Quotes Expiring Soon -->
-                    <div class="flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 shadow-2xs mt-0.5">
+                    <div class="group flex items-start gap-3 rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 shadow-2xs mt-0.5 transition-transform duration-200 group-hover:scale-110">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polyline points="12 6 12 12 16 14"></polyline>
@@ -188,7 +188,7 @@
                                 </span>
                             </div>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block" data-auto-fit data-min-font-size="12" data-max-font-size="24">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight block transition-colors duration-200 group-hover:text-rose-600 dark:group-hover:text-rose-400" data-auto-fit data-min-font-size="12" data-max-font-size="24">
                                     {{ $expiringCount }}
                                 </span>
                             </div>

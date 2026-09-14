@@ -111,10 +111,10 @@
         <div id="activities-metrics-section" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 transition-all duration-200">
             
             <!-- Card 1: Total Activities (Rose / Pink Icon) -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+            <div class="group bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Total Activities</span>
-                    <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-100 dark:border-rose-900/50 flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-100 dark:border-rose-900/50 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="3" y="3" width="18" height="18" rx="2"></rect>
                             <path d="M9 3v18M14 9h4M14 15h4"></path>
@@ -122,7 +122,7 @@
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-200 group-hover:text-rose-600 dark:group-hover:text-rose-400">
                         {{ $totalActivitiesCount }}
                     </h3>
                     <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -133,10 +133,10 @@
             </div>
 
             <!-- Card 2: Completed (Emerald / Green Icon) -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+            <div class="group bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Completed</span>
-                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"></path>
                             <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"></polyline>
@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
                         {{ $totalCompletedCount }}
                     </h3>
                     <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -155,10 +155,10 @@
             </div>
 
             <!-- Card 3: Pending (Blue Icon) -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+            <div class="group bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Pending</span>
-                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10"></circle>
                             <polyline points="12 6 12 12 16 14"></polyline>
@@ -166,7 +166,7 @@
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                         {{ $todayPendingCount }}
                     </h3>
                     <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -177,17 +177,17 @@
             </div>
 
             <!-- Card 4: Calls (Purple Icon) -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4">
+            <div class="group bg-white dark:bg-gray-900 rounded-2xl p-5 border border-slate-200/90 dark:border-gray-800 shadow-2xs flex flex-col justify-between space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Calls</span>
-                    <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 border border-purple-100 dark:border-purple-900/50 flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400 border border-purple-100 dark:border-purple-900/50 flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                         </svg>
                     </div>
                 </div>
                 <div class="space-y-1">
-                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-200 group-hover:text-purple-600 dark:group-hover:text-purple-400">
                         {{ $callsCount }}
                     </h3>
                     <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">

@@ -26,8 +26,8 @@
                 <!-- BEGIN: Pipeline Summary Metrics Banner (4 Executive KPI Cards) -->
                 <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4" data-purpose="pipeline-summary-stats">
                     <!-- Metric 1: Pipeline Value -->
-                    <div class="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition hover:shadow-sm min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-100/70 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400">
+                    <div class="group flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-100/70 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                             <!-- Stacked Coins SVG -->
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <ellipse cx="12" cy="6" rx="8" ry="3"></ellipse>
@@ -38,7 +38,7 @@
                         <div class="min-w-0 flex-1 overflow-hidden">
                             <p class="text-[11px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide truncate block">Pipeline Value</p>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden flex items-baseline">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;" :title="pipelineMetrics.titleValue">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;" :title="pipelineMetrics.titleValue">
                                     @{{ pipelineMetrics.formattedValue }}
                                 </span>
                             </div>
@@ -52,8 +52,8 @@
                     </div>
 
                     <!-- Metric 2: Active Leads -->
-                    <div class="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition hover:shadow-sm min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100/70 text-emerald-600 dark:bg-emerald-950/70 dark:text-emerald-400">
+                    <div class="group flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100/70 text-emerald-600 dark:bg-emerald-950/70 dark:text-emerald-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                             <!-- Flame SVG -->
                             <svg class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C8 6.5 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-6.5-6-11zm0 15a3 3 0 0 1-3-3c0-1.5 1-2.8 2-4 .5 1.5 1.5 2.5 2 3a2 2 0 0 1-1 4z"/>
@@ -62,7 +62,7 @@
                         <div class="min-w-0 flex-1 overflow-hidden">
                             <p class="text-[11px] sm:text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide truncate block">Active Leads</p>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden flex items-baseline">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;">
                                     @{{ pipelineMetrics.activeLeads }}
                                 </span>
                             </div>
@@ -76,8 +76,8 @@
                     </div>
 
                     <!-- Metric 3: Won This Month -->
-                    <div class="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition hover:shadow-sm min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-100/70 text-teal-600 dark:bg-teal-950/70 dark:text-teal-400">
+                    <div class="group flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-100/70 text-teal-600 dark:bg-teal-950/70 dark:text-teal-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                             <!-- Calendar Checklist SVG -->
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -90,7 +90,7 @@
                         <div class="min-w-0 flex-1 overflow-hidden">
                             <p class="text-[11px] sm:text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide truncate block">Won This Month</p>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden flex items-baseline">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;" :title="pipelineMetrics.titleWonValue">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200 group-hover:text-teal-600 dark:group-hover:text-teal-400" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;" :title="pipelineMetrics.titleWonValue">
                                     @{{ pipelineMetrics.formattedWonValue }}
                                 </span>
                             </div>
@@ -104,8 +104,8 @@
                     </div>
 
                     <!-- Metric 4: Conversion Rate -->
-                    <div class="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition hover:shadow-sm min-w-0 overflow-hidden">
-                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-pink-100/70 text-pink-500 dark:bg-pink-950/70 dark:text-pink-400">
+                    <div class="group flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-white p-3.5 sm:p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer min-w-0 overflow-hidden">
+                        <div class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-pink-100/70 text-pink-500 dark:bg-pink-950/70 dark:text-pink-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                             <!-- Lightning Bolt SVG -->
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
                                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -114,7 +114,7 @@
                         <div class="min-w-0 flex-1 overflow-hidden">
                             <p class="text-[11px] sm:text-xs font-semibold text-pink-500 dark:text-pink-400 uppercase tracking-wide truncate block">Conversion Rate</p>
                             <div class="mt-0.5 min-w-0 max-w-full overflow-hidden flex items-baseline">
-                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;">
+                                <span class="auto-fit-text text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200 group-hover:text-pink-600 dark:group-hover:text-pink-400" data-auto-fit data-min-font-size="12" data-max-font-size="24" style="font-weight: 700 !important;">
                                     @{{ pipelineMetrics.conversionRate }}
                                 </span>
                             </div>

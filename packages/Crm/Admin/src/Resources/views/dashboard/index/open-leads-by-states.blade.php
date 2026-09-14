@@ -20,10 +20,10 @@
 
         <!-- Leads Summary Card -->
         <template v-else>
-            <div class="flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition-all hover:shadow-xs dark:border-gray-800 dark:bg-gray-900">
+            <div class="group flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
                 <!-- Header -->
                 <div class="flex items-start gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 border border-sky-100 dark:border-sky-900/50 dark:bg-sky-950/40">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 border border-sky-100 dark:border-sky-900/50 dark:bg-sky-950/40 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                             <line x1="16" y1="2" x2="16" y2="6"/>
