@@ -39,8 +39,8 @@
         <!-- 4 Stat / KPI Cards -->
         <div class="grid grid-cols-2 gap-3.5 sm:gap-4 lg:grid-cols-4">
             <!-- Total Products -->
-            <div class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-sky-100 bg-sky-50 text-sky-600 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-400">
+            <div class="group flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-sky-100 bg-sky-50 text-sky-600 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -49,24 +49,24 @@
                 </div>
                 <div>
                     <div class="text-xs font-semibold text-gray-500 dark:text-gray-400">Total Products</div>
-                    <div class="text-xl sm:text-2xl font-bold text-sky-600 dark:text-sky-400">{{ $stats['total_products'] ?? 10 }}</div>
+                    <div class="text-xl sm:text-2xl font-bold text-sky-600 dark:text-sky-400 transition-transform duration-200 group-hover:translate-x-0.5">{{ $stats['total_products'] ?? 10 }}</div>
                 </div>
             </div>
 
             <!-- Total Value -->
-            <div class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-xl font-bold text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
+            <div class="group flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-xl font-bold text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                     ₹
                 </div>
                 <div>
                     <div class="text-xs font-semibold text-gray-500 dark:text-gray-400">Total Value</div>
-                    <div class="text-base sm:text-xl xl:text-2xl font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{{ $stats['total_value'] ?? '₹ 9,305,000' }}</div>
+                    <div class="text-base sm:text-xl xl:text-2xl font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap transition-transform duration-200 group-hover:translate-x-0.5">{{ $stats['total_value'] ?? '₹ 9,305,000' }}</div>
                 </div>
             </div>
 
             <!-- In Stock -->
-            <div class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-indigo-50 text-indigo-600 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-400">
+            <div class="group flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-indigo-50 text-indigo-600 dark:border-indigo-900 dark:bg-indigo-950/40 dark:text-indigo-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -75,13 +75,13 @@
                 </div>
                 <div>
                     <div class="text-xs font-semibold text-gray-500 dark:text-gray-400">In Stock</div>
-                    <div class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $stats['in_stock'] ?? 7 }}</div>
+                    <div class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 transition-transform duration-200 group-hover:translate-x-0.5">{{ $stats['in_stock'] ?? 7 }}</div>
                 </div>
             </div>
 
             <!-- Low Stock -->
-            <div class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-amber-600 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-400">
+            <div class="group flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-xs dark:border-gray-800 dark:bg-gray-900 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-amber-600 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-400 transition-transform duration-200 group-hover:scale-110 shadow-2xs">
                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
                         <line x1="12" y1="9" x2="12" y2="13"></line>
@@ -90,7 +90,7 @@
                 </div>
                 <div>
                     <div class="text-xs font-semibold text-gray-500 dark:text-gray-400">Low Stock</div>
-                    <div class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">{{ $stats['low_stock'] ?? 3 }}</div>
+                    <div class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400 transition-transform duration-200 group-hover:translate-x-0.5">{{ $stats['low_stock'] ?? 3 }}</div>
                 </div>
             </div>
         </div>
