@@ -143,10 +143,20 @@ app.component("v-activities-calendar", ActivitiesCalendar);
 import Debounce from "./directives/debounce";
 import DOMPurify from "./directives/dompurify";
 import ToolTip from "./directives/tooltip";
+import initKpiTruncationTooltips from "./kpi-tooltip";
 
 app.directive("debounce", Debounce);
 app.directive("safe-html", DOMPurify);
 app.directive("tooltip", ToolTip);
 
+if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => initKpiTruncationTooltips());
+    } else {
+        initKpiTruncationTooltips();
+    }
+}
+
 export default app;
+
 

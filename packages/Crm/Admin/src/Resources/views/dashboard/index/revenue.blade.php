@@ -26,11 +26,11 @@
                 <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate outline-hidden" data-truncate-tooltip tabindex="0">
                                 @lang('admin::app.dashboard.index.revenue.won-revenue')
                             </p>
                             <div class="mt-2 min-w-0 max-w-full">
-                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0')">
+                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 truncate outline-hidden" data-auto-fit data-min-font-size="12" data-max-font-size="28" data-truncate-tooltip tabindex="0" :data-full-text="report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0'">
                                     @{{ report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0' }}
                                 </h3>
                             </div>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center min-w-0">
-                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border dark:border-emerald-800/60">
+                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border dark:border-emerald-800/60 outline-hidden" data-truncate-tooltip tabindex="0">
                             <span class="shrink-0">↑</span>
                             <span class="truncate">@{{ report.total_won_revenue ? Math.abs(report.total_won_revenue.progress.toFixed(0)) : 100 }}% from last 30 days</span>
                         </span>
@@ -53,11 +53,11 @@
                 <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate outline-hidden" data-truncate-tooltip tabindex="0">
                                 @lang('admin::app.dashboard.index.revenue.lost-revenue')
                             </p>
                             <div class="mt-2 min-w-0 max-w-full">
-                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-rose-600 dark:group-hover:text-rose-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0')">
+                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-rose-600 dark:group-hover:text-rose-400 truncate outline-hidden" data-auto-fit data-min-font-size="12" data-max-font-size="28" data-truncate-tooltip tabindex="0" :data-full-text="report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0'">
                                     @{{ report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0' }}
                                 </h3>
                             </div>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center min-w-0">
-                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 dark:border dark:border-rose-800/60">
+                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 dark:border dark:border-rose-800/60 outline-hidden" data-truncate-tooltip tabindex="0">
                             <span class="shrink-0">↓</span>
                             <span class="truncate">@{{ report.total_lost_revenue ? Math.abs(report.total_lost_revenue.progress.toFixed(0)) : 100 }}% from last 30 days</span>
                         </span>
@@ -81,11 +81,11 @@
                 <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate outline-hidden" data-truncate-tooltip tabindex="0">
                                 @lang('admin::app.dashboard.index.over-all.total-leads')
                             </p>
                             <div class="mt-2 min-w-0 max-w-full">
-                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Total Leads: ' + (overall.total_leads ? overall.total_leads.current : 0)">
+                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate outline-hidden" data-auto-fit data-min-font-size="12" data-max-font-size="28" data-truncate-tooltip tabindex="0" :data-full-text="overall.total_leads ? overall.total_leads.current : 0">
                                     @{{ overall.total_leads ? overall.total_leads.current : 0 }}
                                 </h3>
                             </div>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center min-w-0">
-                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 dark:border dark:border-blue-800/60">
+                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 dark:border dark:border-blue-800/60 outline-hidden" data-truncate-tooltip tabindex="0">
                             <span class="shrink-0">↑</span>
                             <span class="truncate">@{{ overall.total_leads ? Math.abs(overall.total_leads.progress.toFixed(0)) : 100 }}% from last 30 days</span>
                         </span>
@@ -108,11 +108,11 @@
                 <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate outline-hidden" data-truncate-tooltip tabindex="0">
                                 @lang('admin::app.dashboard.index.over-all.average-lead-value')
                             </p>
                             <div class="mt-2 min-w-0 max-w-full">
-                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-amber-600 dark:group-hover:text-amber-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0')">
+                                <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 truncate outline-hidden" data-auto-fit data-min-font-size="12" data-max-font-size="28" data-truncate-tooltip tabindex="0" :data-full-text="overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0'">
                                     @{{ overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0' }}
                                 </h3>
                             </div>
@@ -122,7 +122,7 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center min-w-0">
-                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:bg-amber-950/80 dark:text-amber-300 dark:border dark:border-amber-800/60">
+                        <span class="inline-flex max-w-full truncate items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:bg-amber-950/80 dark:text-amber-300 dark:border dark:border-amber-800/60 outline-hidden" data-truncate-tooltip tabindex="0">
                             <span class="shrink-0">↑</span>
                             <span class="truncate">@{{ overall.average_lead_value ? Math.abs(overall.average_lead_value.progress.toFixed(0)) : 100 }}% from last 30 days</span>
                         </span>
