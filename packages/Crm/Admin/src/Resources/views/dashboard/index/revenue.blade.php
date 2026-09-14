@@ -22,10 +22,8 @@
         <template v-else>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 
-                <!-- 1. Total Revenue Won (Success Variant) -->
-                <div class="kpi-card kpi-card--success group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
-                    <span class="kpi-accent-bar"></span>
-
+                <!-- 1. Total Revenue Won -->
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -59,10 +57,8 @@
                     </div>
                 </div>
 
-                <!-- 2. Total Revenue Lost (Danger Variant) -->
-                <div class="kpi-card kpi-card--danger group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
-                    <span class="kpi-accent-bar"></span>
-
+                <!-- 2. Total Revenue Lost -->
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -97,10 +93,8 @@
                     </div>
                 </div>
 
-                <!-- 3. Total Leads (Info Variant) -->
-                <div class="kpi-card kpi-card--info group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
-                    <span class="kpi-accent-bar"></span>
-
+                <!-- 3. Total Leads -->
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -134,10 +128,8 @@
                     </div>
                 </div>
 
-                <!-- 4. Avg. Lead Value (Warning Variant) -->
-                <div class="kpi-card kpi-card--warning group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
-                    <span class="kpi-accent-bar"></span>
-
+                <!-- 4. Avg. Lead Value -->
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">

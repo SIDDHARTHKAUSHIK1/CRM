@@ -758,102 +758,47 @@
 }
 
 /* =========================================================
-   Dashboard KPI cards — ambient color-motion
+   Dashboard KPI cards — clean border with subtle motion
    ========================================================= */
-
-/* Keyframes are hand-written here (not in tailwind.config.js) so Tailwind's
-   content-based purge can never strip them — they are referenced directly
-   by the `animation:` properties below and must ship verbatim. */
-@keyframes kpi-card-glow {
-    0%, 100% {
-        box-shadow: 0 0 0 1px rgb(var(--kpi-accent) / 0.22), 0 0 0 0 rgb(var(--kpi-accent) / 0);
-    }
-    50% {
-        box-shadow: 0 0 0 1px rgb(var(--kpi-accent) / 0.55), 0 0 16px 2px rgb(var(--kpi-accent) / 0.30);
-    }
-}
 
 @keyframes kpi-icon-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.08); }
 }
 
-@keyframes kpi-accent-bar {
-    0%, 100% { opacity: 0.5; transform: scaleX(0.94); }
-    50% { opacity: 1; transform: scaleX(1); }
-}
-
-@keyframes kpi-ring-ping {
-    0% { box-shadow: 0 0 0 0 rgb(var(--kpi-accent) / 0.45); }
-    100% { box-shadow: 0 0 0 14px rgb(var(--kpi-accent) / 0); }
-}
-
 .kpi-card {
     position: relative;
-    --kpi-accent: 100 116 139;
-    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out;
 }
 
-.kpi-card--success { --kpi-accent: 16 185 129; }
-.kpi-card--danger  { --kpi-accent: 239 68 68; }
-.kpi-card--info    { --kpi-accent: 59 130 246; }
-.kpi-card--warning { --kpi-accent: 245 158 11; }
-
 .kpi-card .kpi-accent-bar {
-    position: absolute;
-    top: 0;
-    left: 12px;
-    right: 12px;
-    height: 3px;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, rgb(var(--kpi-accent) / 0), rgb(var(--kpi-accent) / 0.9), rgb(var(--kpi-accent) / 0));
-    pointer-events: none;
-    z-index: 1;
+    display: none !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .kpi-card {
-        animation: kpi-card-glow 2.6s ease-in-out infinite;
-    }
-
     .kpi-card .kpi-icon-chip {
         animation: kpi-icon-pulse 3.2s ease-in-out infinite;
     }
 
-    .kpi-card .kpi-accent-bar {
-        animation: kpi-accent-bar 2.6s ease-in-out infinite;
-    }
-
-    /* Hover: force this to win regardless of any other hover: utility already
-       sitting on the same element — !important is deliberate and scoped
-       narrowly to just these three properties, not the whole rule. */
     .kpi-card:hover,
     .kpi-card:focus-within {
-        animation-play-state: paused !important;
         transform: translateY(-3px) !important;
-        box-shadow: 0 12px 24px -8px rgb(var(--kpi-accent) / 0.35), 0 0 0 1.5px rgb(var(--kpi-accent) / 0.7) !important;
+        box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
     }
 
-    .kpi-card:hover .kpi-icon-chip,
-    .kpi-card:hover .kpi-accent-bar {
+    .kpi-card:hover .kpi-icon-chip {
         animation-play-state: paused !important;
-    }
-
-    .kpi-card.kpi-card--pinged {
-        animation: kpi-ring-ping 900ms ease-out 1;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .kpi-card,
-    .kpi-card .kpi-icon-chip,
-    .kpi-card .kpi-accent-bar {
+    .kpi-card .kpi-icon-chip {
         animation: none !important;
     }
 
     .kpi-card:hover,
     .kpi-card:focus-within {
         transform: none !important;
-        box-shadow: 0 0 0 1.5px rgb(var(--kpi-accent) / 0.6) !important;
     }
 }
