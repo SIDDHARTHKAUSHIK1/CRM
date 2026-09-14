@@ -768,7 +768,10 @@
 
 .kpi-card {
     position: relative;
-    transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .kpi-card .kpi-accent-bar {
@@ -782,8 +785,8 @@
 
     .kpi-card:hover,
     .kpi-card:focus-within {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
     }
 
     .kpi-card:hover .kpi-icon-chip {

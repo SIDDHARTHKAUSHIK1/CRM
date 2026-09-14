@@ -23,7 +23,7 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 
                 <!-- 1. Total Revenue Won -->
-                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -33,14 +33,6 @@
                                 <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0')">
                                     @{{ report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0' }}
                                 </h3>
-
-                                <!-- In-Box Full Value Preview Badge on Hover/Scroll -->
-                                <div class="mt-1.5 hidden group-hover:flex items-center gap-1.5 animate-fadeIn">
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-300 dark:border-emerald-700 shadow-xs">
-                                        <span>🔍</span>
-                                        <span>@{{ report.total_won_revenue ? report.total_won_revenue.formatted_total : '₹0' }}</span>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400 shadow-xs">
@@ -58,7 +50,7 @@
                 </div>
 
                 <!-- 2. Total Revenue Lost -->
-                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -68,14 +60,6 @@
                                 <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-rose-600 dark:group-hover:text-rose-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0')">
                                     @{{ report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0' }}
                                 </h3>
-
-                                <!-- In-Box Full Value Preview Badge on Hover/Scroll -->
-                                <div class="mt-1.5 hidden group-hover:flex items-center gap-1.5 animate-fadeIn">
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-700 dark:text-rose-300 bg-rose-100/80 dark:bg-rose-950 px-2 py-0.5 rounded-md border border-rose-300 dark:border-rose-700 shadow-xs">
-                                        <span>🔍</span>
-                                        <span>@{{ report.total_lost_revenue ? report.total_lost_revenue.formatted_total : '₹0' }}</span>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400 shadow-xs">
@@ -94,7 +78,7 @@
                 </div>
 
                 <!-- 3. Total Leads -->
-                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -104,14 +88,6 @@
                                 <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-blue-600 dark:group-hover:text-blue-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Total Leads: ' + (overall.total_leads ? overall.total_leads.current : 0)">
                                     @{{ overall.total_leads ? overall.total_leads.current : 0 }}
                                 </h3>
-
-                                <!-- In-Box Full Value Preview Badge on Hover/Scroll -->
-                                <div class="mt-1.5 hidden group-hover:flex items-center gap-1.5 animate-fadeIn">
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 dark:text-blue-300 bg-blue-100/80 dark:bg-blue-950 px-2 py-0.5 rounded-md border border-blue-300 dark:border-blue-700 shadow-xs">
-                                        <span>🔍</span>
-                                        <span>@{{ overall.total_leads ? overall.total_leads.current : 0 }} Leads</span>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-400 shadow-xs">
@@ -129,7 +105,7 @@
                 </div>
 
                 <!-- 4. Avg. Lead Value -->
-                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0">
+                <div class="kpi-card group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 min-w-0 w-full">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 truncate">
@@ -139,14 +115,6 @@
                                 <h3 class="auto-fit-text text-2xl font-bold tracking-tight text-gray-900 dark:text-white xl:text-[28px] block cursor-pointer transition-all duration-200 group-hover:text-amber-600 dark:group-hover:text-amber-400" data-auto-fit data-min-font-size="12" data-max-font-size="28" :title="'Full Value: ' + (overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0')">
                                     @{{ overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0' }}
                                 </h3>
-
-                                <!-- In-Box Full Value Preview Badge on Hover/Scroll -->
-                                <div class="mt-1.5 hidden group-hover:flex items-center gap-1.5 animate-fadeIn">
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-950 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-700 shadow-xs">
-                                        <span>🔍</span>
-                                        <span>@{{ overall.average_lead_value ? overall.average_lead_value.formatted_total : '₹0' }}</span>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="kpi-icon-chip flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-400 shadow-xs font-bold text-xl sm:text-2xl">
