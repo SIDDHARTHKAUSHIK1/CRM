@@ -1,6 +1,6 @@
 /**
  * KPI card — truncated value/label hover & focus preview tooltip.
- * Only displays when the target element's text is genuinely truncated (scrollWidth > clientWidth).
+ * Displays a clean, high-contrast preview whenever a KPI card's value or label is squeezed/truncated.
  */
 export default function initKpiTruncationTooltips(root = document) {
     if (typeof document === 'undefined') return;
@@ -19,12 +19,65 @@ export default function initKpiTruncationTooltips(root = document) {
 
     function isTruncated(el) {
         if (!el) return false;
-        return el.scrollWidth > el.clientWidth + 1;
+        // Direct overflow check
+        if (el.scrollWidth > el.clientWidth + 0.5) return true;
+        if (el.scrollHeight > el.clientHeight + 0.5) return true;
+
+        // Container overflow check: if hovering a card, check its value or text children
+        if (el.querySelectorAll) {
+            const candidates = el.querySelectorAll('[data-full-text], .auto-fit-text, .truncate, [data-truncate-tooltip]');
+            for (const child of candidates) {
+                if (child.scrollWidth > child.clientWidth + 0.5) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    function position(el) {
-        if (!el || !tooltipEl) return;
-        const rect = el.getBoundingClientRect();
+    function getTargetAndText(el) {
+        if (!el) return { target: null, text: '' };
+
+        // 1. If el itself is truncated
+        if (el.scrollWidth > el.clientWidth + 0.5) {
+            return {
+                target: el,
+                text: el.dataset.fullText || el.textContent.trim()
+            };
+        }
+
+        // 2. If el has data-full-text explicitly and its text is truncated or squeezed
+        if (el.dataset.fullText && (el.scrollWidth > el.clientWidth + 0.5 || el.classList.contains('truncate'))) {
+            return {
+                target: el,
+                text: el.dataset.fullText
+            };
+        }
+
+        // 3. If container has truncated child (e.g. big KPI value or label)
+        if (el.querySelectorAll) {
+            const candidates = el.querySelectorAll('[data-full-text], .auto-fit-text, .truncate, [data-truncate-tooltip]');
+            for (const child of candidates) {
+                if (child.scrollWidth > child.clientWidth + 0.5) {
+                    return {
+                        target: child,
+                        text: child.dataset.fullText || child.textContent.trim()
+                    };
+                }
+            }
+        }
+
+        if (el.dataset.fullText) {
+            return { target: el, text: el.dataset.fullText };
+        }
+
+        return { target: el, text: el.textContent.trim() };
+    }
+
+    function position(target) {
+        if (!target || !tooltipEl) return;
+        const rect = target.getBoundingClientRect();
         const tipRect = tooltipEl.getBoundingClientRect();
         
         let top = rect.top - tipRect.height - 8;
@@ -51,17 +104,17 @@ export default function initKpiTruncationTooltips(root = document) {
             return;
         }
 
-        activeEl = el;
-        const text = el.dataset.fullText || el.textContent.trim();
+        const { target, text } = getTargetAndText(el);
         if (!text) {
             hide();
             return;
         }
 
+        activeEl = el;
         tooltipEl.textContent = text;
         tooltipEl.setAttribute('aria-hidden', 'false');
         tooltipEl.classList.add('kpi-tooltip--visible');
-        position(el);
+        position(target || el);
     }
 
     function hide() {
@@ -74,11 +127,12 @@ export default function initKpiTruncationTooltips(root = document) {
 
     const resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
-            if (activeEl && entry.target === activeEl) {
+            if (activeEl && (entry.target === activeEl || activeEl.contains(entry.target))) {
                 if (!isTruncated(activeEl)) {
                     hide();
                 } else {
-                    position(activeEl);
+                    const { target } = getTargetAndText(activeEl);
+                    position(target || activeEl);
                 }
             }
         }
@@ -97,11 +151,28 @@ export default function initKpiTruncationTooltips(root = document) {
     }
 
     function scan() {
-        const elements = root.querySelectorAll ? root.querySelectorAll('[data-truncate-tooltip]') : document.querySelectorAll('[data-truncate-tooltip]');
+        const elements = root.querySelectorAll ? root.querySelectorAll('[data-truncate-tooltip], .kpi-card') : document.querySelectorAll('[data-truncate-tooltip], .kpi-card');
         elements.forEach(bindElement);
     }
 
     scan();
+
+    // Event delegation on document to guarantee zero missed hover events
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target.closest('[data-truncate-tooltip], .kpi-card');
+        if (target && !target.dataset.tooltipBound) {
+            bindElement(target);
+            show(target);
+        }
+    }, { passive: true });
+
+    document.addEventListener('focusin', (e) => {
+        const target = e.target.closest('[data-truncate-tooltip], .kpi-card');
+        if (target && !target.dataset.tooltipBound) {
+            bindElement(target);
+            show(target);
+        }
+    }, { passive: true });
 
     // Observe DOM mutations to catch elements rendered asynchronously by Vue components
     if (typeof MutationObserver !== 'undefined') {
@@ -118,20 +189,22 @@ export default function initKpiTruncationTooltips(root = document) {
         }
     }
 
-    // Global event listeners for viewport adjustments
+    // Global event listeners for viewport adjustments (zooming, window resizing, scrolling)
     window.addEventListener('resize', () => {
         if (activeEl && tooltipEl && tooltipEl.classList.contains('kpi-tooltip--visible')) {
             if (!isTruncated(activeEl)) {
                 hide();
             } else {
-                position(activeEl);
+                const { target } = getTargetAndText(activeEl);
+                position(target || activeEl);
             }
         }
     }, { passive: true });
 
     window.addEventListener('scroll', () => {
         if (activeEl && tooltipEl && tooltipEl.classList.contains('kpi-tooltip--visible')) {
-            position(activeEl);
+            const { target } = getTargetAndText(activeEl);
+            position(target || activeEl);
         }
     }, { passive: true });
 }
