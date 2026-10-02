@@ -15,7 +15,8 @@ start "Laravel Queue Worker" cmd /k "cd /d \"%~dp0\" && php artisan queue:work -
 
 echo ===================================================
 echo All services are now running:
-echo - Laravel CRM:         http://127.0.0.1:8000/admin/whatsapp
+echo - Landing Page:        http://127.0.0.1:8000/
+echo - CRM Login:           http://127.0.0.1:8000/admin/login
 echo - WhatsApp Gateway:    http://127.0.0.1:3001
 echo - Queue Worker:        Active (Processing background broadcasts)
 echo ===================================================

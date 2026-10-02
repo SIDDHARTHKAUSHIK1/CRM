@@ -1,0 +1,386 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color-scheme: light;
+  }
+
+  .font-serif {
+    font-family: 'Cormorant Garamond', Garamond, Georgia, 'Times New Roman', serif;
+  }
+
+  .font-brand {
+    font-family: 'Cinzel', 'Cormorant Garamond', serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom smooth glassmorphism and ambient glow utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 230, 223, 0.8);
+}
+
+.glass-dark {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Premium Cinematic Slide Transitions (800-1200ms with Directional Parallax, Depth & Staggered Layers) */
+@keyframes cinematicDepthForwardTitle {
+  0% {
+    opacity: 0;
+    transform: translate3d(32px, 18px, -40px) scale(0.96);
+    filter: blur(8px);
+  }
+  60% {
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthBackwardTitle {
+  0% {
+    opacity: 0;
+    transform: translate3d(-32px, 18px, -40px) scale(0.96);
+    filter: blur(8px);
+  }
+  60% {
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthForwardSubhead {
+  0% {
+    opacity: 0;
+    transform: translate3d(24px, 14px, -20px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthBackwardSubhead {
+  0% {
+    opacity: 0;
+    transform: translate3d(-24px, 14px, -20px);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthKicker {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, -15px) scale(0.94);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthButtons {
+  0% {
+    opacity: 0;
+    transform: translate3d(16px, 12px, -20px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes cinematicDepthBadges {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, -10px);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthFocus {
+  0% {
+    opacity: 0;
+    transform: translateX(-16px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicDepthCounter {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Forward Animation Classes */
+.animate-cinematic-title-fwd {
+  animation: cinematicDepthForwardTitle 1100ms cubic-bezier(0.16, 1, 0.3, 1) 60ms forwards;
+}
+
+.animate-cinematic-subhead-fwd {
+  animation: cinematicDepthForwardSubhead 1000ms cubic-bezier(0.16, 1, 0.3, 1) 140ms forwards;
+}
+
+/* Backward Animation Classes */
+.animate-cinematic-title-bwd {
+  animation: cinematicDepthBackwardTitle 1100ms cubic-bezier(0.16, 1, 0.3, 1) 60ms forwards;
+}
+
+.animate-cinematic-subhead-bwd {
+  animation: cinematicDepthBackwardSubhead 1000ms cubic-bezier(0.16, 1, 0.3, 1) 140ms forwards;
+}
+
+/* General Staggered Layers */
+.animate-cinematic-kicker {
+  animation: cinematicDepthKicker 850ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-cinematic-buttons {
+  animation: cinematicDepthButtons 950ms cubic-bezier(0.16, 1, 0.3, 1) 220ms forwards;
+}
+
+.animate-cinematic-badges {
+  animation: cinematicDepthBadges 900ms cubic-bezier(0.16, 1, 0.3, 1) 300ms forwards;
+}
+
+.animate-cinematic-focus {
+  animation: cinematicDepthFocus 850ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-cinematic-counter {
+  animation: cinematicDepthCounter 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Universal Smooth Landing Page Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmerEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 4s ease-in-out infinite;
+}
+
+/* Card & Button Luxury Hover Elevation */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.hover-lift-dark:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.5), 0 0 25px -5px rgba(16, 185, 129, 0.15);
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 80%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.btn-shimmer:hover::after {
+  transform: rotate(30deg) translateX(100%);
+}
+
+/* KPI Card Specialized Animations */
+@keyframes kpiFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes kpiShine {
+  0% {
+    transform: translateX(-150%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(250%) rotate(45deg);
+  }
+}
+
+.kpi-shine-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(52, 211, 153, 0.12),
+    transparent
+  );
+  transform: translateX(-150%) rotate(45deg);
+  pointer-events: none;
+}
+
+.kpi-card:hover .kpi-shine-sweep {
+  animation: kpiShine 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+.animate-radar-pulse {
+  animation: radarPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+
+

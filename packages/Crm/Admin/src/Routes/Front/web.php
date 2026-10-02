@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Crm\Admin\Http\Controllers\Controller;
+use App\Http\Controllers\LandingController;
 
 /**
  * Home routes.
  */
-Route::get('/', [Controller::class, 'redirectToLogin'])->name('crm.home');
+Route::get('/', [LandingController::class, 'index'])->name('crm.home');

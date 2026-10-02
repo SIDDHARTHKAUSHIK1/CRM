@@ -38,3 +38,9 @@ node_modules/
 # WhatsApp Gateway Microservice
 /whatsapp-gateway/.env
 /whatsapp-gateway/.session*
+
+# Temporary files
+vertix_extracted/
+vertix-crm-*
+*.zip
+

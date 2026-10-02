@@ -1,0 +1,6 @@
+{
+  "name": "Vertix CRM — High-Converting Sales & Customer Platform",
+  "description": "Stop losing leads. Close more deals on WhatsApp & Email all in one place with visual pipelines, automated follow-ups, and instant proposals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
