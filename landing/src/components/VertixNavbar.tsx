@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Menu, X, LogIn } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 
 interface VertixNavbarProps {
   onStartProject: () => void;
@@ -11,8 +11,9 @@ export const VertixNavbar: React.FC<VertixNavbarProps> = ({ onStartProject }) =>
   const NAV_LINKS = [
     { href: '#home', label: 'Overview' },
     { href: '#audience', label: 'Who It\'s For' },
-    { href: '#workflow', label: 'Lead Journey' },
-    { href: '#features', label: 'Features' },
+    { href: '#workflow', label: '6-Step Workflow' },
+    { href: '#tour', label: 'Product Tour' },
+    { href: '#features', label: 'Capabilities' },
     { href: '#results', label: 'Results & ROI' },
     { href: '#faq', label: 'FAQ' },
   ];
@@ -38,7 +39,7 @@ export const VertixNavbar: React.FC<VertixNavbarProps> = ({ onStartProject }) =>
           </a>
 
           {/* Navigation Links - Center */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-xs font-bold tracking-wider uppercase text-[#262522]">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 text-xs font-bold tracking-wider uppercase text-[#262522]">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
@@ -50,16 +51,8 @@ export const VertixNavbar: React.FC<VertixNavbarProps> = ({ onStartProject }) =>
             ))}
           </nav>
 
-          {/* Action Buttons - Right */}
+          {/* Primary Action Button - Right */}
           <div className="hidden sm:flex items-center gap-3 shrink-0">
-            <a
-              href="/admin/login"
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-extrabold tracking-wider text-[#0A0A0A] hover:text-black border border-[#0A0A0A]/35 hover:border-[#0A0A0A] hover:bg-black/5 rounded-full transition-all cursor-pointer shadow-xs"
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>CRM Login</span>
-            </a>
-
             <button
               onClick={onStartProject}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-extrabold tracking-wider text-white bg-[#0A0A0A] hover:bg-[#262626] active:bg-black rounded-full transition-all cursor-pointer shadow-md hover:shadow-lg hover:scale-105"
@@ -71,16 +64,9 @@ export const VertixNavbar: React.FC<VertixNavbarProps> = ({ onStartProject }) =>
 
           {/* Mobile hamburger */}
           <div className="flex lg:hidden items-center gap-2">
-            <a
-              href="/admin/login"
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-extrabold tracking-wider text-[#0A0A0A] border border-[#0A0A0A]/40 rounded-full sm:hidden"
-            >
-              <LogIn className="w-3 h-3" />
-              <span>Login</span>
-            </a>
             <button
               onClick={onStartProject}
-              className="px-3 py-1.5 text-xs font-extrabold tracking-wider text-white bg-[#0A0A0A] rounded-full sm:hidden"
+              className="px-3.5 py-1.5 text-xs font-extrabold tracking-wider text-white bg-[#0A0A0A] rounded-full sm:hidden"
             >
               Demo
             </button>
@@ -110,14 +96,7 @@ export const VertixNavbar: React.FC<VertixNavbarProps> = ({ onStartProject }) =>
               </a>
             ))}
           </nav>
-          <div className="pt-2 space-y-2.5">
-            <a
-              href="/admin/login"
-              className="w-full py-3 text-xs tracking-widest uppercase font-extrabold text-[#0A0A0A] border-2 border-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white rounded-full flex items-center justify-center gap-2 transition-all shadow-xs"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>CRM Login Portal</span>
-            </a>
+          <div className="pt-2">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

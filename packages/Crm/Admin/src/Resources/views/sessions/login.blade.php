@@ -14,44 +14,38 @@
         #app {
             min-height: 100vh !important;
         }
-        .font-serif {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
         .font-sans {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         }
         
-        /* MAXIMUM TRANSLUCENT LIQUID GLASS CARD */
+        /* PREMIUM FROSTED LIQUID GLASS KPI CARD */
         .login-glass-card {
             width: 100% !important;
-            max-width: 410px !important;
+            max-width: 425px !important;
             margin: 0 auto !important;
-            background: rgba(255, 255, 255, 0.06) !important;
-            backdrop-filter: blur(8px) saturate(220%) !important;
-            -webkit-backdrop-filter: blur(8px) saturate(220%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.38) !important;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
-            border-radius: 26px !important;
-            padding: 1.45rem 1.6rem !important;
+            background: rgba(255, 255, 255, 0.42) !important;
+            backdrop-filter: blur(28px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+            box-shadow: 0 30px 60px -15px rgba(0, 30, 80, 0.22), inset 0 1.5px 0 rgba(255, 255, 255, 0.9) !important;
+            border-radius: 32px !important;
+            padding: 1.75rem 1.85rem !important;
         }
 
-        /* LIQUID TRANSLUCENT GLASS INPUTS */
+        /* LIQUID GLASS INPUT WRAPPER */
         .glass-input-wrap {
-            background: rgba(255, 255, 255, 0.10) !important;
+            background: rgba(255, 255, 255, 0.65) !important;
             backdrop-filter: blur(8px) !important;
             -webkit-backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.40) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+            border-radius: 14px !important;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .glass-input-wrap:focus-within {
-            background: rgba(255, 255, 255, 0.20) !important;
-            border-color: rgba(255, 255, 255, 0.85) !important;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25) !important;
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-color: #0066FF !important;
+            box-shadow: 0 0 0 3.5px rgba(0, 102, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
         }
         .glass-input-wrap input {
             width: 100% !important;
@@ -60,109 +54,102 @@
             border: none !important;
             outline: none !important;
             box-shadow: none !important;
-            padding: 0.65rem 0.85rem 0.65rem 2.45rem !important;
-            font-size: 0.88rem !important;
-            color: #0F172A !important;
+            padding: 0.72rem 0.85rem 0.72rem 2.45rem !important;
+            font-size: 0.9rem !important;
+            color: #0B1A30 !important;
             font-weight: 700 !important;
         }
         .glass-input-wrap input::placeholder {
-            color: #334155 !important;
+            color: #64748B !important;
             font-weight: 600 !important;
         }
 
-        /* PREVENT CHROME/EDGE SOLID OPAQUE AUTOFILL */
+        /* AUTOFILL PRESERVATION */
         .glass-input-wrap input:-webkit-autofill,
         .glass-input-wrap input:-webkit-autofill:hover, 
         .glass-input-wrap input:-webkit-autofill:focus, 
         .glass-input-wrap input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.12) inset !important;
-            -webkit-text-fill-color: #0F172A !important;
-            caret-color: #0F172A !important;
+            -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.75) inset !important;
+            -webkit-text-fill-color: #0B1A30 !important;
+            caret-color: #0B1A30 !important;
             transition: background-color 5000s ease-in-out 0s !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             font-weight: 700 !important;
         }
 
-        /* HIGH-CONTRAST READABLE LABELS */
-        .glass-label {
-            color: #0F172A !important;
-            font-weight: 800 !important;
-            font-size: 11.5px !important;
-            letter-spacing: 0.02em !important;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8), 0 0 1px rgba(255, 255, 255, 0.9);
-        }
-
-        /* LIQUID GLASS DEMO BUTTONS */
+        /* DEMO PILL BUTTONS */
         .demo-glass-pill {
-            background: rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.38);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+            border-radius: 14px !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .demo-glass-pill:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.90) !important;
+            border-color: #0066FF !important;
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 16px rgba(0, 102, 255, 0.18) !important;
         }
 
-        /* SLEEK TRANSLUCENT CHARCOAL BUTTON */
-        .btn-charcoal-pill {
-            background: rgba(15, 23, 42, 0.78) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.30) !important;
-            border-radius: 12px !important;
-            padding: 0.72rem 1.25rem !important;
-            font-size: 0.875rem !important;
+        /* ELECTRIC BLUE PRIMARY SIGN IN BUTTON */
+        .btn-electric-blue {
+            background: linear-gradient(135deg, #1A82FF 0%, #0066FF 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 14px !important;
+            padding: 0.82rem 1.25rem !important;
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
             color: #FFFFFF !important;
+            box-shadow: 0 10px 24px -4px rgba(0, 102, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .btn-charcoal-pill:hover {
-            background: rgba(15, 23, 42, 0.92) !important;
+        .btn-electric-blue:hover {
+            background: linear-gradient(135deg, #0A72F0 0%, #0052D4 100%) !important;
             transform: translateY(-1px);
-            box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.5) !important;
+            box-shadow: 0 14px 28px -4px rgba(0, 102, 255, 0.65) !important;
         }
 
-        /* SSO TRANSLUCENT PILLS */
-        .btn-glass-sso {
-            background: rgba(255, 255, 255, 0.08) !important;
-            backdrop-filter: blur(4px) !important;
-            -webkit-backdrop-filter: blur(4px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.30) !important;
-            border-radius: 10px !important;
-            transition: all 0.2s ease !important;
+        /* CREATE ACCOUNT PILL BUTTON */
+        .btn-create-account {
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+            border-radius: 14px !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
-        .btn-glass-sso:hover {
-            background: rgba(255, 255, 255, 0.25) !important;
-            border-color: rgba(255, 255, 255, 0.75) !important;
+        .btn-create-account:hover {
+            background: rgba(255, 255, 255, 0.90) !important;
+            border-color: #0066FF !important;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+            box-shadow: 0 6px 16px rgba(0, 102, 255, 0.18) !important;
         }
 
         .landing-back-pill {
-            background: rgba(255, 255, 255, 0.15) !important;
-            backdrop-filter: blur(12px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.35) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+            background: rgba(255, 255, 255, 0.45) !important;
+            backdrop-filter: blur(14px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .landing-back-pill:hover {
-            background: rgba(255, 255, 255, 0.35) !important;
-            border-color: rgba(255, 255, 255, 0.8) !important;
+            background: rgba(255, 255, 255, 0.7) !important;
+            border-color: #0066FF !important;
             transform: translateY(-1px);
-            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 8px 22px -4px rgba(0, 102, 255, 0.2) !important;
         }
     </style>
     @endpush
 
     <!-- FULLSCREEN FIXED LUXURY REAL ESTATE EXPERIENCE -->
-    <div class="fixed inset-0 h-screen max-h-screen w-screen overflow-y-auto flex flex-col justify-between font-sans selection:bg-[#1E293B] selection:text-white p-3 sm:p-5 box-border">
+    <div class="fixed inset-0 h-screen max-h-screen w-screen overflow-y-auto flex flex-col justify-between font-sans selection:bg-[#0066FF] selection:text-white p-3 sm:p-5 box-border">
         
-        <!-- LAYER 0: Crystal Clear Luxury Villa Background (No Blur, Sharp & 100% Clear) -->
+        <!-- LAYER 0: Crystal Clear Luxury Villa Background -->
         <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
             <img
                 src="{{ asset('images/login-luxury-bg.jpg') }}"
@@ -177,9 +164,9 @@
         <header class="relative z-20 w-full flex items-center justify-between shrink-0">
             <a
                 href="/"
-                class="landing-back-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0F172A] hover:text-black group shadow-sm"
+                class="landing-back-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold text-[#0B1A30] hover:text-black group shadow-sm"
             >
-                <div class="w-4 h-4 rounded-full bg-slate-900/10 flex items-center justify-center text-[#0F172A] group-hover:-translate-x-0.5 transition-transform shadow-2xs">
+                <div class="w-4 h-4 rounded-full bg-slate-900/10 flex items-center justify-center text-[#0B1A30] group-hover:-translate-x-0.5 transition-transform shadow-2xs">
                     <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
@@ -190,99 +177,97 @@
             <div></div>
         </header>
 
-        <!-- LAYER 2: CENTER AUTHENTICATION SECTION (PERFECT VERTICAL & HORIZONTAL MIDDLE ALIGNMENT) -->
-        <main class="relative z-20 w-full my-auto flex items-center justify-center shrink-0 py-4">
+        <!-- LAYER 2: CENTER AUTHENTICATION SECTION -->
+        <main class="relative z-20 w-full my-auto flex items-center justify-center shrink-0 py-3 sm:py-4">
             
             <!-- FROSTED TRANSLUCENT GLASS CARD -->
             <div class="login-glass-card relative animate-in fade-in zoom-in-95 duration-300">
                 
-                <!-- INSIDE CARD BRANDING (COMPACT & SLEEK) -->
+                <!-- 1. BRANDING HEADER -->
                 <div class="flex flex-col items-center text-center mb-3">
-                    <div class="w-9 h-9 flex items-center justify-center mb-1 text-[#0F172A]">
-                        <svg class="w-8 h-8" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 5L6 16.5V34H34V16.5L20 5Z" />
-                            <rect x="16" y="19" width="3.2" height="3.2" fill="currentColor" stroke="none" rx="0.5" />
-                            <rect x="20.8" y="19" width="3.2" height="3.2" fill="currentColor" stroke="none" rx="0.5" />
-                            <rect x="16" y="23.8" width="3.2" height="3.2" fill="currentColor" stroke="none" rx="0.5" />
-                            <rect x="20.8" y="23.8" width="3.2" height="3.2" fill="currentColor" stroke="none" rx="0.5" />
+                    <div class="w-10 h-10 flex items-center justify-center text-[#0B1A30] mb-1">
+                        <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="#0B1A30" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+                            <rect x="9.5" y="11.5" width="5" height="5" stroke="#0B1A30" stroke-width="1.8"/>
+                            <line x1="12" y1="11.5" x2="12" y2="16.5" stroke="#0B1A30" stroke-width="1.4"/>
+                            <line x1="9.5" y1="14" x2="14.5" y2="14" stroke="#0B1A30" stroke-width="1.4"/>
                         </svg>
                     </div>
 
-                    <div class="flex items-center justify-center gap-1 leading-none mb-0.5">
-                        <span class="text-[20px] font-black tracking-tight text-[#0F172A]">RE</span>
-                        <span class="text-[20px] font-normal tracking-normal text-[#1E293B]">CRM</span>
+                    <div class="flex items-center justify-center leading-none">
+                        <h1 class="text-[26px] sm:text-[28px] font-black tracking-tight text-[#0B1A30]">
+                            RE<span class="text-[#0066FF]">CRM</span>
+                        </h1>
                     </div>
 
-                    <div class="text-[8px] font-medium tracking-[0.22em] text-[#475569] uppercase mb-1.5">
+                    <p class="text-[9.5px] font-black tracking-[0.14em] text-[#0B1A30] uppercase mt-1">
                         REAL ESTATE SALES &amp; CRM PLATFORM
-                    </div>
-
-                    <div class="w-8 h-[2px] bg-[#1E293B] mx-auto rounded-full"></div>
+                    </p>
                 </div>
 
-                <!-- QUICK DEMO HEADER -->
+                <!-- 2. QUICK DEMO LOGIN HEADER -->
                 <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center gap-1.5 text-[#0F172A]">
-                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <div class="flex items-center gap-1 text-[#0B1A30]">
+                        <svg class="w-4 h-4 fill-[#0066FF]" viewBox="0 0 24 24">
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                         </svg>
-                        <span class="text-[10.5px] font-bold uppercase tracking-[0.16em]">QUICK DEMO LOGIN</span>
+                        <span class="text-[11.5px] font-black uppercase tracking-wider text-[#0B1A30]">QUICK DEMO LOGIN</span>
                     </div>
 
-                    <span class="inline-flex items-center gap-1 text-[9.5px] font-semibold text-[#1E293B] bg-white/45 border border-white/70 px-2.5 py-0.5 rounded-full shadow-2xs backdrop-blur-sm">
-                        1-Click Sign In <span class="text-[10px]">&rarr;</span>
+                    <span class="inline-flex items-center gap-1 text-[10.5px] font-bold text-[#0B1A30] bg-white/70 border border-white/90 px-2.5 py-0.5 rounded-full shadow-2xs backdrop-blur-sm">
+                        1-Click Sign In <span class="text-[11px] text-[#0066FF] font-bold">&rarr;</span>
                     </span>
                 </div>
 
-                <!-- QUICK DEMO PILL BUTTONS -->
-                <div class="grid grid-cols-2 gap-2.5 mb-3.5">
+                <!-- 3. QUICK DEMO BUTTONS -->
+                <div class="grid grid-cols-2 gap-2.5 mb-3">
                     <!-- Admin Demo -->
                     <button
                         type="button"
                         onclick="quickLogin('admin@example.com', 'admin123', 'Administrator', this)"
-                        class="demo-glass-pill group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer"
+                        class="demo-glass-pill group flex items-center justify-between px-3 py-2.5 rounded-2xl cursor-pointer"
                         title="Click to 1-click login as Administrator"
                     >
                         <div class="flex items-center gap-1.5 truncate">
                             <span class="text-sm">👑</span>
-                            <span class="text-[11.5px] font-bold text-[#0F172A]">Admin Demo</span>
+                            <span class="text-[13px] font-black text-[#0B1A30]">Admin Demo</span>
                         </div>
-                        <span class="text-xs font-bold text-[#475569] group-hover:translate-x-0.5 group-hover:text-black transition-all">&rarr;</span>
+                        <span class="text-xs font-black text-[#0B1A30] group-hover:translate-x-0.5 group-hover:text-[#0066FF] transition-all">&rarr;</span>
                     </button>
 
                     <!-- Agent Demo -->
                     <button
                         type="button"
                         onclick="quickLogin('ram@gmail.com', 'admin123', 'Sales Agent', this)"
-                        class="demo-glass-pill group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer"
+                        class="demo-glass-pill group flex items-center justify-between px-3 py-2.5 rounded-2xl cursor-pointer"
                         title="Click to 1-click login as Sales Agent"
                     >
                         <div class="flex items-center gap-1.5 truncate">
                             <span class="text-sm">💼</span>
-                            <span class="text-[11.5px] font-bold text-[#0F172A]">Agent Demo</span>
+                            <span class="text-[13px] font-black text-[#0B1A30]">Agent Demo</span>
                         </div>
-                        <span class="text-xs font-bold text-[#475569] group-hover:translate-x-0.5 group-hover:text-black transition-all">&rarr;</span>
+                        <span class="text-xs font-black text-[#0B1A30] group-hover:translate-x-0.5 group-hover:text-[#0066FF] transition-all">&rarr;</span>
                     </button>
                 </div>
 
                 <!-- Quick Demo Status Banner -->
-                <div id="demoFeedback" class="hidden mb-2 text-center text-[10.5px] font-semibold text-[#0F172A]"></div>
+                <div id="demoFeedback" class="hidden mb-2 text-center text-[10.5px] font-bold text-[#0066FF]"></div>
 
                 {!! view_render_event('admin.sessions.login.form_controls.before') !!}
 
-                <!-- Login Form -->
+                <!-- 4. LOGIN FORM -->
                 <x-admin::form :action="route('admin.session.store')" id="admin-login-form">
                     @csrf
                     <div class="space-y-3 text-left">
                         
                         <!-- Work Email -->
                         <div>
-                            <label class="glass-label block mb-1" for="email">
+                            <label class="text-[12px] font-black text-[#0B1A30] block mb-1" for="email">
                                 Work Email *
                             </label>
 
                             <div class="relative glass-input-wrap">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F172A]">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0B1A30]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
@@ -298,17 +283,17 @@
                                 />
                             </div>
 
-                            <x-admin::form.control-group.error control-name="email" class="text-xs text-red-600 mt-1 font-medium" />
+                            <x-admin::form.control-group.error control-name="email" class="text-xs text-red-600 mt-1 font-bold" />
                         </div>
 
                         <!-- Password -->
                         <div>
-                            <label class="glass-label block mb-1" for="password">
+                            <label class="text-[12px] font-black text-[#0B1A30] block mb-1" for="password">
                                 Password *
                             </label>
 
                             <div class="relative glass-input-wrap">
-                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0F172A]">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#0B1A30]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
@@ -329,7 +314,7 @@
                                     type="button"
                                     onclick="switchVisibility()"
                                     id="visibilityIcon"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#0F172A] hover:text-black transition-colors cursor-pointer"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#0B1A30] hover:text-[#0066FF] transition-colors cursor-pointer"
                                     title="Toggle password visibility"
                                     aria-label="Toggle password visibility"
                                 >
@@ -343,34 +328,34 @@
                                 </button>
                             </div>
 
-                            <x-admin::form.control-group.error control-name="password" class="text-xs text-red-600 mt-1 font-medium" />
+                            <x-admin::form.control-group.error control-name="password" class="text-xs text-red-600 mt-1 font-bold" />
                         </div>
 
                         <!-- Remember Me & Forgot Password Row -->
                         <div class="flex items-center justify-between pt-0.5">
-                            <label class="flex items-center gap-2 cursor-pointer select-none text-[11px] font-semibold text-[#1E293B] hover:text-black">
+                            <label class="flex items-center gap-2 cursor-pointer select-none text-[12px] font-black text-[#0B1A30]">
                                 <input
                                     type="checkbox"
                                     name="remember"
                                     value="1"
                                     checked
-                                    class="w-4 h-4 rounded border-gray-400 bg-white/60 text-[#1E293B] focus:ring-slate-700 cursor-pointer accent-[#1E293B]"
+                                    class="w-4 h-4 rounded border-white/60 bg-white text-[#0066FF] focus:ring-blue-600 cursor-pointer accent-[#0066FF]"
                                 />
                                 <span>Remember me</span>
                             </label>
 
                             <a
-                                class="text-[11px] font-semibold text-[#475569] hover:text-[#0F172A] transition-colors"
+                                class="text-[12px] font-black text-[#0066FF] hover:underline"
                                 href="{{ route('admin.forgot_password.create') }}"
                             >
                                 Forgot password?
                             </a>
                         </div>
 
-                        <!-- Sign In Button -->
+                        <!-- 5. SIGN IN BUTTON -->
                         <button
                             type="submit"
-                            class="btn-charcoal-pill w-full flex items-center justify-center gap-2 cursor-pointer font-bold shadow-md hover:shadow-xl mt-2"
+                            class="btn-electric-blue w-full flex items-center justify-center gap-2 cursor-pointer font-black shadow-md hover:shadow-xl mt-2"
                             aria-label="{{ trans('admin::app.users.login.submit-btn') }}"
                         >
                             <span>Sign In</span>
@@ -381,51 +366,37 @@
 
                 {!! view_render_event('admin.sessions.login.form_controls.after') !!}
 
-                <!-- OR CONTINUE WITH DIVIDER -->
+                <!-- 6. CREATE ACCOUNT DIVIDER -->
                 <div class="flex items-center gap-3 my-3">
                     <div class="flex-1 h-[1px] bg-slate-400/40"></div>
-                    <span class="font-mono text-[7.5px] uppercase tracking-[0.22em] text-[#475569] font-bold shrink-0">
-                        OR CONTINUE WITH
+                    <span class="font-mono text-[8.5px] uppercase tracking-[0.2em] font-black text-[#475569] shrink-0">
+                        CREATE ACCOUNT
                     </span>
                     <div class="flex-1 h-[1px] bg-slate-400/40"></div>
                 </div>
 
-                <!-- SSO BUTTONS -->
-                <div class="grid grid-cols-2 gap-2">
-                    <button
-                        type="button"
-                        onclick="alert('Google Workspace SSO is configured via Admin Settings -> Integrations.')"
-                        class="btn-glass-sso flex items-center justify-center gap-1.5 py-1.5 px-2.5 font-semibold text-[#1E293B] cursor-pointer"
+                <!-- 7. CREATE ACCOUNT BUTTON (FROM REDESIGN) -->
+                <div>
+                    <a
+                        href="{{ route('admin.register.create') }}"
+                        class="btn-create-account w-full flex items-center justify-between px-4 py-2.5 rounded-2xl cursor-pointer"
                     >
-                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                        </svg>
-                        <span class="text-[9.5px] sm:text-[10px] truncate">Google Workspace</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onclick="alert('Microsoft 365 SSO is configured via Admin Settings -> Integrations.')"
-                        class="btn-glass-sso flex items-center justify-center gap-1.5 py-1.5 px-2.5 font-semibold text-[#1E293B] cursor-pointer"
-                    >
-                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 23 23">
-                            <path fill="#f35325" d="M1 1h10v10H1z"/>
-                            <path fill="#81bc06" d="M12 1h10v10H12z"/>
-                            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
-                            <path fill="#ffba08" d="M12 12h10v10H12z"/>
-                        </svg>
-                        <span class="text-[9.5px] sm:text-[10px] truncate">Microsoft 365</span>
-                    </button>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#0066FF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span class="text-[13px] font-black text-[#0B1A30]">Create Account</span>
+                        </div>
+                        <span class="text-xs font-black text-[#0B1A30] group-hover:translate-x-0.5 transition-all">&rarr;</span>
+                    </a>
                 </div>
 
-                <!-- FOOTER LINK -->
+                <!-- 8. FOOTER LINK -->
                 <div class="mt-3 text-center">
-                    <p class="text-[10.5px] text-[#334155] font-medium">
+                    <p class="text-[11.5px] font-bold text-[#0B1A30]">
                         Need access? Contact your Sales Admin or
-                        <a href="/#contact" class="font-semibold text-[#0F172A] hover:underline underline">
+                        <a href="/#contact" class="text-[#0066FF] font-black underline underline-offset-2 ml-0.5">
                             Request Demo
                         </a>
                     </p>
@@ -473,11 +444,11 @@
                     passwordInput.dispatchEvent(new Event('change', { bubbles: true }));
 
                     if (btn) {
-                        btn.classList.add('ring-2', 'ring-[#0F172A]', 'bg-white/90');
+                        btn.classList.add('ring-2', 'ring-[#0066FF]', 'bg-white');
                     }
 
                     if (feedback) {
-                        feedback.innerHTML = '<span class="inline-flex items-center gap-1 text-[#0F172A] font-semibold text-[10.5px] animate-pulse">✓ Signing in as ' + roleLabel + '...</span>';
+                        feedback.innerHTML = '<span class="inline-flex items-center gap-1 text-[#0066FF] font-black text-[11px] animate-pulse">✓ Signing in as ' + roleLabel + '...</span>';
                         feedback.classList.remove('hidden');
                     }
 

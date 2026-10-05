@@ -11,7 +11,9 @@ use Crm\WhatsApp\Models\WhatsappDoNotContact;
 use Crm\WhatsApp\Services\WhatsAppClientService;
 
 beforeEach(function () {
-    $this->admin = User::find(1) ?: User::factory()->create();
+    \Crm\Core\TenantContext::reset();
+    $this->admin = User::withoutGlobalScopes()->find(1) ?: User::factory()->create(['tenant_id' => 1]);
+    \Crm\Core\TenantContext::setTenantId($this->admin->tenant_id ?: 1);
 });
 
 test('it shows the whatsapp broadcast index page to an authenticated admin', function () {

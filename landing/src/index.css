@@ -1,21 +1,54 @@
 @import "tailwindcss";
 
+/* Match school.aflix.co.in: Plus Jakarta Sans for UI, Sora for headings. */
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-sans);
+  --font-weight-black: 800;
+}
+
+/* Keep existing component aliases consistent with the page typography. */
+@utility font-brand { font-family: var(--font-display); }
+@utility font-outfit { font-family: var(--font-sans); }
+@utility font-space { font-family: var(--font-display); }
+@utility font-script { font-family: var(--font-display); }
+
+/* Headings also override legacy font classes inside dashboard and modal UI. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+svg text {
+  font-family: var(--font-sans);
+}
+
+.estate-footer-scene { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.estate-footer-glow { position: absolute; width: 950px; height: 440px; right: -80px; bottom: -170px; background: radial-gradient(ellipse, #1864e866, transparent 70%); }
+.estate-footer-model { position: absolute; width: min(1060px, 95vw); right: -20px; bottom: -20px; opacity: .85; perspective: 1000px; filter: drop-shadow(0 0 10px #38bdf826); }
+.estate-footer-model svg { width: 100%; transform-origin: 50% 75%; animation: estate-footer-drift 16s ease-in-out infinite; }
+.estate-footer-dashboard { animation: estate-footer-panel 8s ease-in-out infinite; }
+.estate-footer-route { animation: estate-footer-flow 18s linear infinite; }
+[data-background-motion='paused'] .estate-footer-model svg,
+[data-background-motion='paused'] .estate-footer-dashboard,
+[data-background-motion='paused'] .estate-footer-route { animation-play-state: paused; }
+.estate-footer-shade { position: absolute; inset: 0; background: linear-gradient(180deg, #0b1a30d9 0%, #0b1a30a6 35%, #0b1a3033 70%, #0b1a3014 100%); }
+@keyframes estate-footer-drift { 0%, 100% { transform: rotateX(8deg) rotateY(-7deg) translateY(0); } 50% { transform: rotateX(0deg) rotateY(5deg) translateY(-12px); } }
+@keyframes estate-footer-panel { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+@keyframes estate-footer-flow { to { stroke-dashoffset: -140; } }
+@media (max-width: 640px) {
+  .estate-footer-model { width: 560px; right: -105px; bottom: 0; opacity: .72; }
+  .estate-footer-shade { background: linear-gradient(180deg, #0b1a30f5 0%, #0b1a30cc 55%, #0b1a3033 85%, #0b1a3014 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .estate-footer-model svg, .estate-footer-dashboard, .estate-footer-route { animation: none; }
+}
+
 @layer base {
   :root {
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: var(--font-sans);
     color-scheme: light;
-  }
-
-  .font-serif {
-    font-family: 'Cormorant Garamond', Garamond, Georgia, 'Times New Roman', serif;
-  }
-
-  .font-brand {
-    font-family: 'Cinzel', 'Cormorant Garamond', serif;
-  }
-
-  .font-mono {
-    font-family: 'JetBrains Mono', monospace;
   }
 }
 
@@ -51,23 +84,71 @@
   }
 }
 
-.animate-float-slow {
-  animation: floatSlow 6s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
+@keyframes floatLaptop {
   0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+    transform: translateY(-5px) rotate(-0.4deg);
   }
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
+.animate-float-laptop {
+  animation: floatLaptop 6s ease-in-out infinite;
+}
+
+@keyframes floatMobile {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(1.2deg);
+  }
+}
+
+.animate-float-mobile {
+  animation: floatMobile 4.8s ease-in-out infinite 0.6s;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(220%);
+    opacity: 0;
+  }
+}
+
+.animate-scanline {
+  animation: scanline 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes syncLaser {
+  0% {
+    background-position: 0% 50%;
+    opacity: 0.4;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.9;
+  }
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.4;
+  }
+}
+
+.animate-sync-laser {
+  background-size: 200% 200%;
+  animation: syncLaser 3s ease infinite;
 }
 
 /* Premium Cinematic Slide Transitions (800-1200ms with Directional Parallax, Depth & Staggered Layers) */
@@ -381,6 +462,171 @@
   animation: radarPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* ========================================================================= */
+/* 3D REAL ESTATE MOTION ANIMATIONS FOR LANDING PAGE BACKGROUND              */
+/* ========================================================================= */
 
+@keyframes float3dTower {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(16deg) rotateY(-20deg) translateY(0px) translateZ(0px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(20deg) rotateY(-14deg) translateY(-18px) translateZ(30px);
+  }
+}
 
+@keyframes float3dBlueprint {
+  0%, 100% {
+    transform: perspective(1200px) rotateX(58deg) rotateZ(-28deg) translateY(0px) scale(1);
+  }
+  50% {
+    transform: perspective(1200px) rotateX(54deg) rotateZ(-24deg) translateY(-15px) scale(1.03);
+  }
+}
 
+@keyframes float3dPin {
+  0%, 100% {
+    transform: perspective(800px) rotateX(10deg) translateY(0px) scale(1);
+  }
+  50% {
+    transform: perspective(800px) rotateX(18deg) translateY(-16px) scale(1.08);
+  }
+}
+
+@keyframes float3dPrism {
+  0%, 100% {
+    transform: perspective(900px) rotateX(-12deg) rotateY(25deg) translateY(0px) rotateZ(0deg);
+  }
+  50% {
+    transform: perspective(900px) rotateX(-6deg) rotateY(32deg) translateY(-14px) rotateZ(3deg);
+  }
+}
+
+@keyframes float3dGrowth {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(20deg) rotateY(15deg) translateY(0px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(15deg) rotateY(22deg) translateY(-12px);
+  }
+}
+
+@keyframes streamBlueprintDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes beaconRadar {
+  0% {
+    r: 6;
+    opacity: 0.8;
+  }
+  100% {
+    r: 36;
+    opacity: 0;
+  }
+}
+
+@keyframes ambientPulseGlow {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.05);
+  }
+}
+
+.animate-3d-tower {
+  animation: float3dTower 9s ease-in-out infinite;
+}
+
+.animate-3d-tower-delayed {
+  animation: float3dTower 11s ease-in-out infinite 2s;
+}
+
+.animate-3d-blueprint {
+  animation: float3dBlueprint 12s ease-in-out infinite;
+}
+
+.animate-3d-pin {
+  animation: float3dPin 6s ease-in-out infinite;
+}
+
+.animate-3d-prism {
+  animation: float3dPrism 8s ease-in-out infinite 1s;
+}
+
+.animate-3d-growth {
+  animation: float3dGrowth 7.5s ease-in-out infinite 1.5s;
+}
+
+.animate-blueprint-dash {
+  stroke-dasharray: 6 4;
+  animation: streamBlueprintDash 2.5s linear infinite;
+}
+
+.animate-beacon-radar {
+  animation: beaconRadar 2.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+/* ========================================================================= */
+/* INFINITE MARQUEE ANIMATIONS & HOVER UTILITIES                            */
+/* ========================================================================= */
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marqueeScrollReverse {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover,
+.marquee-container:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marqueeScrollReverse 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-reverse:hover,
+.marquee-container:hover .animate-marquee-reverse {
+  animation-play-state: paused;
+}
+
+.animate-marquee-fast {
+  animation-duration: 22s;
+}
+
+.animate-marquee-slow {
+  animation-duration: 45s;
+}
+
+.mask-marquee-edges {
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}

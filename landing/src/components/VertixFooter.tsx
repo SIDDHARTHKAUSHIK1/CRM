@@ -52,7 +52,6 @@ export const VertixFooter: React.FC = () => {
               <li><a href="#results" className="hover:text-white transition-colors">Results &amp; ROI</a></li>
               <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
               <li><a href="#contact" className="hover:text-white transition-colors">Request Demo</a></li>
-              <li className="pt-1"><a href="/admin/login" className="text-emerald-400 hover:text-emerald-300 transition-colors font-bold flex items-center gap-1">CRM Staff &amp; Agent Login &rarr;</a></li>
             </ul>
           </div>
 

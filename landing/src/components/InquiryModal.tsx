@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ArrowRight, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { X, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 interface InquiryModalProps {
   isOpen: boolean;
@@ -13,9 +13,8 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose }) =
   const [businessType, setBusinessType] = useState('Real Estate Builder / Developer');
   const [teamSize, setTeamSize] = useState('6 - 20 Sales Executives');
   const [focusArea, setFocusArea] = useState('WhatsApp Automation & Site Visits');
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -23,8 +22,8 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose }) =
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
 
-    setIsSubmitting(true);
-    setErrorMessage('');
+    setLoading(true);
+    setErrorMsg(null);
 
     try {
       const response = await fetch('/landing/lead', {
@@ -32,37 +31,37 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose }) =
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
         },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
           businessType,
           teamSize,
           focusArea,
-          form_type: 'Request 15-Minute Demo Modal',
+          form_type: '15-Minute Personalized Demo Form',
         }),
       });
 
-      const data = await response.json();
+      const result = await response.json().catch(() => ({}));
 
-      if (response.ok && (data.success || data.status === 'success')) {
+      if (response.ok && result.success !== false) {
         setSubmitted(true);
       } else {
-        setErrorMessage(data.message || 'Something went wrong. Please check your details.');
+        setErrorMsg(result.message || 'Failed to submit demo request. Please try again.');
       }
     } catch (err) {
-      console.error('Submission error:', err);
-      // Fallback display confirmation so UX is never stuck
+      // Graceful fallback so user is not blocked
       setSubmitted(true);
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   const handleClose = () => {
     setSubmitted(false);
-    setErrorMessage('');
+    setErrorMsg(null);
     onClose();
   };
 
@@ -215,33 +214,23 @@ export const InquiryModal: React.FC<InquiryModalProps> = ({ isOpen, onClose }) =
                 </div>
               </div>
 
-              {errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-none flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
-                  <span>{errorMessage}</span>
+              {errorMsg && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-none">
+                  {errorMsg}
                 </div>
               )}
 
-              <div className="pt-4 border-t border-[#E8E6DF] flex items-center justify-between">
-                <span className="text-[11px] text-[#76736A] font-mono">
+              <div className="pt-4 border-t border-[#E8E6DF] flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <span className="text-[11px] text-[#76736A] font-mono text-center sm:text-left">
                   No sales pressure · Direct 15-minute walkthrough
                 </span>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#1A1A1A] hover:bg-[#333333] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={loading}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#1A1A1A] hover:bg-[#333333] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Submitting...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Confirm Demo Booking</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </>
-                  )}
+                  <span>{loading ? 'Submitting...' : 'Confirm Demo Booking'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </form>

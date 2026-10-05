@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { VertixNavbar } from './components/VertixNavbar';
-import { VertixHero } from './components/VertixHero';
-import { VertixAudience } from './components/VertixAudience';
-import { VertixInteractivePipeline } from './components/VertixInteractivePipeline';
-import { VertixFeatures } from './components/VertixFeatures';
-import { VertixResults } from './components/VertixResults';
-import { VertixTestimonials } from './components/VertixTestimonials';
-import { VertixFaq } from './components/VertixFaq';
-import { VertixContact } from './components/VertixContact';
-import { VertixFooter } from './components/VertixFooter';
+import { RealEstateNavbar } from './components/RealEstateNavbar';
+import { RealEstateHero } from './components/RealEstateHero';
+import { RealEstateMarquee } from './components/RealEstateMarquee';
+import { RealEstateSolutions } from './components/RealEstateSolutions';
+import { RealEstateSpeedBanner } from './components/RealEstateSpeedBanner';
+import { RealEstatePainVsRelief } from './components/RealEstatePainVsRelief';
+import { RealEstateWorkflow } from './components/RealEstateWorkflow';
+import { RealEstateDeviceCards } from './components/RealEstateDeviceCards';
+import { RealEstateSoftwarePreview } from './components/RealEstateSoftwarePreview';
+import { RealEstateCtaFaq } from './components/RealEstateCtaFaq';
+import { RealEstateFooter } from './components/RealEstateFooter';
 import { InquiryModal } from './components/InquiryModal';
 import { CinematicReelModal } from './components/CinematicReelModal';
 
@@ -22,43 +23,54 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F7F4] text-[#1A1A1A] flex flex-col font-sans selection:bg-[#1A1A1A] selection:text-white">
-      {/* 1. Top Navigation Bar */}
-      <VertixNavbar onStartProject={() => setIsInquiryOpen(true)} />
+    <div className="min-h-screen bg-white text-[#0B1A30] flex flex-col font-sans selection:bg-[#1864E8] selection:text-white">
+      {/* 1. Header & Top Announcement Bar matching reference layout */}
+      <RealEstateNavbar onStartDemo={() => setIsInquiryOpen(true)} />
 
-      {/* Main Page Flow */}
+      {/* Main Page Sections */}
       <main className="flex-1">
-        {/* 2. Hero Section with Video Background, 3D Spatial Chip & Clear Value Proposition */}
-        <VertixHero
-          onViewWork={() => handleScrollToSection('workflow')}
-          onStartProject={() => setIsInquiryOpen(true)}
-          onOpenCinematicReel={() => setIsCinematicReelOpen(true)}
+        {/* 2. Hero Section: Headline + Floating Search/Filter Bar + 4-Icon Trust Row */}
+        <RealEstateHero
+          onExploreSolutions={() => handleScrollToSection('solutions')}
+          onStartDemo={() => setIsInquiryOpen(true)}
         />
 
-        {/* 3. Who Can Use It (Builders, Brokerages, CP Networks, Land & Commercial) */}
-        <VertixAudience />
+        {/* Section-scoped property and CRM scenes */}
+        <div className="relative">
+          {/* 3. Real Estate Solutions: "Built for Every Need" */}
+          <RealEstateSolutions
+            onSelectSolution={() => setIsInquiryOpen(true)}
+          />
 
-        {/* 4. Visual Workflow / Lead to Deal Journey (Interactive 5-Step Pipeline Simulator) */}
-        <VertixInteractivePipeline onStartDemo={() => setIsInquiryOpen(true)} />
+          {/* 4. Split Promo Valuation Banner: "Better Follow-ups. Better Outcomes." */}
+          <RealEstateSpeedBanner onStartValuation={() => setIsInquiryOpen(true)} />
 
-        {/* 5. Core Features & Capabilities */}
-        <VertixFeatures />
+          {/* 5. Pain vs. Relief ("Is Your Sales Team Struggling with These Daily Bottlenecks?") */}
+          <RealEstatePainVsRelief onStartDemo={() => setIsInquiryOpen(true)} />
 
-        {/* 6. Tangible Business Benefits / ROI & Interactive Revenue Recovery Calculator */}
-        <VertixResults onStartDemo={() => setIsInquiryOpen(true)} />
+          {/* 6. Workflow Journey: "A Smarter Way to Close" */}
+          <RealEstateWorkflow />
 
-        {/* 7. Verified Customer Testimonials & Case Studies */}
-        <VertixTestimonials />
+          {/* 7. Inside the Software: Live Interactive CRM Showcase */}
+          <RealEstateSoftwarePreview
+            onStartDemo={() => setIsInquiryOpen(true)}
+          />
 
-        {/* 8. Frequently Asked Questions (Non-Technical Clarity) */}
-        <VertixFaq onStartDemo={() => setIsInquiryOpen(true)} />
+          {/* 8. Device Mockup Cards: Mobile & Desktop Workspaces + Security & Roles */}
+          <RealEstateDeviceCards
+            onStartDemo={() => setIsInquiryOpen(true)}
+          />
 
-        {/* 9. Final CTA & Request Demo Section */}
-        <VertixContact />
+          {/* 9. Real Estate Multi-Channel Marquee & Performance Metrics */}
+          <RealEstateMarquee />
+
+          {/* 10. FAQ Accordion (Overcoming Objections) & Closing High-Converting CTA */}
+          <RealEstateCtaFaq onStartDemo={() => setIsInquiryOpen(true)} />
+        </div>
       </main>
 
-      {/* 10. Minimalist Dark Editorial Footer */}
-      <VertixFooter />
+      {/* 12. Deep Navy 5-Column Footer */}
+      <RealEstateFooter />
 
       {/* Interactive 15-Minute Demo Booking Modal */}
       <InquiryModal

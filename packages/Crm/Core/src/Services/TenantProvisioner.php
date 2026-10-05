@@ -4,6 +4,7 @@ namespace Crm\Core\Services;
 
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Crm\Attribute\Models\Attribute;
 use Crm\Core\Models\Tenant;
 use Crm\EmailTemplate\Models\EmailTemplate;
@@ -22,19 +23,33 @@ class TenantProvisioner
      * @param  string  $adminEmail
      * @param  string  $adminPassword
      * @param  string|null  $adminName
+     * @param  array  $extra
      * @return array
      */
     public function provision(
         string $name,
         string $adminEmail,
         string $adminPassword,
-        ?string $adminName = null
+        ?string $adminName = null,
+        array $extra = []
     ): array {
-        return DB::transaction(function () use ($name, $adminEmail, $adminPassword, $adminName) {
+        return DB::transaction(function () use ($name, $adminEmail, $adminPassword, $adminName, $extra) {
+            $slug = $extra['slug'] ?? $this->generateUniqueSlug($name);
+            $trialDays = config('crm.signup.trial_days', 14);
+            $trialEndsAt = array_key_exists('trial_ends_at', $extra)
+                ? $extra['trial_ends_at']
+                : ($trialDays > 0 ? now()->addDays($trialDays) : null);
+
             // 1. Create Tenant
             $tenant = Tenant::create([
-                'name'   => $name,
-                'status' => 'active',
+                'name'          => $name,
+                'slug'          => $slug,
+                'status'        => $extra['status'] ?? 'active',
+                'contact_email' => $adminEmail,
+                'contact_phone' => $extra['phone'] ?? null,
+                'signup_source' => $extra['signup_source'] ?? 'web',
+                'signup_ip'     => $extra['signup_ip'] ?? null,
+                'trial_ends_at' => $trialEndsAt,
             ]);
 
             // 2. Create Administrator and Employee Roles for this Tenant
@@ -87,15 +102,19 @@ class TenantProvisioner
 
             // 3. Create Administrator User
             $adminUser = User::create([
-                'tenant_id'       => $tenant->id,
-                'role_id'         => $adminRole->id,
-                'name'            => $adminName ?: "{$name} Admin",
-                'email'           => $adminEmail,
-                'password'        => bcrypt($adminPassword),
-                'password_plain'  => Crypt::encryptString($adminPassword),
-                'status'          => 1,
-                'view_permission' => 'global',
+                'tenant_id'         => $tenant->id,
+                'role_id'           => $adminRole->id,
+                'name'              => $adminName ?: "{$name} Admin",
+                'email'             => $adminEmail,
+                'phone'             => $extra['phone'] ?? null,
+                'email_verified_at' => $extra['email_verified_at'] ?? now(),
+                'password'          => bcrypt($adminPassword),
+                'password_plain'    => Crypt::encryptString($adminPassword),
+                'status'            => $extra['user_status'] ?? 1,
+                'view_permission'   => 'global',
             ]);
+
+            $tenant->update(['owner_user_id' => $adminUser->id]);
 
             // 4. Seed Pipelines & Stages
             $defaultPipelines = Pipeline::withoutGlobalScopes()
@@ -223,5 +242,29 @@ class TenantProvisioner
                 'role'   => $adminRole,
             ];
         });
+    }
+
+    /**
+     * Generate a unique tenant slug based on the company name.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function generateUniqueSlug(string $name): string
+    {
+        $baseSlug = Str::slug($name);
+        if (empty($baseSlug)) {
+            $baseSlug = 'tenant';
+        }
+
+        $slug = $baseSlug;
+        $counter = 2;
+
+        while (Tenant::withoutGlobalScopes()->where('slug', $slug)->exists()) {
+            $slug = "{$baseSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
     }
 }

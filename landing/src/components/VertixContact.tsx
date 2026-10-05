@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const VertixContact: React.FC = () => {
   const [name, setName] = useState('');
@@ -10,49 +10,11 @@ export const VertixContact: React.FC = () => {
   const [teamSize, setTeamSize] = useState('6 - 20 Sales Executives');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
-
-    setIsSubmitting(true);
-    setErrorMessage('');
-
-    try {
-      const response = await fetch('/landing/lead', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          location,
-          businessType,
-          teamSize,
-          message,
-          form_type: 'Live Demo Contact Section Form',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && (data.success || data.status === 'success')) {
-        setSubmitted(true);
-      } else {
-        setErrorMessage(data.message || 'Something went wrong. Please check your information.');
-      }
-    } catch (err) {
-      console.error('Contact submission error:', err);
-      // Fallback display confirmation so UX is smooth
-      setSubmitted(true);
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubmitted(true);
   };
 
   return (
@@ -190,31 +152,14 @@ export const VertixContact: React.FC = () => {
                   ></textarea>
                 </div>
 
-                {errorMessage && (
-                  <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
-
                 {/* Submit button */}
                 <div className="flex justify-stretch sm:justify-end pt-0.5">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full sm:w-auto group btn-shimmer inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#0A0A0A] hover:bg-[#262626] transition-all cursor-pointer rounded-full shadow-md hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto group btn-shimmer inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#0A0A0A] hover:bg-[#262626] transition-all cursor-pointer rounded-full shadow-md hover:scale-[1.02]"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Submitting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Request Live Demo</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
+                    <span>Request Live Demo</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </form>

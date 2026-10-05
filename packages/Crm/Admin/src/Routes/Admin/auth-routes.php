@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Crm\Admin\Http\Controllers\Controller;
 use Crm\Admin\Http\Controllers\User\ForgotPasswordController;
+use Crm\Admin\Http\Controllers\User\RegisterController;
 use Crm\Admin\Http\Controllers\User\ResetPasswordController;
 use Crm\Admin\Http\Controllers\User\SessionController;
 
@@ -25,6 +26,17 @@ Route::withoutMiddleware(['user'])->group(function () {
         Route::middleware(['user'])->group(function () {
             Route::delete('logout', 'destroy')->name('admin.session.destroy');
         });
+    });
+
+    /**
+     * Registration routes.
+     */
+    Route::controller(RegisterController::class)->prefix('register')->group(function () {
+        Route::get('', 'create')->name('admin.register.create');
+
+        Route::post('', 'store')
+            ->middleware('throttle:5,1')
+            ->name('admin.register.store');
     });
 
     /**
